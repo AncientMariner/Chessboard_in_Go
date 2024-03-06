@@ -16,3 +16,6 @@ func (s *Bishop) Handle(request string) string {
 // 	s.next = next
 // 	return next
 // }
+func (*Bishop) GetName() string {
+	return "bishop"
+}

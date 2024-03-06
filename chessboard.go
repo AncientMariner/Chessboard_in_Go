@@ -8,7 +8,7 @@ import (
 
 func main() {
 	drawEmptyBoard()
-	boardWithRookAndBishop := NewBuilder(map[string]int{"rook": 1, "bishop": 1}).withRook().withBishop().Build()
+	boardWithRookAndBishop := NewBuilder().withKing(1).withRook(1).withBishop(1).Build()
 
 	fmt.Println(boardWithRookAndBishop)
 }
@@ -34,45 +34,52 @@ type Chessboard struct {
 }
 
 type ChessBoardBuilder interface {
-	withKing() ChessBoardBuilder
-	withRook() ChessBoardBuilder
-	withBishop() ChessBoardBuilder
+	withKing(int) ChessBoardBuilder
+	withRook(int) ChessBoardBuilder
+	withBishop(int) ChessBoardBuilder
 	Build() *Chessboard
 }
 
 type boardBuilder struct {
+	chessboard             *Chessboard
 	currentFigureBehaviour figures.FigureBehaviour
 	figureQuantityMap      map[string]int
 }
 
-func (bb *boardBuilder) withRook() ChessBoardBuilder {
-	return bb.addToChain(&figures.Rook{})
+func (bb *boardBuilder) withRook(quantity int) ChessBoardBuilder {
+	figure := &figures.Rook{}
+	bb.figureQuantityMap[figure.GetName()] = quantity
+	return bb.addToChain(figure)
 }
 
-func (bb *boardBuilder) withBishop() ChessBoardBuilder {
-	return bb.addToChain(&figures.Bishop{})
+func (bb *boardBuilder) withBishop(quantity int) ChessBoardBuilder {
+	figure := &figures.Bishop{}
+	bb.figureQuantityMap[figure.GetName()] = quantity
+	return bb.addToChain(figure)
 }
 
-func (bb *boardBuilder) withKing() ChessBoardBuilder {
-	return bb.addToChain(&figures.King{})
+func (bb *boardBuilder) withKing(quantity int) ChessBoardBuilder {
+	figure := &figures.King{}
+	bb.figureQuantityMap[figure.GetName()] = quantity
+	return bb.addToChain(figure)
 }
 
-func NewBuilder(figureQuantityMap map[string]int) ChessBoardBuilder {
-	return &boardBuilder{figureQuantityMap: figureQuantityMap}
+func NewBuilder() ChessBoardBuilder {
+	return &boardBuilder{chessboard: &Chessboard{}, figureQuantityMap: make(map[string]int)}
 }
 
 func (bb *boardBuilder) addToChain(figure figures.FigureBehaviour) ChessBoardBuilder {
-	if bb.currentFigureBehaviour == nil {
-		bb.currentFigureBehaviour = figure
+	if bb.chessboard.currentFigureBehaviour == nil {
+		bb.chessboard = &Chessboard{currentFigureBehaviour: figure, figureQuantityMap: bb.figureQuantityMap}
 	} else {
 		bb.currentFigureBehaviour.SetNext(figure)
 	}
+	// needed in order to have the recent added figure and add a link to it a
+	bb.currentFigureBehaviour = figure
 	return bb
 }
 
 func (bb *boardBuilder) Build() *Chessboard {
-	return &Chessboard{
-		figureQuantityMap:      bb.figureQuantityMap,
-		currentFigureBehaviour: bb.currentFigureBehaviour,
-	}
+	var chessboard = bb.chessboard
+	return chessboard
 }

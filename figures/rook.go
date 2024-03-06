@@ -13,3 +13,7 @@ func (f *Rook) Handle(request string) string {
 // 	f.next = next
 // 	return next
 // }
+
+func (*Rook) GetName() string {
+	return "rook"
+}

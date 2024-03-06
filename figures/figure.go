@@ -7,6 +7,7 @@ type Figure struct {
 type FigureBehaviour interface {
 	SetNext(FigureBehaviour) FigureBehaviour
 	Handle(string) string
+	GetName() string
 }
 
 func (f *Figure) SetNext(next FigureBehaviour) FigureBehaviour {
@@ -20,3 +21,7 @@ func (f *Figure) Handle(request string) string {
 	}
 	return ""
 }
+
+// func (f *Figure) GetName() string {
+// 	return "figure"
+// }

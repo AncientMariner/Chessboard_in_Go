@@ -18,11 +18,11 @@ func (s *King) Handle(request string) string {
 	return s.next.Handle(request)
 }
 
-func (s *King) setNext(next FigureBehaviour) FigureBehaviour {
-	s.next = next
-	return next
-}
+// func (s *King) setNext(next FigureBehaviour) FigureBehaviour {
+// 	s.next = next
+// 	return next
+// }
 
-func (*King) getName() string {
+func (*King) GetName() string {
 	return "king"
 }
