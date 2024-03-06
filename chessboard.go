@@ -8,7 +8,7 @@ import (
 
 func main() {
 	drawEmptyBoard()
-	boardWithRookAndBishop := NewBuilder().withKing(1).withRook(1).withBishop(1).Build()
+	boardWithRookAndBishop := NewChessBoard().withKing(1).withRook(1).withBishop(1).Build()
 
 	fmt.Println(boardWithRookAndBishop)
 }
@@ -64,7 +64,7 @@ func (bb *boardBuilder) withKing(quantity int) ChessBoardBuilder {
 	return bb.addToChain(figure)
 }
 
-func NewBuilder() ChessBoardBuilder {
+func NewChessBoard() ChessBoardBuilder {
 	return &boardBuilder{chessboard: &Chessboard{}, figureQuantityMap: make(map[string]int)}
 }
 
@@ -74,12 +74,11 @@ func (bb *boardBuilder) addToChain(figure figures.FigureBehaviour) ChessBoardBui
 	} else {
 		bb.currentFigureBehaviour.SetNext(figure)
 	}
-	// needed in order to have the recent added figure and add a link to it a
+	// is needed in order to have the recent added figure and add a link to it a
 	bb.currentFigureBehaviour = figure
 	return bb
 }
 
 func (bb *boardBuilder) Build() *Chessboard {
-	var chessboard = bb.chessboard
-	return chessboard
+	return bb.chessboard
 }

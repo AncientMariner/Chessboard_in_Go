@@ -11,11 +11,6 @@ func (s *Bishop) Handle(request string) string {
 	return s.next.Handle(request)
 }
 
-//
-// func (s *Bishop) setNext(next FigureBehaviour) FigureBehaviour {
-// 	s.next = next
-// 	return next
-// }
 func (*Bishop) GetName() string {
 	return "bishop"
 }

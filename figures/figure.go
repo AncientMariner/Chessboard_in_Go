@@ -21,7 +21,3 @@ func (f *Figure) Handle(request string) string {
 	}
 	return ""
 }
-
-// func (f *Figure) GetName() string {
-// 	return "figure"
-// }
