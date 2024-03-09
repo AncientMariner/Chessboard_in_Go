@@ -1,7 +1,7 @@
 # Chessboard_in_Go
 Chessboard problem in Go.
 
-Another solution can be found [here](https://github.com/AncientMariner/ChessBoard)
+Java solution can be found [here](https://github.com/AncientMariner/ChessBoard)
 
 ```text
 The problem is to find all unique configurations of
