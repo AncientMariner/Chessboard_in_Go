@@ -2,13 +2,16 @@ package main
 
 import (
     "Chessboard_in_Go/figures"
+    "Chessboard_in_Go/figuresPlacement"
     "fmt"
+    "github.com/hashicorp/go-set/v2"
     "strings"
 )
 
 func main() {
     drawEmptyBoard()
-    board := NewChessBoard().withKing(1).withQueen(1).withKnight(2).withRook(2).withBishop(2).Build()
+    board := NewChessBoard().withKing(2).withQueen(1).withKnight(2).withRook(2).withBishop(2).Build()
+    placeFiguresOnBoard(board)
 
     fmt.Printf("figues %v", board)
 }
@@ -28,9 +31,47 @@ func drawEmptyBoard() string {
     return board.String()
 }
 
+func placeFiguresOnBoard(board *Chessboard) *set.HashSet[*figuresPlacement.FigurePosition, string] {
+    numberOfKings := board.figureQuantityMap["king"]
+
+    // go over chain, place figure on board
+
+    var boards *set.HashSet[*figuresPlacement.FigurePosition, string]
+    var resultingBoards *set.HashSet[*figuresPlacement.FigurePosition, string]
+
+    for i := 0; i < numberOfKings; i++ {
+
+        // if board is empty call with it
+        // else call with each element from set
+        if boards == nil {
+            boardsAfterInitialPlacement := board.figurePlacement.PlaceFiguresOnBoard(drawEmptyBoard())
+            boards = set.NewHashSet[*figuresPlacement.FigurePosition, string](boardsAfterInitialPlacement.Size())
+
+            boardsAfterInitialPlacement.ForEach(func(position *figuresPlacement.FigurePosition) bool {
+                boards.Insert(position)
+                return true
+            })
+        } else {
+            resultingBoards = set.NewHashSet[*figuresPlacement.FigurePosition, string](boards.Size() * boards.Size())
+
+            boards.ForEach(func(position *figuresPlacement.FigurePosition) bool {
+                boardsWithPlacement := board.figurePlacement.PlaceFiguresOnBoard(position.Board)
+
+                boardsWithPlacement.ForEach(func(position *figuresPlacement.FigurePosition) bool {
+                    resultingBoards.Insert(position)
+                    return true
+                })
+                return true
+            })
+        }
+    }
+    return resultingBoards
+}
+
 type Chessboard struct {
     figureQuantityMap      map[string]int
     currentFigureBehaviour figures.FigureBehaviour
+    figurePlacement        figuresPlacement.Placement
 }
 
 type ChessBoardBuilder interface {
