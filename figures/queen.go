@@ -1,18 +1,18 @@
 package figures
 
-type King struct {
+type Queen struct {
     Figure
     // add placement behaviour
     // add figure chain
 }
 
-func (s *King) Handle(request string) string {
+func (s *Queen) Handle(request string) string {
     if request == "Hello" {
         return "World"
     }
     return s.next.Handle(request)
 }
 
-func (*King) GetName() string {
-    return "king"
+func (*Queen) GetName() string {
+    return "queen"
 }

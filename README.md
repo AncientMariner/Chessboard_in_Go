@@ -1,4 +1,5 @@
 # Chessboard_in_Go
+
 Chessboard problem in Go.
 
 Java solution can be found [here](https://github.com/AncientMariner/ChessBoard)
