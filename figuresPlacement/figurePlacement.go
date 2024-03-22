@@ -3,6 +3,7 @@ package figuresPlacement
 import (
     "fmt"
     "github.com/hashicorp/go-set/v2"
+    "strings"
 )
 
 type Placement struct {
@@ -20,6 +21,54 @@ type FigurePosition struct {
 
 func (e *FigurePosition) Hash() string {
     return fmt.Sprintf("%s:%d", e.Board, e.number)
+}
+
+const defaultDimension = 8
+
+func drawEmptyBoard() string {
+
+    var board strings.Builder
+
+    for x := 0; x < defaultDimension; x++ {
+        for y := 0; y < defaultDimension; y++ {
+            board.WriteString("_")
+        }
+        board.WriteString("\n")
+    }
+    return board.String()
+}
+
+func (p *Placement) PlaceFigure(numberOfFigures int) *set.HashSet[*FigurePosition, string] {
+
+    var boards *set.HashSet[*FigurePosition, string]
+
+    for i := 0; i < numberOfFigures; i++ {
+        if boards == nil {
+            boards = p.placeInitialFiguresOnEmptyBoard()
+        } else {
+            boards = p.placeFiguresOnNotEmptyBoard(boards)
+        }
+    }
+    return boards
+}
+
+func (p *Placement) placeInitialFiguresOnEmptyBoard() *set.HashSet[*FigurePosition, string] {
+    return p.PlaceFiguresOnBoard(drawEmptyBoard())
+}
+
+func (p *Placement) placeFiguresOnNotEmptyBoard(boards *set.HashSet[*FigurePosition, string]) *set.HashSet[*FigurePosition, string] {
+    var resultingBoards = set.NewHashSet[*FigurePosition, string](boards.Size() * boards.Size())
+
+    boards.ForEach(func(position *FigurePosition) bool {
+        boardsWithPlacement := p.PlaceFiguresOnBoard(position.Board)
+
+        boardsWithPlacement.ForEach(func(position *FigurePosition) bool {
+            resultingBoards.Insert(position)
+            return true
+        })
+        return true
+    })
+    return resultingBoards
 }
 
 func (p *Placement) PlaceFiguresOnBoard(board string) *set.HashSet[*FigurePosition, string] {
