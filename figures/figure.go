@@ -8,6 +8,7 @@ type FigureBehaviour interface {
     SetNext(FigureBehaviour) FigureBehaviour
     Handle(string) string
     GetName() string
+    GetNext() FigureBehaviour
 }
 
 func (f *Figure) SetNext(next FigureBehaviour) FigureBehaviour {
@@ -20,4 +21,8 @@ func (f *Figure) Handle(request string) string {
         return f.next.Handle(request)
     }
     return ""
+}
+
+func (f *Figure) GetNext() FigureBehaviour {
+    return f.next
 }

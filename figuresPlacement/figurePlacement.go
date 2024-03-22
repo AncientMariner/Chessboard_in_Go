@@ -1,6 +1,7 @@
 package figuresPlacement
 
 import (
+    "Chessboard_in_Go/figures"
     "fmt"
     "github.com/hashicorp/go-set/v2"
     "strings"
@@ -38,8 +39,13 @@ func drawEmptyBoard() string {
     return board.String()
 }
 
-func (p *Placement) PlaceFigure(numberOfFigures int) *set.HashSet[*FigurePosition, string] {
+func (p *Placement) PlaceFigure(numberOfFigures int, behaviour figures.FigureBehaviour, boards *set.HashSet[*FigurePosition, string]) *set.HashSet[*FigurePosition, string] {
+    // use different figures
+    // use boars provided
+    return p.test(numberOfFigures)
+}
 
+func (p *Placement) test(numberOfFigures int) *set.HashSet[*FigurePosition, string] {
     var boards *set.HashSet[*FigurePosition, string]
 
     for i := 0; i < numberOfFigures; i++ {

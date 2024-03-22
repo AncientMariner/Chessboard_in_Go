@@ -8,19 +8,37 @@ import (
 )
 
 func main() {
-    board := NewChessBoard().withKing(1).withQueen(1).withKnight(2).withRook(2).withBishop(2).Build()
-    boardsWithFigures := placeFiguresOnBoard(board)
+    board := NewChessBoard().withKing(1).withQueen(1).Build()
+    // board := NewChessBoard().withKing(1).withQueen(1).withKnight(2).withRook(2).withBishop(2).Build()
+    boardsWithFigures := placeFigures(board)
 
     fmt.Printf("\nfigues %v", board)
     fmt.Printf("\nboardsWithFigures.Size() %d", boardsWithFigures.Size())
 }
 
-func placeFiguresOnBoard(board *Chessboard) *set.HashSet[*figuresPlacement.FigurePosition, string] {
+func placeFigures(board *Chessboard) *set.HashSet[*figuresPlacement.FigurePosition, string] {
     numberOfKings := board.figureQuantityMap["king"]
 
-    // go over chain, place figure on board
+    boards := placeFigure(board, numberOfKings, board.currentFigureBehaviour, set.NewHashSet[*figuresPlacement.FigurePosition, string](0))
+    return boards
+}
 
-    return board.figurePlacement.PlaceFigure(numberOfKings)
+func placeFigure(board *Chessboard, numberOrFigures int, behaviour figures.FigureBehaviour, previousFigureBoards *set.HashSet[*figuresPlacement.FigurePosition, string]) *set.HashSet[*figuresPlacement.FigurePosition, string] {
+
+    boardsForCertainFigure := board.figurePlacement.PlaceFigure(numberOrFigures, board.currentFigureBehaviour, previousFigureBoards)
+
+    var result = set.NewHashSet[*figuresPlacement.FigurePosition, string](previousFigureBoards.Size() + boardsForCertainFigure.Size()) // check to calculate empty places in order to set proper size
+
+    boardsForCertainFigure.ForEach(func(position *figuresPlacement.FigurePosition) bool {
+        result.Insert(position)
+        return true
+    })
+
+    if board.currentFigureBehaviour.GetNext() != nil {
+        placeFigure(board, numberOrFigures, board.currentFigureBehaviour.GetNext(), result)
+    }
+
+    return result
 }
 
 type Chessboard struct {
