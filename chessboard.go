@@ -25,7 +25,7 @@ func placeFigures(board *Chessboard) *set.HashSet[*figuresPlacement.FigurePositi
 
 func placeFigure(board *Chessboard, numberOrFigures int, behaviour figures.FigureBehaviour, previousFigureBoards *set.HashSet[*figuresPlacement.FigurePosition, string]) *set.HashSet[*figuresPlacement.FigurePosition, string] {
 
-    boardsForCertainFigure := board.figurePlacement.PlaceFigure(numberOrFigures, board.currentFigureBehaviour, previousFigureBoards)
+    boardsForCertainFigure := board.figurePlacement.PlaceFigure(numberOrFigures, behaviour, previousFigureBoards)
 
     var result = set.NewHashSet[*figuresPlacement.FigurePosition, string](previousFigureBoards.Size() + boardsForCertainFigure.Size()) // check to calculate empty places in order to set proper size
 
@@ -34,8 +34,8 @@ func placeFigure(board *Chessboard, numberOrFigures int, behaviour figures.Figur
         return true
     })
 
-    if board.currentFigureBehaviour.GetNext() != nil {
-        placeFigure(board, numberOrFigures, board.currentFigureBehaviour.GetNext(), result)
+    if behaviour.GetNext() != nil {
+        placeFigure(board, numberOrFigures, behaviour.GetNext(), result)
     }
 
     return result
