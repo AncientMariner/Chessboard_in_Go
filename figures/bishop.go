@@ -1,16 +1,16 @@
 package figures
 
 type Bishop struct {
-    Figure
+	Figure
 }
 
 func (s *Bishop) Handle(request string) string {
-    if request == "Hello" {
-        return "World"
-    }
-    return s.next.Handle(request)
+	if request == "Hello" {
+		return "World"
+	}
+	return s.next.Handle(request)
 }
 
-func (*Bishop) GetName() string {
-    return "bishop"
+func (*Bishop) GetName() rune {
+	return 'b'
 }

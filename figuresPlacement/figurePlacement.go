@@ -41,33 +41,21 @@ func drawEmptyBoard() string {
 }
 
 func (p *Placement) PlaceFigure(numberOfFigures int, behaviour figures.FigureBehaviour, boards *set.HashSet[*FigurePosition, string]) *set.HashSet[*FigurePosition, string] {
-	// use different figures
-	// use boars provided
-	return p.test(numberOfFigures)
-}
-
-func (p *Placement) test(numberOfFigures int) *set.HashSet[*FigurePosition, string] {
-	var boards *set.HashSet[*FigurePosition, string]
-
 	for i := 0; i < numberOfFigures; i++ {
-		if boards == nil {
-			boards = p.placeInitialFiguresOnEmptyBoard()
+		if boards.Size() == 0 {
+			boards = p.PlaceFiguresOnEmptyBoard(drawEmptyBoard(), behaviour)
 		} else {
-			boards = p.placeFiguresOnNotEmptyBoard(boards)
+			boards = p.placeFiguresOnBoard(boards, behaviour)
 		}
 	}
 	return boards
 }
 
-func (p *Placement) placeInitialFiguresOnEmptyBoard() *set.HashSet[*FigurePosition, string] {
-	return p.PlaceFiguresOnBoard(drawEmptyBoard())
-}
-
-func (p *Placement) placeFiguresOnNotEmptyBoard(boards *set.HashSet[*FigurePosition, string]) *set.HashSet[*FigurePosition, string] {
+func (p *Placement) placeFiguresOnBoard(boards *set.HashSet[*FigurePosition, string], behaviour figures.FigureBehaviour) *set.HashSet[*FigurePosition, string] {
 	var resultingBoards = set.NewHashSet[*FigurePosition, string](boards.Size() * boards.Size())
 
 	boards.ForEach(func(position *FigurePosition) bool {
-		boardsWithPlacement := p.PlaceFiguresOnBoard(position.Board)
+		boardsWithPlacement := p.PlaceFiguresOnEmptyBoard(position.Board, behaviour)
 
 		boardsWithPlacement.ForEach(func(position *FigurePosition) bool {
 			resultingBoards.Insert(position)
@@ -78,7 +66,7 @@ func (p *Placement) placeFiguresOnNotEmptyBoard(boards *set.HashSet[*FigurePosit
 	return resultingBoards
 }
 
-func (p *Placement) PlaceFiguresOnBoard(board string) *set.HashSet[*FigurePosition, string] {
+func (p *Placement) PlaceFiguresOnEmptyBoard(board string, behaviour figures.FigureBehaviour) *set.HashSet[*FigurePosition, string] {
 
 	countOfEmptyPlaces := 0
 	for i := 0; i < len(board); i++ {
@@ -92,7 +80,7 @@ func (p *Placement) PlaceFiguresOnBoard(board string) *set.HashSet[*FigurePositi
 	for i := 0; i < len(board); i++ {
 		if board[i] == '_' {
 			out := []rune(board)
-			out[i] = 'k' // get figure
+			out[i] = behaviour.GetName()
 			boardWithFigure := string(out)
 
 			hashSetOfBoards.Insert(&FigurePosition{boardWithFigure, i})
