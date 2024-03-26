@@ -8,8 +8,8 @@ import (
 )
 
 func main() {
-	board := NewChessBoard().withKing(1).withQueen(1).Build()
-	// board := NewChessBoard().withKing(1).withQueen(1).withKnight(2).withRook(2).withBishop(2).Build()
+	board := NewChessboard().withKing(1).withQueen(1).Build()
+	// board := NewChessboard().withKing(1).withQueen(1).withKnight(2).withRook(2).withBishop(2).Build()
 	boardsWithFigures := placeFigures(board)
 
 	fmt.Printf("\nfigures %v", board)
@@ -17,7 +17,7 @@ func main() {
 }
 
 func placeFigures(board *Chessboard) *set.HashSet[*figuresPlacement.FigurePosition, string] {
-	numberOfKings := board.figureQuantityMap['k']
+	numberOfKings := board.figureQuantityMap[board.currentFigureBehaviour.GetName()]
 
 	boards := placeFigure(board, numberOfKings, board.currentFigureBehaviour, set.NewHashSet[*figuresPlacement.FigurePosition, string](0))
 	return boards
@@ -48,12 +48,12 @@ type Chessboard struct {
 	figurePlacement        figuresPlacement.Placement
 }
 
-type ChessBoardBuilder interface {
-	withKing(int) ChessBoardBuilder
-	withQueen(int) ChessBoardBuilder
-	withBishop(int) ChessBoardBuilder
-	withKnight(int) ChessBoardBuilder
-	withRook(int) ChessBoardBuilder
+type ChessboardBuilder interface {
+	withKing(int) ChessboardBuilder
+	withQueen(int) ChessboardBuilder
+	withBishop(int) ChessboardBuilder
+	withKnight(int) ChessboardBuilder
+	withRook(int) ChessboardBuilder
 	Build() *Chessboard
 }
 
@@ -63,43 +63,43 @@ type boardBuilder struct {
 	figureQuantityMap      map[rune]int
 }
 
-func (b *boardBuilder) withKing(quantity int) ChessBoardBuilder {
+func (b *boardBuilder) withKing(quantity int) ChessboardBuilder {
 	figure := &figures.King{}
 	b.figureQuantityMap[figure.GetName()] = quantity
 	return b.addToChain(figure)
 }
 
-func (b *boardBuilder) withQueen(quantity int) ChessBoardBuilder {
+func (b *boardBuilder) withQueen(quantity int) ChessboardBuilder {
 	figure := &figures.Queen{}
 	b.figureQuantityMap[figure.GetName()] = quantity
 	return b.addToChain(figure)
 }
 
-func (b *boardBuilder) withBishop(quantity int) ChessBoardBuilder {
+func (b *boardBuilder) withBishop(quantity int) ChessboardBuilder {
 	figure := &figures.Bishop{}
 	b.figureQuantityMap[figure.GetName()] = quantity
 	return b.addToChain(figure)
 }
 
-func (b *boardBuilder) withKnight(quantity int) ChessBoardBuilder {
+func (b *boardBuilder) withKnight(quantity int) ChessboardBuilder {
 	figure := &figures.Knight{}
 	b.figureQuantityMap[figure.GetName()] = quantity
 	return b.addToChain(figure)
 }
 
-func (b *boardBuilder) withRook(quantity int) ChessBoardBuilder {
+func (b *boardBuilder) withRook(quantity int) ChessboardBuilder {
 	figure := &figures.Rook{}
 	b.figureQuantityMap[figure.GetName()] = quantity
 	return b.addToChain(figure)
 }
 
-func NewChessBoard() ChessBoardBuilder {
+func NewChessboard() ChessboardBuilder {
 	return &boardBuilder{chessboard: &Chessboard{}, figureQuantityMap: make(map[rune]int)}
 }
 
-func (b *boardBuilder) addToChain(figure figures.FigureBehaviour) ChessBoardBuilder {
+func (b *boardBuilder) addToChain(figure figures.FigureBehaviour) ChessboardBuilder {
 	if b.chessboard.currentFigureBehaviour == nil {
-		b.chessboard = &Chessboard{currentFigureBehaviour: figure, figureQuantityMap: b.figureQuantityMap}
+		b.chessboard = &Chessboard{b.figureQuantityMap, figure, b.chessboard.figurePlacement}
 	} else {
 		b.currentFigureBehaviour.SetNext(figure)
 	}
