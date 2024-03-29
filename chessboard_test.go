@@ -96,9 +96,8 @@ func Test_boardBuilder_addToEmptyChain(t *testing.T) {
 				tt.fields.currentFigureBehaviour,
 				tt.fields.figureQuantityMap,
 			}
-			figure := tt.args.figure
-			chain := b.addToChain(figure)
-			if got := chain; !reflect.DeepEqual(got, tt.want) {
+			
+			if got := b.addToChain(tt.args.figure); !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("addToEmptyChain() = %v, want %v", got, tt.want)
 			}
 		})
@@ -154,6 +153,7 @@ func Test_boardBuilder_addToNonEmptyChain(t *testing.T) {
 	}
 }
 
+// todo add more variations
 func Test_number_of_boards_with_1_figure(t *testing.T) {
 	type args struct {
 		board *Chessboard
