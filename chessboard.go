@@ -10,25 +10,23 @@ import (
 func main() {
 	board := NewChessboard().withKing(1).withQueen(2).Build()
 	// board := NewChessboard().withKing(1).withQueen(1).withKnight(2).withRook(2).withBishop(2).Build()
-	boardsWithFigures := placeFigures(board)
+	boardsWithFigures := board.placeFigures()
 
 	fmt.Printf("\nfigures %v", board)
 	fmt.Printf("\nboardsWithFigures.Size() %d", boardsWithFigures.Size())
 }
 
-func placeFigures(board *Chessboard) *set.HashSet[*figuresPlacement.FigurePosition, string] {
+func  (board *Chessboard)placeFigures() *set.HashSet[*figuresPlacement.FigurePosition, string] {
 
-	return placeFigure(board, board.currentFigureBehaviour, set.NewHashSet[*figuresPlacement.FigurePosition, string](0))
+	return board.placeFigure(board.currentFigureBehaviour, set.NewHashSet[*figuresPlacement.FigurePosition, string](0))
 }
 
-// add all combinations of figures placement
-func placeFigure(board *Chessboard, behaviour figures.FigureBehaviour, previousFigureBoards *set.HashSet[*figuresPlacement.FigurePosition, string]) *set.HashSet[*figuresPlacement.FigurePosition, string] {
-	numberOfFigures := board.figureQuantityMap[behaviour.GetName()]
-
+func (board *Chessboard)placeFigure(behaviour figures.FigureBehaviour, previousFigureBoards *set.HashSet[*figuresPlacement.FigurePosition, string]) *set.HashSet[*figuresPlacement.FigurePosition, string] {
 	// extract no need to put board param here
-	boards := board.figurePlacement.PlaceFigure(numberOfFigures, behaviour, previousFigureBoards)
+	boards := board.figurePlacement.PlaceFigure(board.figureQuantityMap[behaviour.GetName()], behaviour, previousFigureBoards)
 
-	var result = set.NewHashSet[*figuresPlacement.FigurePosition, string](previousFigureBoards.Size() + boards.Size()) // check to calculate empty places in order to set proper size
+	// check to calculate empty places in order to set proper size
+	var result = set.NewHashSet[*figuresPlacement.FigurePosition, string](previousFigureBoards.Size() + boards.Size()) 
 
 	boards.ForEach(func(position *figuresPlacement.FigurePosition) bool {
 		result.Insert(position)
@@ -36,7 +34,7 @@ func placeFigure(board *Chessboard, behaviour figures.FigureBehaviour, previousF
 	})
 
 	if behaviour.GetNext() != nil {
-		placeFigure(board, behaviour.GetNext(), result)
+		board.placeFigure(behaviour.GetNext(), result)
 	}
 
 	return result

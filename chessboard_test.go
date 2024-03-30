@@ -171,7 +171,7 @@ func Test_number_of_boards_with_1_figure(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := placeFigures(tt.args.board); got.Size() != tt.want {
+			if got := tt.args.board.placeFigures(); got.Size() != tt.want {
 				t.Errorf("placeFigures() = %v, want %v", got, tt.want)
 			}
 		})
