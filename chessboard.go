@@ -8,7 +8,7 @@ import (
 )
 
 func main() {
-	board := NewChessboard().withKing(1).withQueen(1).Build()
+	board := NewChessboard().withKing(1).withQueen(2).Build()
 	// board := NewChessboard().withKing(1).withQueen(1).withKnight(2).withRook(2).withBishop(2).Build()
 	boardsWithFigures := placeFigures(board)
 
@@ -17,16 +17,16 @@ func main() {
 }
 
 func placeFigures(board *Chessboard) *set.HashSet[*figuresPlacement.FigurePosition, string] {
-	numberOfKings := board.figureQuantityMap[board.currentFigureBehaviour.GetName()]
 
-	boards := placeFigure(board, numberOfKings, board.currentFigureBehaviour, set.NewHashSet[*figuresPlacement.FigurePosition, string](0))
-	return boards
+	return placeFigure(board, board.currentFigureBehaviour, set.NewHashSet[*figuresPlacement.FigurePosition, string](0))
 }
 
-func placeFigure(board *Chessboard, numberOrFigures int, behaviour figures.FigureBehaviour, previousFigureBoards *set.HashSet[*figuresPlacement.FigurePosition, string]) *set.HashSet[*figuresPlacement.FigurePosition, string] {
+// add all combinations of figures placement
+func placeFigure(board *Chessboard, behaviour figures.FigureBehaviour, previousFigureBoards *set.HashSet[*figuresPlacement.FigurePosition, string]) *set.HashSet[*figuresPlacement.FigurePosition, string] {
+	numberOfFigures := board.figureQuantityMap[behaviour.GetName()]
 
 	// extract no need to put board param here
-	boards := board.figurePlacement.PlaceFigure(numberOrFigures, behaviour, previousFigureBoards)
+	boards := board.figurePlacement.PlaceFigure(numberOfFigures, behaviour, previousFigureBoards)
 
 	var result = set.NewHashSet[*figuresPlacement.FigurePosition, string](previousFigureBoards.Size() + boards.Size()) // check to calculate empty places in order to set proper size
 
@@ -36,7 +36,7 @@ func placeFigure(board *Chessboard, numberOrFigures int, behaviour figures.Figur
 	})
 
 	if behaviour.GetNext() != nil {
-		placeFigure(board, numberOrFigures, behaviour.GetNext(), result)
+		placeFigure(board, behaviour.GetNext(), result)
 	}
 
 	return result
