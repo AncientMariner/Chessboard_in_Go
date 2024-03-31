@@ -5,6 +5,8 @@ import (
 	"Chessboard_in_Go/figuresPlacement"
 	"reflect"
 	"testing"
+
+	"github.com/hashicorp/go-set/v2"
 )
 
 func TestNewChessBoard(t *testing.T) {
@@ -177,6 +179,35 @@ func Test_number_of_boards_with_1_figure(t *testing.T) {
 		})
 	}
 }
+
+
+func Test_board_with_1_figure(t *testing.T) {
+	type args struct {
+		board *Chessboard
+		figurePlacement *figures.FigureBehaviour
+	}
+	tests := []struct {
+		name string
+		args args
+		want int
+	}{
+		{"Test empty board with 1 king", args{&Chessboard{}, nil }, 0},
+		// {"Test empty board with 1 queen", args{board: NewChessboard().withQueen(1).Build()}, 64},
+		// {"Test empty board with 1 rook", args{board: NewChessboard().withRook(1).Build()}, 64},
+		// {"Test empty board with 1 knight", args{board: NewChessboard().withKnight(1).Build()}, 64},
+		// {"Test empty board with 1 bishop", args{board: NewChessboard().withBishop(1).Build()}, 64},
+	}
+	
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			x  figures.FigureBehaviour = &figures.King{}
+			if got := tt.args.board.placeFigure(x,  set.NewHashSet[*figuresPlacement.FigurePosition, string](0) ); got.Size() != tt.want {
+				t.Errorf("placeFigures() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
 
 func Test_boardBuilder_withKing(t *testing.T) {
 	type fields struct {
