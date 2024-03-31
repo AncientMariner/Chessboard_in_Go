@@ -184,24 +184,31 @@ func Test_number_of_boards_with_1_figure(t *testing.T) {
 func Test_board_with_1_figure(t *testing.T) {
 	type args struct {
 		board *Chessboard
-		figurePlacement *figures.FigureBehaviour
+		figuresBehaviour figures.FigureBehaviour
 	}
+	king := &figures.King{}
+	queen := &figures.Queen{}
 	tests := []struct {
 		name string
 		args args
 		want int
 	}{
-		{"Test empty board with 1 king", args{&Chessboard{}, nil }, 0},
-		// {"Test empty board with 1 queen", args{board: NewChessboard().withQueen(1).Build()}, 64},
-		// {"Test empty board with 1 rook", args{board: NewChessboard().withRook(1).Build()}, 64},
-		// {"Test empty board with 1 knight", args{board: NewChessboard().withKnight(1).Build()}, 64},
-		// {"Test empty board with 1 bishop", args{board: NewChessboard().withBishop(1).Build()}, 64},
+		//{"Test empty board", args{&Chessboard{}}, 0},
+		{"Test empty board with 1 king", args{&Chessboard{
+			map[rune]int{king.GetName(): 1},
+			king,
+			figuresPlacement.Placement{},
+		}, king}, 64},
+		{"Test empty board with 1 king", args{&Chessboard{
+			map[rune]int{queen.GetName(): 1},
+			queen,
+			figuresPlacement.Placement{},
+		}, queen}, 64},
 	}
 	
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			x  figures.FigureBehaviour = &figures.King{}
-			if got := tt.args.board.placeFigure(x,  set.NewHashSet[*figuresPlacement.FigurePosition, string](0) ); got.Size() != tt.want {
+			if got := tt.args.board.placeFigure(tt.args.figuresBehaviour,  set.NewHashSet[*figuresPlacement.FigurePosition, string](0) ); got.Size() != tt.want {
 				t.Errorf("placeFigures() = %v, want %v", got, tt.want)
 			}
 		})
