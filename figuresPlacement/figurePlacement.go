@@ -26,6 +26,7 @@ func (e *FigurePosition) Hash() string {
 }
 
 const defaultDimension = 8
+const emptyField = '_'
 
 func drawEmptyBoard() string {
 
@@ -33,7 +34,7 @@ func drawEmptyBoard() string {
 
 	for x := 0; x < defaultDimension; x++ {
 		for y := 0; y < defaultDimension; y++ {
-			board.WriteString("_")
+			board.WriteString(string(emptyField))
 		}
 		board.WriteString("\n")
 	}
@@ -70,7 +71,7 @@ func (p *Placement) PlaceFiguresOnEmptyBoard(board string, behaviour figures.Fig
 
 	countOfEmptyPlaces := 0
 	for i := 0; i < len(board); i++ {
-		if board[i] == '_' {
+		if board[i] == emptyField {
 			countOfEmptyPlaces++
 		}
 	}
@@ -78,7 +79,7 @@ func (p *Placement) PlaceFiguresOnEmptyBoard(board string, behaviour figures.Fig
 	hashSetOfBoards := set.NewHashSet[*FigurePosition, string](countOfEmptyPlaces)
 
 	for i := 0; i < len(board); i++ {
-		if board[i] == '_' {
+		if board[i] == emptyField {
 			out := []rune(board)
 			out[i] = behaviour.GetName()
 			boardWithFigure := string(out)
