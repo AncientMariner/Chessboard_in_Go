@@ -3,10 +3,9 @@ package main
 import (
 	"Chessboard_in_Go/figures"
 	"Chessboard_in_Go/figuresPlacement"
+	"github.com/hashicorp/go-set/v2"
 	"reflect"
 	"testing"
-
-	"github.com/hashicorp/go-set/v2"
 )
 
 func TestNewChessBoard(t *testing.T) {
@@ -98,7 +97,7 @@ func Test_boardBuilder_addToEmptyChain(t *testing.T) {
 				tt.fields.currentFigureBehaviour,
 				tt.fields.figureQuantityMap,
 			}
-			
+
 			if got := b.addToChain(tt.args.figure); !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("addToEmptyChain() = %v, want %v", got, tt.want)
 			}
@@ -170,6 +169,7 @@ func Test_number_of_boards_with_1_figure(t *testing.T) {
 		{"Test empty board with 1 rook", args{board: NewChessboard().withRook(1).Build()}, 64},
 		{"Test empty board with 1 knight", args{board: NewChessboard().withKnight(1).Build()}, 64},
 		{"Test empty board with 1 bishop", args{board: NewChessboard().withBishop(1).Build()}, 64},
+		{"Test empty board with 1 king 1 queen", args{board: NewChessboard().withKing(1).withQueen(1).Build()}, 4032},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -180,41 +180,41 @@ func Test_number_of_boards_with_1_figure(t *testing.T) {
 	}
 }
 
-
 func Test_board_with_1_figure(t *testing.T) {
+	type fields struct {
+		figureQuantityMap      map[rune]int
+		currentFigureBehaviour figures.FigureBehaviour
+		figurePlacement        figuresPlacement.Placement
+	}
 	type args struct {
-		board *Chessboard
-		figuresBehaviour figures.FigureBehaviour
+		behaviour            figures.FigureBehaviour
+		previousFigureBoards *set.HashSet[*figuresPlacement.FigurePosition, string]
 	}
-	king := &figures.King{}
-	queen := &figures.Queen{}
+	behaviour := &figures.King{}
+	behaviour.SetNext(&figures.Queen{})
+
 	tests := []struct {
-		name string
-		args args
-		want int
+		name   string
+		fields fields
+		args   args
+		want   int
 	}{
-		//{"Test empty board", args{&Chessboard{}}, 0},
-		{"Test empty board with 1 king", args{&Chessboard{
-			map[rune]int{king.GetName(): 1},
-			king,
-			figuresPlacement.Placement{},
-		}, king}, 64},
-		{"Test empty board with 1 king", args{&Chessboard{
-			map[rune]int{queen.GetName(): 1},
-			queen,
-			figuresPlacement.Placement{},
-		}, queen}, 64},
+		{"Test empty board with 1 king", fields{map[rune]int{(&figures.King{}).GetName(): 1}, &figures.King{}, figuresPlacement.Placement{}}, args{&figures.King{}, set.NewHashSet[*figuresPlacement.FigurePosition, string](0)}, 64},
+		{"Test empty board with 1 king 1 queen", fields{map[rune]int{(&figures.King{}).GetName(): 1, (&figures.Queen{}).GetName(): 1}, behaviour, figuresPlacement.Placement{}}, args{behaviour, set.NewHashSet[*figuresPlacement.FigurePosition, string](0)}, 4032},
 	}
-	
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := tt.args.board.placeFigure(tt.args.figuresBehaviour,  set.NewHashSet[*figuresPlacement.FigurePosition, string](0) ); got.Size() != tt.want {
-				t.Errorf("placeFigures() = %v, want %v", got, tt.want)
+			board := &Chessboard{
+				figureQuantityMap:      tt.fields.figureQuantityMap,
+				currentFigureBehaviour: tt.fields.currentFigureBehaviour,
+				figurePlacement:        tt.fields.figurePlacement,
+			}
+			if got := board.placeFigure(tt.args.behaviour, tt.args.previousFigureBoards); got.Size() != tt.want {
+				t.Errorf("placeFigure() = %v, want %v", got, tt.want)
 			}
 		})
 	}
 }
-
 
 func Test_boardBuilder_withKing(t *testing.T) {
 	type fields struct {

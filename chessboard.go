@@ -16,17 +16,17 @@ func main() {
 	fmt.Printf("\nboardsWithFigures.Size() %d", boardsWithFigures.Size())
 }
 
-func  (board *Chessboard)placeFigures() *set.HashSet[*figuresPlacement.FigurePosition, string] {
+func (board *Chessboard) placeFigures() *set.HashSet[*figuresPlacement.FigurePosition, string] {
 
 	return board.placeFigure(board.currentFigureBehaviour, set.NewHashSet[*figuresPlacement.FigurePosition, string](0))
 }
 
-func (board *Chessboard)placeFigure(behaviour figures.FigureBehaviour, previousFigureBoards *set.HashSet[*figuresPlacement.FigurePosition, string]) *set.HashSet[*figuresPlacement.FigurePosition, string] {
+func (board *Chessboard) placeFigure(behaviour figures.FigureBehaviour, previousFigureBoards *set.HashSet[*figuresPlacement.FigurePosition, string]) *set.HashSet[*figuresPlacement.FigurePosition, string] {
 	// extract no need to put board param here
 	boards := board.figurePlacement.PlaceFigure(board.figureQuantityMap[behaviour.GetName()], behaviour, previousFigureBoards)
 
 	// check to calculate empty places in order to set proper size
-	var result = set.NewHashSet[*figuresPlacement.FigurePosition, string](previousFigureBoards.Size() + boards.Size()) 
+	var result = set.NewHashSet[*figuresPlacement.FigurePosition, string](previousFigureBoards.Size() + boards.Size())
 
 	boards.ForEach(func(position *figuresPlacement.FigurePosition) bool {
 		result.Insert(position)
@@ -34,7 +34,7 @@ func (board *Chessboard)placeFigure(behaviour figures.FigureBehaviour, previousF
 	})
 
 	if behaviour.GetNext() != nil {
-		board.placeFigure(behaviour.GetNext(), result)
+		result = board.placeFigure(behaviour.GetNext(), result)
 	}
 
 	return result
