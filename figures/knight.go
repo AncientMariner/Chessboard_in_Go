@@ -3,7 +3,6 @@ package figures
 type Knight struct {
 	Figure
 	// add placement behaviour
-	// add figure chain
 }
 
 func (s *Knight) Handle(request string) string {

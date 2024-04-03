@@ -28,8 +28,8 @@ func (board *Chessboard) placeFigure(behaviour figures.FigureBehaviour, previous
 	// check to calculate empty places in order to set proper size
 	var result = set.NewHashSet[*figuresPlacement.FigurePosition, string](previousFigureBoards.Size() + boards.Size())
 
-	boards.ForEach(func(position *figuresPlacement.FigurePosition) bool {
-		result.Insert(position)
+	boards.ForEach(func(board *figuresPlacement.FigurePosition) bool {
+		result.Insert(board)
 		return true
 	})
 
@@ -101,7 +101,7 @@ func (b *boardBuilder) addToChain(figure figures.FigureBehaviour) ChessboardBuil
 	} else {
 		b.currentFigureBehaviour.SetNext(figure)
 	}
-	// is needed in order to have the recent added figure and add a link to it a
+	// is needed in order to have the recent added figure and add a link to it
 	b.currentFigureBehaviour = figure
 	return b
 }

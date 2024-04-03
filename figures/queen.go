@@ -3,7 +3,6 @@ package figures
 type Queen struct {
 	Figure
 	// add placement behaviour
-	// add figure chain
 }
 
 func (s *Queen) Handle(request string) string {
