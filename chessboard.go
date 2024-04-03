@@ -26,7 +26,7 @@ func (board *Chessboard) placeFigure(behaviour figures.FigureBehaviour, previous
 	boards := board.figurePlacement.PlaceFigure(board.figureQuantityMap[behaviour.GetName()], behaviour, previousFigureBoards)
 
 	// check to calculate empty places in order to set proper size
-	var result = set.NewHashSet[*figuresPlacement.FigurePosition, string](previousFigureBoards.Size() + boards.Size())
+	var result = set.NewHashSet[*figuresPlacement.FigurePosition, string](boards.Size())
 
 	boards.ForEach(func(board *figuresPlacement.FigurePosition) bool {
 		result.Insert(board)
