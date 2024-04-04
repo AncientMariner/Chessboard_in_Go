@@ -18,12 +18,12 @@ func (f *Figure) SetNext(next FigureBehaviour) FigureBehaviour {
 	return next
 }
 
-func (f *Figure) Handle(request string) *set.HashSet[*FigurePosition, string] {
-	if f.next != nil {
-		return f.next.Handle(request)
-	}
-	return nil
-}
+// func (f *Figure) Handle(request string) *set.HashSet[*FigurePosition, string] {
+// 	if f.next != nil {
+// 		return f.next.Handle(request)
+// 	}
+// 	return nil
+// }
 
 func (f *Figure) GetNext() FigureBehaviour {
 	return f.next

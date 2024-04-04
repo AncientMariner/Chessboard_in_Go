@@ -8,7 +8,7 @@ import (
 
 func main() {
 	// board := NewChessboard().withKing(1).withQueen(2).Build()
-	board := NewChessboard().withKing(2).Build()
+	board := NewChessboard().withKing(1).Build()
 	// board := NewChessboard().withKing(1).withQueen(1).withKnight(2).withRook(2).withBishop(2).Build()
 	boardsWithFigures := board.placeFigures()
 

@@ -26,6 +26,7 @@ func (e *FigurePosition) Hash() string {
 
 const defaultDimension = 8
 const emptyField = '_'
+const attackPlace = 'x'
 
 func drawEmptyBoard() string {
 

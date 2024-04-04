@@ -27,45 +27,56 @@ func (king *King) Handle(board string) *set.HashSet[*FigurePosition, string] {
 
 			placeAttackPlacesHorizontally(out, i)
 			placeAttackPlacesVertically(out, i)
-
-			// place diagonally
+			placeDiagonallyAbove(out, i)
+			placeDiagonallyBelow(out, i)
 
 			hashSetOfBoards.Insert(&FigurePosition{string(out), i})
 		}
 	}
-
-	// if king.next != nil {
-	// 	nextFigureBoards := king.next.Handle(board)
-	// 	result := set.NewHashSet[*FigurePosition, string](nextFigureBoards.Size())
-	//
-	// 	nextFigureBoards.ForEach(func(position *FigurePosition) bool {
-	// 		result.Insert(position)
-	// 		return true
-	// 	})
-	// 	return result
-	// }
 	return hashSetOfBoards
 }
 
-func placeAttackPlacesVertically(out []rune, position int) {
-	// place above
-	if position >= defaultDimension+1 && out[position-defaultDimension-1] == '_' {
-		out[position-defaultDimension-1] = 'x'
+func placeDiagonallyAbove(out []rune, position int) {
+	diagAboveRight := position - defaultDimension - 1 + 1
+	if position >= defaultDimension+1 && out[diagAboveRight] == emptyField {
+		out[diagAboveRight] = attackPlace
 	}
-	// place below(the one before last line is the last one where next line is accessible)
-	if position < len(out)-defaultDimension-1 && out[position+defaultDimension+1] == '_' {
-		out[position+defaultDimension+1] = 'x'
+	diagAboveLeft := position - defaultDimension - 1 - 1
+	if position >= defaultDimension+1 && diagAboveLeft >= 0 && out[diagAboveLeft] == emptyField {
+		out[diagAboveLeft] = attackPlace
+	}
+}
+
+func placeDiagonallyBelow(out []rune, position int) {
+	diagBelowRight := position + defaultDimension + 1 + 1
+	if position < len(out)-defaultDimension-1 && out[diagBelowRight] == emptyField {
+		out[diagBelowRight] = attackPlace
+	}
+	diagBelowLeft := position + defaultDimension + 1 - 1
+	if position < len(out)-defaultDimension-1 && out[diagBelowLeft] == emptyField {
+		out[diagBelowLeft] = attackPlace
+	}
+}
+
+func placeAttackPlacesVertically(out []rune, position int) {
+	positionAbove := position - defaultDimension - 1
+	if position >= defaultDimension+1 && out[positionAbove] == emptyField {
+		out[positionAbove] = attackPlace
+	}
+	positionBelow := position + defaultDimension + 1
+	if position < len(out)-defaultDimension-1 && out[positionBelow] == emptyField {
+		out[positionBelow] = attackPlace
 	}
 }
 
 func placeAttackPlacesHorizontally(out []rune, position int) {
-	// place left
-	if position-1 >= 0 && out[position-1] == '_' {
-		out[position-1] = 'x'
+	previousPosition := position - 1
+	if previousPosition >= 0 && out[previousPosition] == emptyField {
+		out[previousPosition] = attackPlace
 	}
-	// place right
-	if (position+1) < len(out) && out[position+1] == '_' {
-		out[position+1] = 'x'
+	nextPosition := position + 1
+	if nextPosition < len(out) && out[nextPosition] == emptyField {
+		out[nextPosition] = attackPlace
 	}
 }
 
