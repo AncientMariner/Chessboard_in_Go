@@ -2,13 +2,13 @@ package main
 
 import (
 	"Chessboard_in_Go/figures"
-	"Chessboard_in_Go/figuresPlacement"
 	"fmt"
 	"github.com/hashicorp/go-set/v2"
 )
 
 func main() {
-	board := NewChessboard().withKing(1).withQueen(2).Build()
+	// board := NewChessboard().withKing(1).withQueen(2).Build()
+	board := NewChessboard().withKing(2).Build()
 	// board := NewChessboard().withKing(1).withQueen(1).withKnight(2).withRook(2).withBishop(2).Build()
 	boardsWithFigures := board.placeFigures()
 
@@ -16,19 +16,19 @@ func main() {
 	fmt.Printf("\nboardsWithFigures.Size() %d", boardsWithFigures.Size())
 }
 
-func (board *Chessboard) placeFigures() *set.HashSet[*figuresPlacement.FigurePosition, string] {
+func (board *Chessboard) placeFigures() *set.HashSet[*figures.FigurePosition, string] {
 
-	return board.placeFigure(board.currentFigureBehaviour, set.NewHashSet[*figuresPlacement.FigurePosition, string](0))
+	return board.placeFigure(board.currentFigureBehaviour, set.NewHashSet[*figures.FigurePosition, string](0))
 }
 
-func (board *Chessboard) placeFigure(behaviour figures.FigureBehaviour, previousFigureBoards *set.HashSet[*figuresPlacement.FigurePosition, string]) *set.HashSet[*figuresPlacement.FigurePosition, string] {
+func (board *Chessboard) placeFigure(behaviour figures.FigureBehaviour, previousFigureBoards *set.HashSet[*figures.FigurePosition, string]) *set.HashSet[*figures.FigurePosition, string] {
 	// extract no need to put board param here
 	boards := board.figurePlacement.PlaceFigure(board.figureQuantityMap[behaviour.GetName()], behaviour, previousFigureBoards)
 
 	// check to calculate empty places in order to set proper size
-	var result = set.NewHashSet[*figuresPlacement.FigurePosition, string](boards.Size())
+	var result = set.NewHashSet[*figures.FigurePosition, string](boards.Size())
 
-	boards.ForEach(func(board *figuresPlacement.FigurePosition) bool {
+	boards.ForEach(func(board *figures.FigurePosition) bool {
 		result.Insert(board)
 		return true
 	})
@@ -43,7 +43,7 @@ func (board *Chessboard) placeFigure(behaviour figures.FigureBehaviour, previous
 type Chessboard struct {
 	figureQuantityMap      map[rune]int
 	currentFigureBehaviour figures.FigureBehaviour
-	figurePlacement        figuresPlacement.Placement
+	figurePlacement        figures.Placement
 }
 
 type ChessboardBuilder interface {

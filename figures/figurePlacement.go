@@ -1,7 +1,6 @@
-package figuresPlacement
+package figures
 
 import (
-	"Chessboard_in_Go/figures"
 	"fmt"
 	"strings"
 
@@ -41,7 +40,7 @@ func drawEmptyBoard() string {
 	return board.String()
 }
 
-func (p *Placement) PlaceFigure(numberOfFigures int, behaviour figures.FigureBehaviour, boards *set.HashSet[*FigurePosition, string]) *set.HashSet[*FigurePosition, string] {
+func (p *Placement) PlaceFigure(numberOfFigures int, behaviour FigureBehaviour, boards *set.HashSet[*FigurePosition, string]) *set.HashSet[*FigurePosition, string] {
 	for i := 0; i < numberOfFigures; i++ {
 		if boards.Size() == 0 {
 			boards = p.PlaceFiguresOnEmptyBoard(drawEmptyBoard(), behaviour)
@@ -52,7 +51,7 @@ func (p *Placement) PlaceFigure(numberOfFigures int, behaviour figures.FigureBeh
 	return boards
 }
 
-func (p *Placement) placeFiguresOnBoard(boards *set.HashSet[*FigurePosition, string], behaviour figures.FigureBehaviour) *set.HashSet[*FigurePosition, string] {
+func (p *Placement) placeFiguresOnBoard(boards *set.HashSet[*FigurePosition, string], behaviour FigureBehaviour) *set.HashSet[*FigurePosition, string] {
 	var resultingBoards = set.NewHashSet[*FigurePosition, string](boards.Size() * boards.Size())
 
 	boards.ForEach(func(position *FigurePosition) bool {
@@ -67,25 +66,6 @@ func (p *Placement) placeFiguresOnBoard(boards *set.HashSet[*FigurePosition, str
 	return resultingBoards
 }
 
-func (p *Placement) PlaceFiguresOnEmptyBoard(board string, behaviour figures.FigureBehaviour) *set.HashSet[*FigurePosition, string] {
-
-	countOfEmptyPlaces := 0
-	for i := 0; i < len(board); i++ {
-		if board[i] == emptyField {
-			countOfEmptyPlaces++
-		}
-	}
-
-	hashSetOfBoards := set.NewHashSet[*FigurePosition, string](countOfEmptyPlaces)
-
-	for i := 0; i < len(board); i++ {
-		if board[i] == emptyField {
-			out := []rune(board)
-			out[i] = behaviour.GetName()
-			boardWithFigure := string(out)
-
-			hashSetOfBoards.Insert(&FigurePosition{boardWithFigure, i})
-		}
-	}
-	return hashSetOfBoards
+func (p *Placement) PlaceFiguresOnEmptyBoard(board string, behaviour FigureBehaviour) *set.HashSet[*FigurePosition, string] {
+	return behaviour.Handle(board)
 }
