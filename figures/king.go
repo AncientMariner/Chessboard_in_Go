@@ -49,11 +49,11 @@ func placeDiagonallyAbove(out []rune, position int) {
 
 func placeDiagonallyBelow(out []rune, position int) {
 	diagBelowRight := position + defaultDimension + 1 + 1
-	if position < len(out)-defaultDimension-1 && out[diagBelowRight] == emptyField {
+	if position < len(out)-defaultDimension-1 && diagBelowRight < len(out) && out[diagBelowRight] == emptyField {
 		out[diagBelowRight] = attackPlace
 	}
 	diagBelowLeft := position + defaultDimension + 1 - 1
-	if position < len(out)-defaultDimension-1 && out[diagBelowLeft] == emptyField {
+	if position < len(out)-defaultDimension-1 && diagBelowLeft < len(out) && out[diagBelowLeft] == emptyField {
 		out[diagBelowLeft] = attackPlace
 	}
 }
