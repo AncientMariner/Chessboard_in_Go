@@ -37,23 +37,35 @@ func (king *King) Handle(board string) *set.HashSet[*FigurePosition, string] {
 }
 
 func placeDiagonallyAbove(out []rune, position int) {
-	diagAboveRight := position - defaultDimension - 1 + 1
-	if position >= defaultDimension+1 && out[diagAboveRight] == emptyField {
+	if position == defaultDimension || position%(defaultDimension+1) == defaultDimension {
+		return
+	}
+	positionOneLineAbove := position - defaultDimension - 1
+
+	diagAboveRight := positionOneLineAbove + 1
+	previousLineExists := position >= defaultDimension+1
+
+	if previousLineExists && out[diagAboveRight] == emptyField {
 		out[diagAboveRight] = attackPlace
 	}
-	diagAboveLeft := position - defaultDimension - 1 - 1
-	if position >= defaultDimension+1 && diagAboveLeft >= 0 && out[diagAboveLeft] == emptyField {
+	diagAboveLeft := positionOneLineAbove - 1
+	if previousLineExists && (position-1)%defaultDimension != 0 && diagAboveLeft >= 0 && out[diagAboveLeft] == emptyField {
 		out[diagAboveLeft] = attackPlace
 	}
 }
 
 func placeDiagonallyBelow(out []rune, position int) {
+	if position == defaultDimension || position%(defaultDimension+1) == defaultDimension {
+		return
+	}
 	diagBelowRight := position + defaultDimension + 1 + 1
-	if position < len(out)-defaultDimension-1 && diagBelowRight < len(out) && out[diagBelowRight] == emptyField {
+	diagBelowLeft := position + defaultDimension + 1 - 1
+	isOneBeforeLastLine := position < len(out)-defaultDimension-1
+
+	if isOneBeforeLastLine && diagBelowRight < len(out) && out[diagBelowRight] == emptyField {
 		out[diagBelowRight] = attackPlace
 	}
-	diagBelowLeft := position + defaultDimension + 1 - 1
-	if position < len(out)-defaultDimension-1 && diagBelowLeft < len(out) && out[diagBelowLeft] == emptyField {
+	if isOneBeforeLastLine && position%defaultDimension != 0 && diagBelowLeft < len(out) && out[diagBelowLeft] == emptyField {
 		out[diagBelowLeft] = attackPlace
 	}
 }
@@ -70,6 +82,9 @@ func placeAttackPlacesVertically(out []rune, position int) {
 }
 
 func placeAttackPlacesHorizontally(out []rune, position int) {
+	if position == defaultDimension || position%(defaultDimension+1) == defaultDimension {
+		return
+	}
 	previousPosition := position - 1
 	if previousPosition >= 0 && out[previousPosition] == emptyField {
 		out[previousPosition] = attackPlace
