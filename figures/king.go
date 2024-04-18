@@ -25,10 +25,10 @@ func (king *King) Handle(board string) *set.HashSet[*FigurePosition, string] {
 
 			out[i] = king.GetName()
 
-			placeAttackPlacesHorizontally(out, i)
-			placeAttackPlacesVertically(out, i)
-			placeDiagonallyAbove(out, i)
-			placeDiagonallyBelow(out, i)
+			king.placeAttackPlacesHorizontally(out, i)
+			king.placeAttackPlacesVertically(out, i)
+			king.placeDiagonallyAbove(out, i)
+			king.placeDiagonallyBelow(out, i)
 
 			hashSetOfBoards.Insert(&FigurePosition{string(out), i})
 		}
@@ -36,7 +36,7 @@ func (king *King) Handle(board string) *set.HashSet[*FigurePosition, string] {
 	return hashSetOfBoards
 }
 
-func placeDiagonallyAbove(out []rune, position int) {
+func (king *King) placeDiagonallyAbove(out []rune, position int) {
 	if position == defaultDimension || position%(defaultDimension+1) == defaultDimension {
 		return
 	}
@@ -54,7 +54,7 @@ func placeDiagonallyAbove(out []rune, position int) {
 	}
 }
 
-func placeDiagonallyBelow(out []rune, position int) {
+func (king *King) placeDiagonallyBelow(out []rune, position int) {
 	if position == defaultDimension || position%(defaultDimension+1) == defaultDimension {
 		return
 	}
@@ -70,7 +70,7 @@ func placeDiagonallyBelow(out []rune, position int) {
 	}
 }
 
-func placeAttackPlacesVertically(out []rune, position int) {
+func (king *King) placeAttackPlacesVertically(out []rune, position int) {
 	positionAbove := position - defaultDimension - 1
 	if position >= defaultDimension+1 && out[positionAbove] == emptyField {
 		out[positionAbove] = attackPlace
@@ -81,7 +81,7 @@ func placeAttackPlacesVertically(out []rune, position int) {
 	}
 }
 
-func placeAttackPlacesHorizontally(out []rune, position int) {
+func (king *King) placeAttackPlacesHorizontally(out []rune, position int) {
 	if position == defaultDimension || position%(defaultDimension+1) == defaultDimension {
 		return
 	}
