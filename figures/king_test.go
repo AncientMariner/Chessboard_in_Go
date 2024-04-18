@@ -1,7 +1,6 @@
 package figures
 
 import (
-	"github.com/hashicorp/go-set/v2"
 	"reflect"
 	"testing"
 )
@@ -36,21 +35,24 @@ func TestKing_Handle(t *testing.T) {
 	type args struct {
 		board string
 	}
+
 	tests := []struct {
 		name   string
 		fields fields
 		args   args
-		want   *set.HashSet[*FigurePosition, string]
+		want   int
 	}{
-		// TODO: Add test cases.
+		{"Test handle board size 8", fields{Figure{next: nil}}, args{board: "____\n"}, 4},
+		{"Test handle board size 8", fields{Figure{next: nil}}, args{board: "________\n"}, 8},
+		{"Test handle board size 64", fields{Figure{next: nil}}, args{board: "________\n________\n________\n________\n________\n________\n________\n________\n"}, 64},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			king := &King{
 				Figure: tt.fields.Figure,
 			}
-			if got := king.Handle(tt.args.board); !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("Handle() = %v, want %v", got, tt.want)
+			if got := king.Handle(tt.args.board); got.Size() != tt.want {
+				t.Errorf("Handle() size = %v, want %v", got, tt.want)
 			}
 		})
 	}
@@ -155,7 +157,11 @@ func Test_placeAttackPlacesVertically(t *testing.T) {
 			out:      []rune{'_', '_', '_', '_', '_', '_', '_', '_', '\n', '_', '_', '_', '_', '_', '_', '_', '_', '\n', '_', '_', '_', '_', '_', '_', '_', '_', '\n'},
 			position: 9,
 		}, []rune{'x', '_', '_', '_', '_', '_', '_', '_', '\n', '_', '_', '_', '_', '_', '_', '_', '_', '\n', 'x', '_', '_', '_', '_', '_', '_', '_', '\n'}},
-		{"Test vertically one above", args{
+		{"Test vertically one above and below", args{
+			out:      []rune{'_', '_', '_', '_', '_', '_', '_', '_', '\n', '_', '_', '_', '_', '_', '_', '_', '_', '\n', '_', '_', '_', '_', '_', '_', '_', '_', '\n'},
+			position: 16,
+		}, []rune{'_', '_', '_', '_', '_', '_', '_', 'x', '\n', '_', '_', '_', '_', '_', '_', '_', '_', '\n', '_', '_', '_', '_', '_', '_', '_', 'x', '\n'}},
+		{"Test vertically non existing case", args{
 			out:      []rune{'_', '_', '_', '_', '_', '_', '_', '_', '\n', '_', '_', '_', '_', '_', '_', '_', '_', '\n', '_', '_', '_', '_', '_', '_', '_', '_', '\n'},
 			position: 17,
 		}, []rune{'_', '_', '_', '_', '_', '_', '_', '_', '\n', '_', '_', '_', '_', '_', '_', '_', '_', '\n', '_', '_', '_', '_', '_', '_', '_', '_', '\n'}},
@@ -196,7 +202,7 @@ func Test_placeDiagonallyAbove(t *testing.T) {
 			out:      []rune{'_', '_', '_', '_', '_', '_', '_', '_', '\n', '_', '_', '_', '_', '_', '_', '_', '_', '\n'},
 			position: 7,
 		}, []rune{'_', '_', '_', '_', '_', '_', '_', '_', '\n', '_', '_', '_', '_', '_', '_', '_', '_', '\n'}},
-		{"Test diag 1 above", args{
+		{"Test diag 1 above non existing case", args{
 			out:      []rune{'_', '_', '_', '_', '_', '_', '_', '_', '\n', '_', '_', '_', '_', '_', '_', '_', '_', '\n'},
 			position: 8,
 		}, []rune{'_', '_', '_', '_', '_', '_', '_', '_', '\n', '_', '_', '_', '_', '_', '_', '_', '_', '\n'}},
@@ -216,7 +222,7 @@ func Test_placeDiagonallyAbove(t *testing.T) {
 			out:      []rune{'_', '_', '_', '_', '_', '_', '_', '_', '\n', '_', '_', '_', '_', '_', '_', '_', '_', '\n'},
 			position: 16,
 		}, []rune{'_', '_', '_', '_', '_', '_', 'x', '_', '\n', '_', '_', '_', '_', '_', '_', '_', '_', '\n'}},
-		{"Test diag above", args{
+		{"Test diag above non existing case", args{
 			out:      []rune{'_', '_', '_', '_', '_', '_', '_', '_', '\n', '_', '_', '_', '_', '_', '_', '_', '_', '\n'},
 			position: 17,
 		}, []rune{'_', '_', '_', '_', '_', '_', '_', '_', '\n', '_', '_', '_', '_', '_', '_', '_', '_', '\n'}},
@@ -257,7 +263,7 @@ func Test_placeDiagonallyBelow(t *testing.T) {
 			out:      []rune{'_', '_', '_', '_', '_', '_', '_', '_', '\n', '_', '_', '_', '_', '_', '_', '_', '_', '\n'},
 			position: 7,
 		}, []rune{'_', '_', '_', '_', '_', '_', '_', '_', '\n', '_', '_', '_', '_', '_', '_', 'x', '_', '\n'}},
-		{"Test diag below", args{
+		{"Test diag below non existing case", args{
 			out:      []rune{'_', '_', '_', '_', '_', '_', '_', '_', '\n', '_', '_', '_', '_', '_', '_', '_', '_', '\n'},
 			position: 8,
 		}, []rune{'_', '_', '_', '_', '_', '_', '_', '_', '\n', '_', '_', '_', '_', '_', '_', '_', '_', '\n'}},
@@ -269,7 +275,7 @@ func Test_placeDiagonallyBelow(t *testing.T) {
 			out:      []rune{'_', '_', '_', '_', '_', '_', '_', '_', '\n', '_', '_', '_', '_', '_', '_', '_', '_', '\n', '_', '_', '_', '_', '_', '_', '_', '_', '\n'},
 			position: 16,
 		}, []rune{'_', '_', '_', '_', '_', '_', '_', '_', '\n', '_', '_', '_', '_', '_', '_', '_', '_', '\n', '_', '_', '_', '_', '_', '_', '_', '_', '\n'}},
-		{"Test diag below", args{
+		{"Test diag below non existing case", args{
 			out:      []rune{'_', '_', '_', '_', '_', '_', '_', '_', '\n', '_', '_', '_', '_', '_', '_', '_', '_', '\n', '_', '_', '_', '_', '_', '_', '_', '_', '\n'},
 			position: 17,
 		}, []rune{'_', '_', '_', '_', '_', '_', '_', '_', '\n', '_', '_', '_', '_', '_', '_', '_', '_', '\n', '_', '_', '_', '_', '_', '_', '_', '_', '\n'}},
@@ -277,6 +283,10 @@ func Test_placeDiagonallyBelow(t *testing.T) {
 			out:      []rune{'_', '_', '_', '_', '_', '_', '_', '_', '\n', '_', '_', '_', '_', '_', '_', '_', '_', '\n', '_', '_', '_', '_', '_', '_', '_', '_', '\n', '_', '_', '_', '_', '_', '_', '_', '_', '\n'},
 			position: 18,
 		}, []rune{'_', '_', '_', '_', '_', '_', '_', '_', '\n', '_', '_', '_', '_', '_', '_', '_', '_', '\n', '_', '_', '_', '_', '_', '_', '_', '_', '\n', '_', 'x', '_', '_', '_', '_', '_', '_', '\n'}},
+		{"Test diag below", args{
+			out:      []rune{'_', '_', '_', '_', '_', '_', '_', '_', '\n', '_', '_', '_', '_', '_', '_', '_', '_', '\n', '_', '_', '_', '_', '_', '_', '_', '_', '\n', '_', '_', '_', '_', '_', '_', '_', '_', '\n'},
+			position: 19,
+		}, []rune{'_', '_', '_', '_', '_', '_', '_', '_', '\n', '_', '_', '_', '_', '_', '_', '_', '_', '\n', '_', '_', '_', '_', '_', '_', '_', '_', '\n', 'x', '_', 'x', '_', '_', '_', '_', '_', '\n'}},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
