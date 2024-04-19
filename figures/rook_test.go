@@ -124,7 +124,7 @@ func TestRook_placeAttackPlacesHorizontally(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			(&Rook{}).placeAttackPlacesHorizontally(tt.args.out, tt.args.position)
 			if !reflect.DeepEqual(tt.args.out, tt.want) {
-				t.Errorf("placeAttackPlacesHorizontally() = %v, want %v", tt.args.out, tt.want)
+				t.Errorf("placeAttackPlacesDiagonallyBelow() = %v, want %v", tt.args.out, tt.want)
 			}
 		})
 	}

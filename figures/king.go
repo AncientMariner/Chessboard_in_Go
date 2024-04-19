@@ -60,12 +60,12 @@ func (king *King) placeDiagonallyBelow(out []rune, position int) {
 	}
 	diagBelowRight := position + defaultDimension + 1 + 1
 	diagBelowLeft := position + defaultDimension + 1 - 1
-	isOneBeforeLastLine := position < len(out)-defaultDimension-1
+	isNotLastLine := position < len(out)-defaultDimension-1
 
-	if isOneBeforeLastLine && diagBelowRight < len(out) && out[diagBelowRight] == emptyField {
+	if isNotLastLine && diagBelowRight < len(out) && out[diagBelowRight] == emptyField {
 		out[diagBelowRight] = attackPlace
 	}
-	if isOneBeforeLastLine && position%defaultDimension != 0 && diagBelowLeft < len(out) && out[diagBelowLeft] == emptyField {
+	if isNotLastLine && position%defaultDimension != 0 && diagBelowLeft < len(out) && out[diagBelowLeft] == emptyField {
 		out[diagBelowLeft] = attackPlace
 	}
 }
