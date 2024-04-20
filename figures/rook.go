@@ -23,36 +23,68 @@ func (rook *Rook) Handle(board string) *set.HashSet[*FigurePosition, string] {
 		if board[i] == emptyField {
 			out := []rune(board)
 
-			out[i] = rook.GetName()
-
-			rook.placeAttackPlacesHorizontally(out, i)
+			isPossibleToPlaceHorizontally := rook.placeAttackPlacesHorizontally(out, i)
 			rook.placeAttackPlacesVertically(out, i)
-
-			hashSetOfBoards.Insert(&FigurePosition{string(out), i})
+			if isPossibleToPlaceHorizontally {
+				out[i] = rook.GetName()
+				hashSetOfBoards.Insert(&FigurePosition{string(out), i})
+			}
 		}
 	}
-
 	return hashSetOfBoards
 }
 
-func (rook *Rook) placeAttackPlacesHorizontally(out []rune, position int) {
+func (rook *Rook) placeAttackPlacesHorizontally(out []rune, position int) bool {
 	if position >= len(out) || position == defaultDimension || position%(defaultDimension+1) == defaultDimension {
-		return
+		return false
 	}
 
-	var counterOfLeftPositions = (position) % (defaultDimension + 1)
+	if isAnotherFigurePresentOnTheLine(out, position) {
+		return false
+	} else {
 
-	for previousPosition := position - 1; counterOfLeftPositions >= 0 && previousPosition >= 0 && out[previousPosition] == emptyField; counterOfLeftPositions-- {
-		out[previousPosition] = attackPlace
+		var counterOfLeftPositions = (position) % (defaultDimension + 1)
+		var counterOfRightPositions = defaultDimension - ((position) % (defaultDimension + 1)) - 1
+
+		for previousPosition := position - 1; counterOfLeftPositions >= 0 && previousPosition >= 0; counterOfLeftPositions-- {
+			if out[previousPosition] == emptyField {
+				out[previousPosition] = attackPlace
+			}
+			previousPosition--
+		}
+
+		for nextPosition := position + 1; counterOfRightPositions >= 0 && nextPosition < len(out); counterOfRightPositions-- {
+			if out[nextPosition] == emptyField {
+				out[nextPosition] = attackPlace
+			}
+			nextPosition++
+		}
+		return true
+	}
+}
+
+// todo test
+func isAnotherFigurePresentOnTheLine(out []rune, position int) bool {
+	var counterOfLeftPositions = (position) % (defaultDimension + 1)
+	var counterOfRightPositions = defaultDimension - ((position) % (defaultDimension + 1)) - 1
+
+	var previousPositionNumbers []int
+	var nextPositionNumbers []int
+
+	for previousPosition := position - 1; counterOfLeftPositions >= 0 && previousPosition >= 0; counterOfLeftPositions-- {
+		if out[previousPosition] == emptyField || out[previousPosition] == attackPlace {
+			previousPositionNumbers = append(previousPositionNumbers, previousPosition)
+		}
 		previousPosition--
 	}
 
-	var counterOfRightPositions = defaultDimension - ((position) % (defaultDimension + 1)) - 1
-
-	for nextPosition := position + 1; counterOfRightPositions >= 0 && nextPosition < len(out) && out[nextPosition] == emptyField; counterOfRightPositions-- {
-		out[nextPosition] = attackPlace
+	for nextPosition := position + 1; counterOfRightPositions >= 0 && nextPosition < len(out); counterOfRightPositions-- {
+		if out[nextPosition] == emptyField || out[nextPosition] == attackPlace {
+			nextPositionNumbers = append(nextPositionNumbers, nextPosition)
+		}
 		nextPosition++
 	}
+	return len(previousPositionNumbers)+len(nextPositionNumbers) < 7
 }
 
 func (rook *Rook) placeAttackPlacesVertically(out []rune, position int) {
