@@ -63,7 +63,6 @@ func (rook *Rook) placeAttackPlacesHorizontally(out []rune, position int) bool {
 	}
 }
 
-// todo test
 func isAnotherFigurePresentOnTheLine(out []rune, position int) bool {
 	var counterOfLeftPositions = (position) % (defaultDimension + 1)
 	var counterOfRightPositions = defaultDimension - ((position) % (defaultDimension + 1)) - 1
