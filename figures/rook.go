@@ -1,6 +1,7 @@
 package figures
 
 import (
+	"fmt"
 	"github.com/hashicorp/go-set/v2"
 )
 
@@ -39,7 +40,7 @@ func (rook *Rook) placeAttackPlacesHorizontally(out []rune, position int) bool {
 		return false
 	}
 
-	if isAnotherFigurePresentOnTheLine(out, position) {
+	if isAnotherFigurePresentOnTheLineHorizontally(out, position) {
 		return false
 	} else {
 
@@ -63,7 +64,7 @@ func (rook *Rook) placeAttackPlacesHorizontally(out []rune, position int) bool {
 	}
 }
 
-func isAnotherFigurePresentOnTheLine(out []rune, position int) bool {
+func isAnotherFigurePresentOnTheLineHorizontally(out []rune, position int) bool {
 	var counterOfLeftPositions = (position) % (defaultDimension + 1)
 	var counterOfRightPositions = defaultDimension - ((position) % (defaultDimension + 1)) - 1
 
@@ -84,6 +85,26 @@ func isAnotherFigurePresentOnTheLine(out []rune, position int) bool {
 		nextPosition++
 	}
 	return len(previousPositionNumbers)+len(nextPositionNumbers) < 7
+}
+
+func isAnotherFigurePresentOnTheLineVertically(out []rune, position int) bool {
+	numberOfLines := len(out) / (defaultDimension + 1)
+
+	currentLine := 0
+
+	if position <= defaultDimension {
+		currentLine = 1
+	} else {
+		currentLine = position/defaultDimension + 1
+	}
+
+	var counterBelowLines = numberOfLines - currentLine
+	// var counterOfRightPositions = defaultDimension - ((position) % (defaultDimension + 1)) - 1
+	//
+	// var previousPositionNumbers []int
+	// var nextPositionNumbers []int
+	fmt.Println(counterBelowLines)
+	return false
 }
 
 func (rook *Rook) placeAttackPlacesVertically(out []rune, position int) {
