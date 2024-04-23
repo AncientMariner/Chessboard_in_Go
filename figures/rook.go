@@ -1,7 +1,6 @@
 package figures
 
 import (
-	"fmt"
 	"github.com/hashicorp/go-set/v2"
 )
 
@@ -40,7 +39,7 @@ func (rook *Rook) placeAttackPlacesHorizontally(out []rune, position int) bool {
 		return false
 	}
 
-	if isAnotherFigurePresentOnTheLineHorizontally(out, position) {
+	if isAnotherFigurePresentOnTheLine(out, position) {
 		return false
 	} else {
 
@@ -64,7 +63,7 @@ func (rook *Rook) placeAttackPlacesHorizontally(out []rune, position int) bool {
 	}
 }
 
-func isAnotherFigurePresentOnTheLineHorizontally(out []rune, position int) bool {
+func isAnotherFigurePresentOnTheLine(out []rune, position int) bool {
 	var counterOfLeftPositions = (position) % (defaultDimension + 1)
 	var counterOfRightPositions = defaultDimension - ((position) % (defaultDimension + 1)) - 1
 
@@ -87,24 +86,28 @@ func isAnotherFigurePresentOnTheLineHorizontally(out []rune, position int) bool 
 	return len(previousPositionNumbers)+len(nextPositionNumbers) < 7
 }
 
-func isAnotherFigurePresentOnTheLineVertically(out []rune, position int) bool {
+func isAnotherFigurePresentOnTheColumn(out []rune, position int) bool {
 	numberOfLines := len(out) / (defaultDimension + 1)
+	currentLine := position / (defaultDimension + 1)
 
-	currentLine := 0
-
-	if position <= defaultDimension {
-		currentLine = 1
-	} else {
-		currentLine = position/defaultDimension + 1
+	var aboveLineNumbers []int
+	counterAboveLines := currentLine
+	for previousLinePosition := position - defaultDimension - 1; previousLinePosition > 0 && counterAboveLines > 0; counterAboveLines-- {
+		if out[previousLinePosition] == emptyField || out[previousLinePosition] == attackPlace {
+			aboveLineNumbers = append(aboveLineNumbers, previousLinePosition)
+		}
+		previousLinePosition = previousLinePosition - defaultDimension - 1
 	}
+	var counterBelowLines = numberOfLines - currentLine - 1
+	var belowLineNumbers []int
 
-	var counterBelowLines = numberOfLines - currentLine
-	// var counterOfRightPositions = defaultDimension - ((position) % (defaultDimension + 1)) - 1
-	//
-	// var previousPositionNumbers []int
-	// var nextPositionNumbers []int
-	fmt.Println(counterBelowLines)
-	return false
+	for nextLinePosition := position + defaultDimension + 1; nextLinePosition < len(out) && counterBelowLines > 0; counterBelowLines-- {
+		if out[nextLinePosition] == emptyField || out[nextLinePosition] == attackPlace {
+			belowLineNumbers = append(belowLineNumbers, nextLinePosition)
+		}
+		nextLinePosition = nextLinePosition + defaultDimension + 1
+	}
+	return len(aboveLineNumbers)+len(belowLineNumbers) < 7
 }
 
 func (rook *Rook) placeAttackPlacesVertically(out []rune, position int) {
