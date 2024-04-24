@@ -16,21 +16,19 @@ func (bishop *Bishop) Handle(board string) *set.HashSet[*FigurePosition, string]
 
 	hashSetOfBoards := set.NewHashSet[*FigurePosition, string](countOfEmptyPlaces)
 
-	for i := 0; i < len(board); i++ {
+	for i := 0; i < len(board) && len(board) == ((defaultDimension+1)*defaultDimension); i++ {
 		if board[i] == emptyField {
 			out := []rune(board)
 
-			out[i] = bishop.GetName()
-
-			bishop.placeAttackPlacesDiagonallyAbove(out, i)
-			bishop.placeAttackPlacesDiagonallyBelow(out, i)
-
-			hashSetOfBoards.Insert(&FigurePosition{string(out), i})
+			if !isAnotherFigurePresentDiag(out, i) {
+				bishop.placeAttackPlacesDiagonallyAbove(out, i)
+				bishop.placeAttackPlacesDiagonallyBelow(out, i)
+				out[i] = bishop.GetName()
+				hashSetOfBoards.Insert(&FigurePosition{string(out), i})
+			}
 		}
 	}
-
 	return hashSetOfBoards
-
 }
 
 func (bishop *Bishop) placeAttackPlacesDiagonallyBelow(out []rune, position int) {
@@ -77,32 +75,30 @@ func isAnotherFigurePresentDiag(out []rune, position int) bool {
 
 	var diagNumbers []int
 
-	// check diag left and right is not in the same line
-
 	previousLinePositionLeft := position - defaultDimension - 1 - 1
 	previousLinePositionRight := position - defaultDimension - 1 + 1
 	for counterAboveLines := currentLine; previousLinePositionLeft >= 0 && previousLinePositionRight >= 0 && counterAboveLines > 0; counterAboveLines-- {
-		// if out[previousLinePositionRight] == emptyField || out[previousLinePositionRight] == attackPlace {
-		diagNumbers = append(diagNumbers, previousLinePositionRight)
-		previousLinePositionRight = previousLinePositionRight - defaultDimension - 1 + 1
-		// }
-		// if out[previousLinePositionLeft] == emptyField || out[previousLinePositionLeft] == attackPlace {
-		diagNumbers = append(diagNumbers, previousLinePositionLeft)
-		previousLinePositionLeft = previousLinePositionLeft - defaultDimension - 1 - 1
-		// }
+		if out[previousLinePositionRight] != '\n' {
+			diagNumbers = append(diagNumbers, previousLinePositionRight)
+			previousLinePositionRight = previousLinePositionRight - defaultDimension - 1 + 1
+		}
+		if out[previousLinePositionLeft] != '\n' {
+			diagNumbers = append(diagNumbers, previousLinePositionLeft)
+			previousLinePositionLeft = previousLinePositionLeft - defaultDimension - 1 - 1
+		}
 	}
 
 	nextLinePositionLeft := position + defaultDimension + 1 - 1
 	nextLinePositionRight := position + defaultDimension + 1 + 1
 	for counterBelowLines := numberOfLines - currentLine - 1; nextLinePositionRight < len(out) && nextLinePositionLeft < len(out) && counterBelowLines > 0; counterBelowLines-- {
-		// if out[nextLinePositionRight] == emptyField || out[nextLinePositionRight] == attackPlace {
-		diagNumbers = append(diagNumbers, nextLinePositionRight)
-		nextLinePositionRight = nextLinePositionRight + defaultDimension + 1 + 1
-		// }
-		// if out[nextLinePositionLeft] == emptyField || out[nextLinePositionLeft] == attackPlace {
-		diagNumbers = append(diagNumbers, nextLinePositionLeft)
-		nextLinePositionLeft = nextLinePositionLeft + defaultDimension + 1 - 1
-		// }
+		if out[nextLinePositionRight] != '\n' {
+			diagNumbers = append(diagNumbers, nextLinePositionRight)
+			nextLinePositionRight = nextLinePositionRight + defaultDimension + 1 + 1
+		}
+		if out[nextLinePositionLeft] != '\n' {
+			diagNumbers = append(diagNumbers, nextLinePositionLeft)
+			nextLinePositionLeft = nextLinePositionLeft + defaultDimension + 1 - 1
+		}
 	}
 
 	for _, number := range diagNumbers {
