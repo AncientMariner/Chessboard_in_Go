@@ -19,13 +19,13 @@ func (rook *Rook) Handle(board string) *set.HashSet[*FigurePosition, string] {
 
 	hashSetOfBoards := set.NewHashSet[*FigurePosition, string](countOfEmptyPlaces)
 
-	for i := 0; i < len(board); i++ {
+	for i := 0; i < len(board) && len(board) == ((defaultDimension+1)*defaultDimension); i++ {
 		if board[i] == emptyField {
 			out := []rune(board)
 
-			isPossibleToPlaceHorizontally := rook.placeAttackPlacesHorizontally(out, i)
-			isPossibleToPlaceVertically := rook.placeAttackPlacesVertically(out, i)
-			if isPossibleToPlaceHorizontally && isPossibleToPlaceVertically {
+			if !isAnotherFigurePresentOnTheLine(out, i) && !isAnotherFigurePresentOnTheColumn(out, i) {
+				rook.placeAttackPlacesHorizontally(out, i)
+				rook.placeAttackPlacesVertically(out, i)
 				out[i] = rook.GetName()
 				hashSetOfBoards.Insert(&FigurePosition{string(out), i})
 			}
@@ -34,31 +34,26 @@ func (rook *Rook) Handle(board string) *set.HashSet[*FigurePosition, string] {
 	return hashSetOfBoards
 }
 
-func (rook *Rook) placeAttackPlacesHorizontally(out []rune, position int) bool {
+func (rook *Rook) placeAttackPlacesHorizontally(out []rune, position int) {
 	if position >= len(out) || position == defaultDimension || position%(defaultDimension+1) == defaultDimension {
-		return false
+		return
 	}
 
-	if isAnotherFigurePresentOnTheLine(out, position) {
-		return false
-	} else {
-		var counterOfLeftPositions = (position) % (defaultDimension + 1)
-		var counterOfRightPositions = defaultDimension - ((position) % (defaultDimension + 1)) - 1
+	var counterOfLeftPositions = (position) % (defaultDimension + 1)
+	var counterOfRightPositions = defaultDimension - ((position) % (defaultDimension + 1)) - 1
 
-		for previousPosition := position - 1; counterOfLeftPositions >= 0 && previousPosition >= 0; counterOfLeftPositions-- {
-			if out[previousPosition] == emptyField {
-				out[previousPosition] = attackPlace
-			}
-			previousPosition--
+	for previousPosition := position - 1; counterOfLeftPositions >= 0 && previousPosition >= 0; counterOfLeftPositions-- {
+		if out[previousPosition] == emptyField {
+			out[previousPosition] = attackPlace
 		}
+		previousPosition--
+	}
 
-		for nextPosition := position + 1; counterOfRightPositions >= 0 && nextPosition < len(out); counterOfRightPositions-- {
-			if out[nextPosition] == emptyField {
-				out[nextPosition] = attackPlace
-			}
-			nextPosition++
+	for nextPosition := position + 1; counterOfRightPositions >= 0 && nextPosition < len(out); counterOfRightPositions-- {
+		if out[nextPosition] == emptyField {
+			out[nextPosition] = attackPlace
 		}
-		return true
+		nextPosition++
 	}
 }
 
@@ -85,32 +80,27 @@ func isAnotherFigurePresentOnTheLine(out []rune, position int) bool {
 	return len(previousPositionNumbers)+len(nextPositionNumbers) < 7
 }
 
-func (rook *Rook) placeAttackPlacesVertically(out []rune, position int) bool {
+func (rook *Rook) placeAttackPlacesVertically(out []rune, position int) {
 	if position >= len(out) || position == defaultDimension || position%(defaultDimension+1) == defaultDimension {
-		return false
+		return
 	}
 
-	if isAnotherFigurePresentOnTheColumn(out, position) {
-		return false
-	} else {
-		positionAbove := position - defaultDimension - 1
+	positionAbove := position - defaultDimension - 1
 
-		for linesAbove := position / (defaultDimension + 1); linesAbove > 0; linesAbove-- {
-			if position >= defaultDimension+1 && positionAbove >= 0 && out[positionAbove] == emptyField {
-				out[positionAbove] = attackPlace
-				positionAbove = positionAbove - defaultDimension - 1
-			}
+	for linesAbove := position / (defaultDimension + 1); linesAbove > 0; linesAbove-- {
+		if position >= defaultDimension+1 && positionAbove >= 0 && out[positionAbove] == emptyField {
+			out[positionAbove] = attackPlace
+			positionAbove = positionAbove - defaultDimension - 1
 		}
+	}
 
-		positionBelow := position + defaultDimension + 1
+	positionBelow := position + defaultDimension + 1
 
-		for linesBelow := defaultDimension - position/(defaultDimension+1); linesBelow > 0; linesBelow-- {
-			if positionBelow < len(out) && position < len(out)-defaultDimension-1 && out[positionBelow] == emptyField {
-				out[positionBelow] = attackPlace
-				positionBelow = positionBelow + defaultDimension + 1
-			}
+	for linesBelow := defaultDimension - position/(defaultDimension+1); linesBelow > 0; linesBelow-- {
+		if positionBelow < len(out) && position < len(out)-defaultDimension-1 && out[positionBelow] == emptyField {
+			out[positionBelow] = attackPlace
+			positionBelow = positionBelow + defaultDimension + 1
 		}
-		return true
 	}
 }
 
