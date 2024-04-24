@@ -23,13 +23,12 @@ func (king *King) Handle(board string) *set.HashSet[*FigurePosition, string] {
 		if board[i] == emptyField {
 			out := []rune(board)
 
-			out[i] = king.GetName()
-
 			if !isAnotherFigurePresent(out, i) {
 				king.placeAttackPlacesHorizontally(out, i)
 				king.placeAttackPlacesVertically(out, i)
 				king.placeDiagonallyAbove(out, i)
 				king.placeDiagonallyBelow(out, i)
+				out[i] = king.GetName()
 
 				hashSetOfBoards.Insert(&FigurePosition{string(out), i})
 			}
