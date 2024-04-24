@@ -168,6 +168,10 @@ func Test_number_of_boards_with_1_figure(t *testing.T) {
 		{"Test empty board with 1 king 1 king", args{board: NewChessboard().withKing(1).withKing(1).Build()}, 1806},
 		{"Test empty board with 2 rook", args{board: NewChessboard().withRook(2).Build()}, 3080},
 		{"Test empty board with 1 rook 1 rook", args{board: NewChessboard().withRook(1).withRook(1).Build()}, 3080},
+		{"Test empty board with 2 bishop ", args{board: NewChessboard().withBishop(2).Build()}, 2436},
+		{"Test empty board with 1 bishop 1 bishop", args{board: NewChessboard().withBishop(1).withBishop(1).Build()}, 2436},
+		{"Test empty board with 1 king 1 rook", args{board: NewChessboard().withKing(1).withBishop(1).Build()}, 3251},
+		{"Test empty board with 1 bishop 1 king", args{board: NewChessboard().withBishop(1).withKing(1).Build()}, 3248},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
