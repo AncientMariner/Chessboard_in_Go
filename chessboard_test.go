@@ -164,7 +164,17 @@ func Test_number_of_boards_with_1_figure(t *testing.T) {
 		want int
 	}{
 		{"Test empty board with 1 king", args{board: NewChessboard().withKing(1).Build()}, 64},
-		// {"Test empty board with 1 queen", args{board: NewChessboard().withQueen(1).Build()}, 64},
+		{"Test empty board with 1 king 1 king", args{board: NewChessboard().withKing(1).withKing(1).Build()}, 3612},
+		{"Test empty board with 2 king", args{board: NewChessboard().withKing(2).Build()}, 3612},
+		{"Test empty board with 2 rook", args{board: NewChessboard().withRook(2).Build()}, 3136},
+		{"Test empty board with 1 rook 1 rook", args{board: NewChessboard().withRook(1).withRook(1).Build()}, 3136},
+		{"Test empty board with 1 king 1 rook", args{board: NewChessboard().withKing(1).withRook(1).Build()}, 2952},
+		{"Test empty board with 1 rook 1 king", args{board: NewChessboard().withRook(1).withKing(1).Build()}, 2952},
+		{"Test empty board with 1 king 2 rook", args{board: NewChessboard().withKing(1).withRook(2).Build()}, 99774},
+		{"Test empty board with 1 king 1 rook 1 rook", args{board: NewChessboard().withKing(1).withRook(1).withRook(1).Build()}, 99774},
+		{"Test empty board with 1 rook 1 king 1 rook", args{board: NewChessboard().withRook(1).withKing(1).withRook(1).Build()}, 99774},
+		{"Test empty board with 1 rook 1 rook 1 king", args{board: NewChessboard().withRook(1).withRook(1).withKing(1).Build()}, 103043},
+		{"Test empty board with 2 rook 1 king", args{board: NewChessboard().withRook(2).withKing(1).Build()}, 103043},
 		// {"Test empty board with 1 rook", args{board: NewChessboard().withRook(1).Build()}, 64},
 		// {"Test empty board with 1 knight", args{board: NewChessboard().withKnight(1).Build()}, 64},
 		// {"Test empty board with 1 bishop", args{board: NewChessboard().withBishop(1).Build()}, 64},
@@ -192,6 +202,9 @@ func Test_board_with_1_figure(t *testing.T) {
 	behaviour := &figures.King{}
 	behaviour.SetNext(&figures.Queen{})
 
+	figureBehaviour := &figures.King{}
+	figureBehaviour.SetNext(&figures.Rook{})
+
 	tests := []struct {
 		name   string
 		fields fields
@@ -199,6 +212,8 @@ func Test_board_with_1_figure(t *testing.T) {
 		want   int
 	}{
 		{"Test empty board with 1 king", fields{map[rune]int{(&figures.King{}).GetName(): 1}, &figures.King{}, figures.Placement{}}, args{&figures.King{}, set.NewHashSet[*figures.FigurePosition, string](0)}, 64},
+		{"Test empty board with 2 king", fields{map[rune]int{(&figures.King{}).GetName(): 2}, &figures.King{}, figures.Placement{}}, args{&figures.King{}, set.NewHashSet[*figures.FigurePosition, string](0)}, 3612},
+		{"Test empty board with 1 king 1 rook", fields{map[rune]int{(&figures.King{}).GetName(): 1, (&figures.Rook{}).GetName(): 1}, figureBehaviour, figures.Placement{}}, args{figureBehaviour, set.NewHashSet[*figures.FigurePosition, string](0)}, 2952},
 		// {"Test empty board with 1 king 1 queen", fields{map[rune]int{(&figures.King{}).GetName(): 1, (&figures.Queen{}).GetName(): 1}, behaviour, figures.Placement{}}, args{behaviour, set.NewHashSet[*figures.FigurePosition, string](0)}, 4032},
 	}
 	for _, tt := range tests {
