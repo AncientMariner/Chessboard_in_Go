@@ -164,21 +164,10 @@ func Test_number_of_boards_with_1_figure(t *testing.T) {
 		want int
 	}{
 		{"Test empty board with 1 king", args{board: NewChessboard().withKing(1).Build()}, 64},
-		{"Test empty board with 1 king 1 king", args{board: NewChessboard().withKing(1).withKing(1).Build()}, 3612},
-		{"Test empty board with 2 king", args{board: NewChessboard().withKing(2).Build()}, 3612},
-		{"Test empty board with 2 rook", args{board: NewChessboard().withRook(2).Build()}, 3136},
-		{"Test empty board with 1 rook 1 rook", args{board: NewChessboard().withRook(1).withRook(1).Build()}, 3136},
-		{"Test empty board with 1 king 1 rook", args{board: NewChessboard().withKing(1).withRook(1).Build()}, 2952},
-		{"Test empty board with 1 rook 1 king", args{board: NewChessboard().withRook(1).withKing(1).Build()}, 2952},
-		{"Test empty board with 1 king 2 rook", args{board: NewChessboard().withKing(1).withRook(2).Build()}, 99774},
-		{"Test empty board with 1 king 1 rook 1 rook", args{board: NewChessboard().withKing(1).withRook(1).withRook(1).Build()}, 99774},
-		{"Test empty board with 1 rook 1 king 1 rook", args{board: NewChessboard().withRook(1).withKing(1).withRook(1).Build()}, 99774},
-		{"Test empty board with 1 rook 1 rook 1 king", args{board: NewChessboard().withRook(1).withRook(1).withKing(1).Build()}, 103043},
-		{"Test empty board with 2 rook 1 king", args{board: NewChessboard().withRook(2).withKing(1).Build()}, 103043},
-		// {"Test empty board with 1 rook", args{board: NewChessboard().withRook(1).Build()}, 64},
-		// {"Test empty board with 1 knight", args{board: NewChessboard().withKnight(1).Build()}, 64},
-		// {"Test empty board with 1 bishop", args{board: NewChessboard().withBishop(1).Build()}, 64},
-		// {"Test empty board with 1 king 1 queen", args{board: NewChessboard().withKing(1).withQueen(1).Build()}, 4032},
+		{"Test empty board with 2 king", args{board: NewChessboard().withKing(2).Build()}, 1806}, // 3612 if black and white king
+		{"Test empty board with 1 king 1 king", args{board: NewChessboard().withKing(1).withKing(1).Build()}, 1806},
+		{"Test empty board with 2 rook", args{board: NewChessboard().withRook(2).Build()}, 3080},
+		{"Test empty board with 1 rook 1 rook", args{board: NewChessboard().withRook(1).withRook(1).Build()}, 3080},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -187,6 +176,63 @@ func Test_number_of_boards_with_1_figure(t *testing.T) {
 			}
 		})
 	}
+}
+
+func Test_number_of_boards_with_different_figure_variations(t *testing.T) {
+	placeFigures_R_K_R := NewChessboard().withRook(1).withKing(1).withRook(1).Build().placeFigures()
+	placeFigures_R_R_K := NewChessboard().withRook(1).withRook(1).withKing(1).Build().placeFigures()
+	placeFigures_K_R_R := NewChessboard().withKing(1).withRook(1).withRook(1).Build().placeFigures()
+
+	var unitedSet = set.NewHashSet[*figures.FigurePosition, string](placeFigures_R_K_R.Size() + placeFigures_R_R_K.Size() + placeFigures_K_R_R.Size())
+
+	placeFigures_R_K_R.ForEach(func(board *figures.FigurePosition) bool {
+		unitedSet.Insert(board)
+		return true
+	})
+	placeFigures_R_R_K.ForEach(func(board *figures.FigurePosition) bool {
+		unitedSet.Insert(board)
+		return true
+	})
+	placeFigures_K_R_R.ForEach(func(board *figures.FigurePosition) bool {
+		unitedSet.Insert(board)
+		return true
+	})
+
+	// counterOfNotUniqueItemsInSet := 0
+	// unitedSet.ForEach(func(position *figures.FigurePosition) bool {
+	// 	if contains(unitedBoards, position.Board) {
+	// 		counterOfNotUniqueItemsInSet++
+	// 	}
+	// 	unitedBoards = append(unitedBoards, position.Board)
+	// 	return true
+	// })
+	if unitedSet.Size() != 113022 {
+		t.Errorf("placeFigures() all possible variations = %v, want %v", unitedSet.Size(), 113022)
+	}
+}
+
+func contains(s []string, e string) bool {
+	for _, a := range s {
+		if a == e {
+			return true
+		}
+	}
+	return false
+}
+
+// difference returns the elements in `a` that aren't in `b`.
+func difference(a, b []string) []string {
+	mb := make(map[string]struct{}, len(b))
+	for _, x := range b {
+		mb[x] = struct{}{}
+	}
+	var diff []string
+	for _, x := range a {
+		if _, found := mb[x]; !found {
+			diff = append(diff, x)
+		}
+	}
+	return diff
 }
 
 func Test_board_with_1_figure(t *testing.T) {

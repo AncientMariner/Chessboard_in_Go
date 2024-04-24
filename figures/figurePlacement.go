@@ -2,6 +2,7 @@ package figures
 
 import (
 	"fmt"
+	"hash/fnv"
 	"strings"
 
 	"github.com/hashicorp/go-set/v2"
@@ -21,7 +22,9 @@ type FigurePosition struct {
 }
 
 func (e *FigurePosition) Hash() string {
-	return fmt.Sprintf("%s:%d", e.Board, e.number)
+	algorithm := fnv.New64()
+	algorithm.Write([]byte(e.Board + string(algorithm.Sum64())))
+	return fmt.Sprintf("%s:%d", e.Board, algorithm.Sum64())
 }
 
 const defaultDimension = 8
