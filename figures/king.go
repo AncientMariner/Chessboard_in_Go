@@ -19,21 +19,76 @@ func (king *King) Handle(board string) *set.HashSet[*FigurePosition, string] {
 
 	hashSetOfBoards := set.NewHashSet[*FigurePosition, string](countOfEmptyPlaces)
 
-	for i := 0; i < len(board); i++ {
+	for i := 0; i < len(board) && len(board) == ((defaultDimension+1)*defaultDimension); i++ {
 		if board[i] == emptyField {
 			out := []rune(board)
 
 			out[i] = king.GetName()
 
-			king.placeAttackPlacesHorizontally(out, i)
-			king.placeAttackPlacesVertically(out, i)
-			king.placeDiagonallyAbove(out, i)
-			king.placeDiagonallyBelow(out, i)
+			if !isAnotherFigurePresent(out, i) {
+				king.placeAttackPlacesHorizontally(out, i)
+				king.placeAttackPlacesVertically(out, i)
+				king.placeDiagonallyAbove(out, i)
+				king.placeDiagonallyBelow(out, i)
 
-			hashSetOfBoards.Insert(&FigurePosition{string(out), i})
+				hashSetOfBoards.Insert(&FigurePosition{string(out), i})
+			}
 		}
 	}
 	return hashSetOfBoards
+}
+
+func isAnotherFigurePresent(out []rune, position int) bool {
+
+	positionOneLineAbove := position - defaultDimension - 1
+	var positionsAround []int
+
+	diagAboveRight := positionOneLineAbove + 1
+	previousLineExists := position >= defaultDimension+1
+
+	if previousLineExists && out[diagAboveRight] != '\n' {
+		positionsAround = append(positionsAround, diagAboveRight)
+	}
+	diagAboveLeft := positionOneLineAbove - 1
+	if previousLineExists && (position-1)%defaultDimension != 0 && diagAboveLeft >= 0 && out[diagAboveLeft] != '\n' {
+		positionsAround = append(positionsAround, diagAboveLeft)
+	}
+
+	diagBelowRight := position + defaultDimension + 1 + 1
+	diagBelowLeft := position + defaultDimension + 1 - 1
+	isNotLastLine := position < len(out)-defaultDimension-1
+
+	if isNotLastLine && diagBelowRight < len(out) && out[diagBelowRight] != '\n' {
+		positionsAround = append(positionsAround, diagBelowRight)
+	}
+	if isNotLastLine && position%defaultDimension != 0 && diagBelowLeft < len(out) && out[diagBelowLeft] != '\n' {
+		positionsAround = append(positionsAround, diagBelowLeft)
+	}
+
+	previousPosition := position - 1
+	if previousPosition >= 0 && out[previousPosition] != '\n' {
+		positionsAround = append(positionsAround, previousPosition)
+	}
+	nextPosition := position + 1
+	if nextPosition < len(out) && out[nextPosition] != '\n' {
+		positionsAround = append(positionsAround, nextPosition)
+	}
+
+	positionAbove := position - defaultDimension - 1
+	if position >= defaultDimension+1 && out[positionAbove] != '\n' {
+		positionsAround = append(positionsAround, positionAbove)
+	}
+	positionBelow := position + defaultDimension + 1
+	if position < len(out)-defaultDimension-1 && out[positionBelow] != '\n' {
+		positionsAround = append(positionsAround, positionBelow)
+	}
+
+	for _, number := range positionsAround {
+		if out[number] != emptyField && out[number] != attackPlace && out[number] != '\n' {
+			return true
+		}
+	}
+	return false
 }
 
 func (king *King) placeDiagonallyAbove(out []rune, position int) {

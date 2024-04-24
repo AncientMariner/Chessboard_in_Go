@@ -50,8 +50,8 @@ func TestBishop_Handle(t *testing.T) {
 		{"Test handle board with kings size 20", fields{Figure{next: nil}}, args{board: "xxx_____\nxkx_____\nxxxxxx__\n___xkx__\n___xxx__\n__xxxxxx\n__xkxxkx\n__xxxxxx\n"}, 20},
 		{"Test handle board with kings size 11", fields{Figure{next: nil}}, args{board: "xxxxxx__\nxkxxkx__\nxxxxxx__\n___xkx__\n___xxx__\n__xxxxxx\n__xkxxkx\n__xxxxxx\n"}, 11},
 		{"Test handle board with kings size 7", fields{Figure{next: nil}}, args{board: "xxxxxx__\nxkxxkx__\nxxxxxx__\nxkxxkx__\nxxxxxx__\nxxxxxxxx\n__xkxxkx\n__xxxxxx\n"}, 7},
-		{"Test handle board with kings size 7", fields{Figure{next: nil}}, args{board: "xxxxxx__\nxkxxkx__\nxxxxxx__\nxkxxkxxx\nxxxxxxxk\nxxxxxxxx\n__xkxxkx\n__xxxxxx\n"}, 5},
-		{"Test handle board with kings size 7", fields{Figure{next: nil}}, args{board: "xxxxxxxx\nxkxxkxxk\nxxxxxxxx\nxkxxkxxx\nxxxxxxxk\nxxxxxxxx\n__xkxxkx\n__xxxxxx\n"}, 1},
+		{"Test handle board with kings size 5", fields{Figure{next: nil}}, args{board: "xxxxxx__\nxkxxkx__\nxxxxxx__\nxkxxkxxx\nxxxxxxxk\nxxxxxxxx\n__xkxxkx\n__xxxxxx\n"}, 5},
+		{"Test handle board with kings size 1", fields{Figure{next: nil}}, args{board: "xxxxxxxx\nxkxxkxxk\nxxxxxxxx\nxkxxkxxx\nxxxxxxxk\nxxxxxxxx\n__xkxxkx\n__xxxxxx\n"}, 1},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -191,6 +191,16 @@ func Test_isAnotherFigurePresentDiag(t *testing.T) {
 			'_', '_', '_', '_', '_', '_', '_', '_', '\n',
 			'_', '_', '_', '_', '_', '_', '_', '_', '\n'},
 			0}, false},
+		{"Test position#", args{[]rune{
+			'_', '_', '_', '_', '_', '_', '_', '_', '\n',
+			'_', '_', '_', '_', '_', '_', '_', '_', '\n',
+			'_', '_', '_', '_', '_', '_', '_', '_', '\n',
+			'_', '_', '_', '_', '_', '_', '_', '_', '\n',
+			'_', '_', '_', '_', '_', '_', '_', '_', '\n',
+			'_', '_', '_', '_', '_', '_', '_', '_', '\n',
+			'_', '_', '_', '_', '_', '_', '_', '_', '\n',
+			'_', '_', '_', '_', '_', '_', '_', '_', '\n'},
+			8}, false},
 		{"Test position#", args{[]rune{
 			'k', '_', '_', '_', '_', '_', '_', '_', '\n',
 			'_', '_', '_', '_', '_', '_', '_', '_', '\n',
