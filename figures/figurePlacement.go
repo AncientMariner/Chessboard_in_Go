@@ -23,7 +23,7 @@ type FigurePosition struct {
 
 func (e *FigurePosition) Hash() string {
 	algorithm := fnv.New64()
-	algorithm.Write([]byte(e.Board + string(algorithm.Sum64())))
+	algorithm.Write([]byte(e.Board))
 	return fmt.Sprintf("%s:%d", e.Board, algorithm.Sum64())
 }
 

@@ -24,8 +24,8 @@ func (rook *Rook) Handle(board string) *set.HashSet[*FigurePosition, string] {
 			out := []rune(board)
 
 			if !isAnotherFigurePresentOnTheLine(out, i) && !isAnotherFigurePresentOnTheColumn(out, i) {
-				rook.placeAttackPlacesHorizontally(out, i)
-				rook.placeAttackPlacesVertically(out, i)
+				placeAttackPlacesHorizontally(out, i)
+				placeAttackPlacesVertically(out, i)
 				out[i] = rook.GetName()
 				hashSetOfBoards.Insert(&FigurePosition{string(out), i})
 			}
@@ -34,7 +34,7 @@ func (rook *Rook) Handle(board string) *set.HashSet[*FigurePosition, string] {
 	return hashSetOfBoards
 }
 
-func (rook *Rook) placeAttackPlacesHorizontally(out []rune, position int) {
+func placeAttackPlacesHorizontally(out []rune, position int) {
 	if position >= len(out) || position == defaultDimension || position%(defaultDimension+1) == defaultDimension {
 		return
 	}
@@ -80,7 +80,7 @@ func isAnotherFigurePresentOnTheLine(out []rune, position int) bool {
 	return len(previousPositionNumbers)+len(nextPositionNumbers) < 7
 }
 
-func (rook *Rook) placeAttackPlacesVertically(out []rune, position int) {
+func placeAttackPlacesVertically(out []rune, position int) {
 	if position >= len(out) || position == defaultDimension || position%(defaultDimension+1) == defaultDimension {
 		return
 	}
@@ -90,8 +90,8 @@ func (rook *Rook) placeAttackPlacesVertically(out []rune, position int) {
 	for linesAbove := position / (defaultDimension + 1); linesAbove > 0; linesAbove-- {
 		if position >= defaultDimension+1 && positionAbove >= 0 && out[positionAbove] == emptyField {
 			out[positionAbove] = attackPlace
-			positionAbove = positionAbove - defaultDimension - 1
 		}
+		positionAbove = positionAbove - defaultDimension - 1
 	}
 
 	positionBelow := position + defaultDimension + 1
@@ -99,8 +99,8 @@ func (rook *Rook) placeAttackPlacesVertically(out []rune, position int) {
 	for linesBelow := defaultDimension - position/(defaultDimension+1); linesBelow > 0; linesBelow-- {
 		if positionBelow < len(out) && position < len(out)-defaultDimension-1 && out[positionBelow] == emptyField {
 			out[positionBelow] = attackPlace
-			positionBelow = positionBelow + defaultDimension + 1
 		}
+		positionBelow = positionBelow + defaultDimension + 1
 	}
 }
 

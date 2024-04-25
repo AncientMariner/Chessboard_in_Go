@@ -1,6 +1,8 @@
 package figures
 
-import "github.com/hashicorp/go-set/v2"
+import (
+	"github.com/hashicorp/go-set/v2"
+)
 
 type Bishop struct {
 	Figure
@@ -21,8 +23,8 @@ func (bishop *Bishop) Handle(board string) *set.HashSet[*FigurePosition, string]
 			out := []rune(board)
 
 			if !isAnotherFigurePresentDiag(out, i) {
-				bishop.placeAttackPlacesDiagonallyAbove(out, i)
-				bishop.placeAttackPlacesDiagonallyBelow(out, i)
+				placeAttackPlacesDiagonallyAbove(out, i)
+				placeAttackPlacesDiagonallyBelow(out, i)
 				out[i] = bishop.GetName()
 				hashSetOfBoards.Insert(&FigurePosition{string(out), i})
 			}
@@ -31,26 +33,31 @@ func (bishop *Bishop) Handle(board string) *set.HashSet[*FigurePosition, string]
 	return hashSetOfBoards
 }
 
-func (bishop *Bishop) placeAttackPlacesDiagonallyBelow(out []rune, position int) {
+func placeAttackPlacesDiagonallyBelow(out []rune, position int) {
 	if position >= len(out) || position == defaultDimension || position%(defaultDimension+1) == defaultDimension {
 		return
 	}
 	diagBelowRight := position + defaultDimension + 1 + 1
 	diagBelowLeft := position + defaultDimension + 1 - 1
 
-	for linesBelow := defaultDimension - position/(defaultDimension+1); linesBelow > 0; linesBelow-- {
-		if diagBelowRight < len(out) && position < len(out)-defaultDimension-1 && out[diagBelowRight] == emptyField {
+	currentLine := position/defaultDimension + 1
+	for lineBelow := currentLine + 1; lineBelow <= defaultDimension; lineBelow++ {
+		lineOfTheDiagBelowRight := diagBelowRight/(defaultDimension+1) + 1
+		lineOfTheDiagBelowLeft := diagBelowLeft/(defaultDimension+1) + 1
+
+		if lineBelow == lineOfTheDiagBelowRight && diagBelowRight < len(out) && position < len(out)-defaultDimension-1 && out[diagBelowRight] == emptyField {
 			out[diagBelowRight] = attackPlace
-			diagBelowRight = diagBelowRight + defaultDimension + 1 + 1
 		}
-		if diagBelowLeft < len(out) && position < len(out)-defaultDimension-1 && out[diagBelowLeft] == emptyField {
+		diagBelowRight = diagBelowRight + defaultDimension + 1 + 1
+
+		if lineBelow == lineOfTheDiagBelowLeft && diagBelowLeft < len(out) && position < len(out)-defaultDimension-1 && out[diagBelowLeft] == emptyField {
 			out[diagBelowLeft] = attackPlace
-			diagBelowLeft = diagBelowLeft + defaultDimension + 1 - 1
 		}
+		diagBelowLeft = diagBelowLeft + defaultDimension + 1 - 1
 	}
 }
 
-func (bishop *Bishop) placeAttackPlacesDiagonallyAbove(out []rune, position int) {
+func placeAttackPlacesDiagonallyAbove(out []rune, position int) {
 	if position >= len(out) || position == defaultDimension || position%(defaultDimension+1) == defaultDimension {
 		return
 	}
@@ -60,12 +67,12 @@ func (bishop *Bishop) placeAttackPlacesDiagonallyAbove(out []rune, position int)
 	for linesAbove := position / (defaultDimension + 1); linesAbove > 0; linesAbove-- {
 		if position >= defaultDimension+1 && diagAboveRight >= 0 && out[diagAboveRight] == emptyField {
 			out[diagAboveRight] = attackPlace
-			diagAboveRight = diagAboveRight - defaultDimension - 1 + 1
 		}
+		diagAboveRight = diagAboveRight - defaultDimension - 1 + 1
 		if position >= defaultDimension+1 && diagAboveLeft >= 0 && out[diagAboveLeft] == emptyField {
 			out[diagAboveLeft] = attackPlace
-			diagAboveLeft = diagAboveLeft - defaultDimension - 1 - 1
 		}
+		diagAboveLeft = diagAboveLeft - defaultDimension - 1 - 1
 	}
 }
 
@@ -80,12 +87,12 @@ func isAnotherFigurePresentDiag(out []rune, position int) bool {
 	for counterAboveLines := currentLine; previousLinePositionLeft >= 0 && previousLinePositionRight >= 0 && counterAboveLines > 0; counterAboveLines-- {
 		if out[previousLinePositionRight] != '\n' {
 			diagNumbers = append(diagNumbers, previousLinePositionRight)
-			previousLinePositionRight = previousLinePositionRight - defaultDimension - 1 + 1
 		}
+		previousLinePositionRight = previousLinePositionRight - defaultDimension - 1 + 1
 		if out[previousLinePositionLeft] != '\n' {
 			diagNumbers = append(diagNumbers, previousLinePositionLeft)
-			previousLinePositionLeft = previousLinePositionLeft - defaultDimension - 1 - 1
 		}
+		previousLinePositionLeft = previousLinePositionLeft - defaultDimension - 1 - 1
 	}
 
 	nextLinePositionLeft := position + defaultDimension + 1 - 1
@@ -93,12 +100,12 @@ func isAnotherFigurePresentDiag(out []rune, position int) bool {
 	for counterBelowLines := numberOfLines - currentLine - 1; nextLinePositionRight < len(out) && nextLinePositionLeft < len(out) && counterBelowLines > 0; counterBelowLines-- {
 		if out[nextLinePositionRight] != '\n' {
 			diagNumbers = append(diagNumbers, nextLinePositionRight)
-			nextLinePositionRight = nextLinePositionRight + defaultDimension + 1 + 1
 		}
+		nextLinePositionRight = nextLinePositionRight + defaultDimension + 1 + 1
 		if out[nextLinePositionLeft] != '\n' {
 			diagNumbers = append(diagNumbers, nextLinePositionLeft)
-			nextLinePositionLeft = nextLinePositionLeft + defaultDimension + 1 - 1
 		}
+		nextLinePositionLeft = nextLinePositionLeft + defaultDimension + 1 - 1
 	}
 
 	for _, number := range diagNumbers {
