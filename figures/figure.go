@@ -16,7 +16,7 @@ func (f *Figure) SetNext(next FigureBehaviour) FigureBehaviour {
 	return next
 }
 
-// func (f *Figure) Handle(request string) *set.HashSet[*FigurePosition, string] {
+// func (f *Figure) Handle(request string) *set.HashSet[*BoardWithFigurePosition, string] {
 // 	if f.next != nil {
 // 		return f.next.Handle(request)
 // 	}

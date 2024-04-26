@@ -26,12 +26,12 @@ func (queen *Queen) Handle(board string) map[uint32]string {
 
 				out[i] = queen.GetName()
 
-				item := &FigurePosition{}
-				item.Board = string(out)
-				item.number = i
-				item.Hash()
+				b := &BoardWithFigurePosition{}
+				b.Board = string(out)
+				b.number = i
+				b.Hash()
 
-				hashSetOfBoards[item.hash] = item.Board
+				hashSetOfBoards[b.hash] = b.Board
 			}
 		}
 	}

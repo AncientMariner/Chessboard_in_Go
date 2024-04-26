@@ -213,7 +213,7 @@ func Test_number_of_boards_with_different_figure_variations(t *testing.T) {
 	}
 
 	// counterOfNotUniqueItemsInSet := 0
-	// unitedSet.ForEach(func(position *figures.FigurePosition) bool {
+	// unitedSet.ForEach(func(position *figures.BoardWithFigurePosition) bool {
 	// 	if contains(unitedBoards, position.Board) {
 	// 		counterOfNotUniqueItemsInSet++
 	// 	}
@@ -274,7 +274,7 @@ func Test_board_with_1_figure(t *testing.T) {
 		{"Test empty board with 1 king", fields{map[rune]int{(&figures.King{}).GetName(): 1}, &figures.King{}, figures.Placement{}}, args{&figures.King{}, make(map[uint32]string)}, 64},
 		{"Test empty board with 2 king", fields{map[rune]int{(&figures.King{}).GetName(): 2}, &figures.King{}, figures.Placement{}}, args{&figures.King{}, make(map[uint32]string)}, 3612},
 		{"Test empty board with 1 king 1 rook", fields{map[rune]int{(&figures.King{}).GetName(): 1, (&figures.Rook{}).GetName(): 1}, figureBehaviour, figures.Placement{}}, args{figureBehaviour, make(map[uint32]string)}, 2952},
-		// {"Test empty board with 1 king 1 queen", fields{map[rune]int{(&figures.King{}).GetName(): 1, (&figures.Queen{}).GetName(): 1}, behaviour, figures.Placement{}}, args{behaviour, set.NewHashSet[*figures.FigurePosition, string](0)}, 4032},
+		// {"Test empty board with 1 king 1 queen", fields{map[rune]int{(&figures.King{}).GetName(): 1, (&figures.Queen{}).GetName(): 1}, behaviour, figures.Placement{}}, args{behaviour, set.NewHashSet[*figures.BoardWithFigurePosition, string](0)}, 4032},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

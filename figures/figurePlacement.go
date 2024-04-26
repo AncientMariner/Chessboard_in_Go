@@ -14,13 +14,13 @@ type FigurePlacement interface {
 	PlaceFiguresOnBoard([]string) FigurePlacement
 }
 
-type FigurePosition struct {
+type BoardWithFigurePosition struct {
 	Board  string
 	number int
 	hash   uint32
 }
 
-func (e *FigurePosition) Hash() string {
+func (e *BoardWithFigurePosition) Hash() string {
 	algorithm := fnv.New32a()
 	algorithm.Write([]byte(e.Board))
 	sum32 := algorithm.Sum32()
@@ -57,38 +57,15 @@ func (p *Placement) PlaceFigure(numberOfFigures int, behaviour FigureBehaviour, 
 }
 
 func (p *Placement) placeFiguresOnBoard(boards map[uint32]string, behaviour FigureBehaviour) map[uint32]string {
-	// var resultingBoards = set.NewHashSet[*FigurePosition, string](boards.Size() * boards.Size())
 	var resultingMap = make(map[uint32]string)
 
 	for _, ss := range boards {
 		boardsWithPlacement := p.PlaceFiguresOnEmptyBoard(ss, behaviour)
 
 		for u, s := range boardsWithPlacement {
-			// if resultingMap[u] == "" {
 			resultingMap[u] = s
-			// }
 		}
 	}
-
-	// boards.ForEach(func(position *FigurePosition) bool {
-	// 	boardsWithPlacement := p.PlaceFiguresOnEmptyBoard(position.Board, behaviour)
-	//
-	// 	for u, s := range boardsWithPlacement {
-	// 		if resultingMap[u] == "" {
-	// 			resultingMap[u] = s
-	// 		}
-	// 	}
-
-	// boardsWithPlacement.ForEach(func(position *FigurePosition) bool {
-	// 	// resultingBoards.Insert(position)
-	// 	if resultingMap[position.hash] == "" {
-	// 		resultingMap[position.hash] = position.Board
-	// 	}
-	// 	return true
-	// })
-	// 	return true
-	// })
-
 	return resultingMap
 }
 

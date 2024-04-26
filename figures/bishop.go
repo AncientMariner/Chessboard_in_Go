@@ -12,7 +12,7 @@ func (bishop *Bishop) Handle(board string) map[uint32]string {
 		}
 	}
 
-	hashSetOfBoards := make(map[uint32]string, countOfEmptyPlaces)
+	boards := make(map[uint32]string, countOfEmptyPlaces)
 
 	for i := 0; i < len(board) && len(board) == ((defaultDimension+1)*defaultDimension); i++ {
 		if board[i] == emptyField {
@@ -23,16 +23,16 @@ func (bishop *Bishop) Handle(board string) map[uint32]string {
 				placeAttackPlacesDiagonallyBelow(out, i)
 				out[i] = bishop.GetName()
 
-				item := &FigurePosition{}
-				item.Board = string(out)
-				item.number = i
-				item.Hash()
+				b := &BoardWithFigurePosition{}
+				b.Board = string(out)
+				b.number = i
+				b.Hash()
 
-				hashSetOfBoards[item.hash] = item.Board
+				boards[b.hash] = b.Board
 			}
 		}
 	}
-	return hashSetOfBoards
+	return boards
 }
 
 func placeAttackPlacesDiagonallyBelow(out []rune, position int) {

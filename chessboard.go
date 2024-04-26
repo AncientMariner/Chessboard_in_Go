@@ -22,21 +22,11 @@ func (board *Chessboard) placeFigures() map[uint32]string {
 }
 
 func (board *Chessboard) placeFigure(behaviour figures.FigureBehaviour, previousFigureBoards map[uint32]string) map[uint32]string {
-	// extract no need to put board param here
 	result := board.figurePlacement.PlaceFigure(board.figureQuantityMap[behaviour.GetName()], behaviour, previousFigureBoards)
-
-	// check to calculate empty places in order to set proper size
-	// var result = set.NewHashSet[*figures.FigurePosition, string](boards.Size())
-	//
-	// boards.ForEach(func(board *figures.FigurePosition) bool {
-	// 	result.Insert(board)
-	// 	return true
-	// })
 
 	if behaviour.GetNext() != nil {
 		result = board.placeFigure(behaviour.GetNext(), result)
 	}
-
 	return result
 }
 
