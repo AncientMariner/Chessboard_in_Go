@@ -1,7 +1,6 @@
 package figures
 
 import (
-	"github.com/hashicorp/go-set/v2"
 	"reflect"
 	"testing"
 )
@@ -29,14 +28,16 @@ func TestPlacement_PlaceFigure(t *testing.T) {
 	type args struct {
 		numberOfFigures int
 		behaviour       FigureBehaviour
-		boards          *set.HashSet[*FigurePosition, string]
+		boards          map[uint32]string
 	}
 
-	setOfBoards := set.NewHashSet[*FigurePosition, string](1)
-	setOfBoards.Insert(&FigurePosition{
-		Board:  "________\n________\n________\n________\n________\n________\n________\n________\n",
-		number: 1,
-	})
+	item := &FigurePosition{}
+	item.Board = "________\n________\n________\n________\n________\n________\n________\n________\n"
+	item.number = 1
+	item.Hash()
+
+	newMap := make(map[uint32]string)
+	newMap[item.hash] = item.Board
 
 	tests := []struct {
 		name   string
@@ -47,17 +48,17 @@ func TestPlacement_PlaceFigure(t *testing.T) {
 		{"Test place figures without figures", fields{nil}, args{
 			0,
 			&King{},
-			set.NewHashSet[*FigurePosition, string](0),
+			make(map[uint32]string),
 		}, 0},
 		{"Test place figures on empty board", fields{nil}, args{
 			1,
 			&King{},
-			set.NewHashSet[*FigurePosition, string](0),
+			make(map[uint32]string),
 		}, 64},
 		{"Test place figures on board", fields{nil}, args{
 			1,
 			&King{},
-			setOfBoards,
+			newMap,
 		}, 64},
 	}
 	for _, tt := range tests {
@@ -65,7 +66,7 @@ func TestPlacement_PlaceFigure(t *testing.T) {
 			p := &Placement{
 				currentPlacement: tt.fields.currentPlacement,
 			}
-			if got := p.PlaceFigure(tt.args.numberOfFigures, tt.args.behaviour, tt.args.boards); got.Size() != tt.want {
+			if got := p.PlaceFigure(tt.args.numberOfFigures, tt.args.behaviour, tt.args.boards); len(got) != tt.want {
 				t.Errorf("PlaceFigure() = %v, want %v", got, tt.want)
 			}
 		})
@@ -93,7 +94,7 @@ func TestPlacement_PlaceFiguresOnEmptyBoard(t *testing.T) {
 			p := &Placement{
 				currentPlacement: tt.fields.currentPlacement,
 			}
-			if got := p.PlaceFiguresOnEmptyBoard(tt.args.board, tt.args.behaviour); got.Size() != tt.want {
+			if got := p.PlaceFiguresOnEmptyBoard(tt.args.board, tt.args.behaviour); len(got) != tt.want {
 				t.Errorf("PlaceFiguresOnEmptyBoard() = %v, want %v", got, tt.want)
 			}
 		})
@@ -105,15 +106,17 @@ func TestPlacement_placeFiguresOnBoard(t *testing.T) {
 		currentPlacement FigurePlacement
 	}
 	type args struct {
-		boards    *set.HashSet[*FigurePosition, string]
+		boards    map[uint32]string
 		behaviour FigureBehaviour
 	}
 
-	setOfBoards := set.NewHashSet[*FigurePosition, string](1)
-	setOfBoards.Insert(&FigurePosition{
-		Board:  "________\n________\n________\n________\n________\n________\n________\n________\n",
-		number: 1,
-	})
+	item := &FigurePosition{}
+	item.Board = string("________\n________\n________\n________\n________\n________\n________\n________\n")
+	item.number = 1
+	item.Hash()
+
+	newMap := make(map[uint32]string)
+	newMap[item.hash] = item.Board
 
 	tests := []struct {
 		name   string
@@ -121,14 +124,14 @@ func TestPlacement_placeFiguresOnBoard(t *testing.T) {
 		args   args
 		want   int
 	}{
-		{"Test placement on board", fields{nil}, args{setOfBoards, &King{}}, 64},
+		{"Test placement on board", fields{nil}, args{newMap, &King{}}, 64},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			p := &Placement{
 				currentPlacement: tt.fields.currentPlacement,
 			}
-			if got := p.placeFiguresOnBoard(tt.args.boards, tt.args.behaviour); got.Size() != tt.want {
+			if got := p.placeFiguresOnBoard(tt.args.boards, tt.args.behaviour); len(got) != tt.want {
 				t.Errorf("placeFiguresOnBoard() = %v, want %v", got, tt.want)
 			}
 		})

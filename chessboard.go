@@ -3,7 +3,7 @@ package main
 import (
 	"Chessboard_in_Go/figures"
 	"fmt"
-	"github.com/hashicorp/go-set/v2"
+	// "github.com/hashicorp/go-set/v2"
 )
 
 func main() {
@@ -13,25 +13,25 @@ func main() {
 	boardsWithFigures := board.placeFigures()
 
 	fmt.Printf("\nfigures %v", board)
-	fmt.Printf("\nboardsWithFigures.Size() %d", boardsWithFigures.Size())
+	fmt.Printf("\nboardsWithFigures.Size() %d", len(boardsWithFigures))
 }
 
-func (board *Chessboard) placeFigures() *set.HashSet[*figures.FigurePosition, string] {
+func (board *Chessboard) placeFigures() map[uint32]string {
 
-	return board.placeFigure(board.currentFigureBehaviour, set.NewHashSet[*figures.FigurePosition, string](0))
+	return board.placeFigure(board.currentFigureBehaviour, make(map[uint32]string))
 }
 
-func (board *Chessboard) placeFigure(behaviour figures.FigureBehaviour, previousFigureBoards *set.HashSet[*figures.FigurePosition, string]) *set.HashSet[*figures.FigurePosition, string] {
+func (board *Chessboard) placeFigure(behaviour figures.FigureBehaviour, previousFigureBoards map[uint32]string) map[uint32]string {
 	// extract no need to put board param here
-	boards := board.figurePlacement.PlaceFigure(board.figureQuantityMap[behaviour.GetName()], behaviour, previousFigureBoards)
+	result := board.figurePlacement.PlaceFigure(board.figureQuantityMap[behaviour.GetName()], behaviour, previousFigureBoards)
 
 	// check to calculate empty places in order to set proper size
-	var result = set.NewHashSet[*figures.FigurePosition, string](boards.Size())
-
-	boards.ForEach(func(board *figures.FigurePosition) bool {
-		result.Insert(board)
-		return true
-	})
+	// var result = set.NewHashSet[*figures.FigurePosition, string](boards.Size())
+	//
+	// boards.ForEach(func(board *figures.FigurePosition) bool {
+	// 	result.Insert(board)
+	// 	return true
+	// })
 
 	if behaviour.GetNext() != nil {
 		result = board.placeFigure(behaviour.GetNext(), result)

@@ -4,8 +4,6 @@ import (
 	"fmt"
 	"hash/fnv"
 	"strings"
-
-	"github.com/hashicorp/go-set/v2"
 )
 
 type Placement struct {
@@ -19,12 +17,15 @@ type FigurePlacement interface {
 type FigurePosition struct {
 	Board  string
 	number int
+	hash   uint32
 }
 
 func (e *FigurePosition) Hash() string {
-	algorithm := fnv.New64()
+	algorithm := fnv.New32a()
 	algorithm.Write([]byte(e.Board))
-	return fmt.Sprintf("%s:%d", e.Board, algorithm.Sum64())
+	sum32 := algorithm.Sum32()
+	e.hash = sum32
+	return fmt.Sprintf("%s:%d", e.Board, sum32)
 }
 
 const defaultDimension = 8
@@ -44,9 +45,9 @@ func drawEmptyBoard() string {
 	return board.String()
 }
 
-func (p *Placement) PlaceFigure(numberOfFigures int, behaviour FigureBehaviour, boards *set.HashSet[*FigurePosition, string]) *set.HashSet[*FigurePosition, string] {
+func (p *Placement) PlaceFigure(numberOfFigures int, behaviour FigureBehaviour, boards map[uint32]string) map[uint32]string {
 	for i := 0; i < numberOfFigures; i++ {
-		if boards.Size() == 0 {
+		if len(boards) == 0 {
 			boards = p.PlaceFiguresOnEmptyBoard(drawEmptyBoard(), behaviour)
 		} else {
 			boards = p.placeFiguresOnBoard(boards, behaviour)
@@ -55,21 +56,42 @@ func (p *Placement) PlaceFigure(numberOfFigures int, behaviour FigureBehaviour, 
 	return boards
 }
 
-func (p *Placement) placeFiguresOnBoard(boards *set.HashSet[*FigurePosition, string], behaviour FigureBehaviour) *set.HashSet[*FigurePosition, string] {
-	var resultingBoards = set.NewHashSet[*FigurePosition, string](boards.Size() * boards.Size())
+func (p *Placement) placeFiguresOnBoard(boards map[uint32]string, behaviour FigureBehaviour) map[uint32]string {
+	// var resultingBoards = set.NewHashSet[*FigurePosition, string](boards.Size() * boards.Size())
+	var resultingMap = make(map[uint32]string)
 
-	boards.ForEach(func(position *FigurePosition) bool {
-		boardsWithPlacement := p.PlaceFiguresOnEmptyBoard(position.Board, behaviour)
+	for _, ss := range boards {
+		boardsWithPlacement := p.PlaceFiguresOnEmptyBoard(ss, behaviour)
 
-		boardsWithPlacement.ForEach(func(position *FigurePosition) bool {
-			resultingBoards.Insert(position)
-			return true
-		})
-		return true
-	})
-	return resultingBoards
+		for u, s := range boardsWithPlacement {
+			// if resultingMap[u] == "" {
+			resultingMap[u] = s
+			// }
+		}
+	}
+
+	// boards.ForEach(func(position *FigurePosition) bool {
+	// 	boardsWithPlacement := p.PlaceFiguresOnEmptyBoard(position.Board, behaviour)
+	//
+	// 	for u, s := range boardsWithPlacement {
+	// 		if resultingMap[u] == "" {
+	// 			resultingMap[u] = s
+	// 		}
+	// 	}
+
+	// boardsWithPlacement.ForEach(func(position *FigurePosition) bool {
+	// 	// resultingBoards.Insert(position)
+	// 	if resultingMap[position.hash] == "" {
+	// 		resultingMap[position.hash] = position.Board
+	// 	}
+	// 	return true
+	// })
+	// 	return true
+	// })
+
+	return resultingMap
 }
 
-func (p *Placement) PlaceFiguresOnEmptyBoard(board string, behaviour FigureBehaviour) *set.HashSet[*FigurePosition, string] {
+func (p *Placement) PlaceFiguresOnEmptyBoard(board string, behaviour FigureBehaviour) map[uint32]string {
 	return behaviour.Handle(board)
 }

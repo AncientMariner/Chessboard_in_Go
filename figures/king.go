@@ -1,14 +1,10 @@
 package figures
 
-import (
-	"github.com/hashicorp/go-set/v2"
-)
-
 type King struct {
 	Figure
 }
 
-func (king *King) Handle(board string) *set.HashSet[*FigurePosition, string] {
+func (king *King) Handle(board string) map[uint32]string {
 
 	countOfEmptyPlaces := 0
 	for i := 0; i < len(board); i++ {
@@ -17,7 +13,7 @@ func (king *King) Handle(board string) *set.HashSet[*FigurePosition, string] {
 		}
 	}
 
-	hashSetOfBoards := set.NewHashSet[*FigurePosition, string](countOfEmptyPlaces)
+	hashSetOfBoards := make(map[uint32]string, countOfEmptyPlaces)
 
 	for i := 0; i < len(board) && len(board) == ((defaultDimension+1)*defaultDimension); i++ {
 		if board[i] == emptyField {
@@ -30,7 +26,12 @@ func (king *King) Handle(board string) *set.HashSet[*FigurePosition, string] {
 				king.placeDiagonallyBelow(out, i)
 				out[i] = king.GetName()
 
-				hashSetOfBoards.Insert(&FigurePosition{string(out), i})
+				item := &FigurePosition{}
+				item.Board = string(out)
+				item.number = i
+				item.Hash()
+
+				hashSetOfBoards[item.hash] = item.Board
 			}
 		}
 	}

@@ -59,7 +59,7 @@ func TestRook_Handle(t *testing.T) {
 			rook := &Rook{
 				Figure: tt.fields.Figure,
 			}
-			if got := rook.Handle(tt.args.board); got.Size() != tt.want {
+			if got := rook.Handle(tt.args.board); len(got) != tt.want {
 				t.Errorf("Handle() size = %v, want %v", got, tt.want)
 			}
 		})

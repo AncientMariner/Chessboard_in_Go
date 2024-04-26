@@ -2,7 +2,6 @@ package main
 
 import (
 	"Chessboard_in_Go/figures"
-	"github.com/hashicorp/go-set/v2"
 	"reflect"
 	"testing"
 )
@@ -172,10 +171,22 @@ func Test_number_of_boards_with_1_figure(t *testing.T) {
 		{"Test empty board with 1 bishop 1 bishop", args{board: NewChessboard().withBishop(1).withBishop(1).Build()}, 2436},
 		{"Test empty board with 1 king 1 rook", args{board: NewChessboard().withKing(1).withBishop(1).Build()}, 3251},
 		{"Test empty board with 1 bishop 1 king", args{board: NewChessboard().withBishop(1).withKing(1).Build()}, 3248},
+		{"Test empty board with 1 queen", args{board: NewChessboard().withQueen(1).Build()}, 64},
+		{"Test empty board with 1 queen", args{board: NewChessboard().withQueen(2).Build()}, 1226},
+		{"Test empty board with 1 queen", args{board: NewChessboard().withQueen(1).withQueen(1).Build()}, 1226},
+		{"Test empty board with 1 queen", args{board: NewChessboard().withKing(1).withQueen(1).Build()}, 2471},
+		{"Test empty board with 1 queen", args{board: NewChessboard().withQueen(1).withKing(1).Build()}, 2535},
+		{"Test empty board with 1 queen", args{board: NewChessboard().withQueen(7).Build()}, 727},
+		// todo check hashcode
+		{"Test empty board with 1 queen", args{board: NewChessboard().withQueen(4).Build()}, 25813},
+		{"Test empty board with 1 queen", args{board: NewChessboard().withQueen(5).Build()}, 26116},
+		{"Test empty board with 1 queen", args{board: NewChessboard().withQueen(6).Build()}, 4},
+		{"Test empty board with 1 queen", args{board: NewChessboard().withQueen(7).Build()}, 727},
+		{"Test empty board with 1 queen", args{board: NewChessboard().withQueen(8).Build()}, 92},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := tt.args.board.placeFigures(); got.Size() != tt.want {
+			if got := tt.args.board.placeFigures(); len(got) != tt.want {
 				t.Errorf("placeFigures() = %v, want %v", got, tt.want)
 			}
 		})
@@ -187,20 +198,19 @@ func Test_number_of_boards_with_different_figure_variations(t *testing.T) {
 	placeFigures_R_R_K := NewChessboard().withRook(1).withRook(1).withKing(1).Build().placeFigures()
 	placeFigures_K_R_R := NewChessboard().withKing(1).withRook(1).withRook(1).Build().placeFigures()
 
-	var unitedSet = set.NewHashSet[*figures.FigurePosition, string](placeFigures_R_K_R.Size() + placeFigures_R_R_K.Size() + placeFigures_K_R_R.Size())
+	var unitedSet = make(map[uint32]string, len(placeFigures_R_K_R)+len(placeFigures_R_R_K)+len(placeFigures_K_R_R))
 
-	placeFigures_R_K_R.ForEach(func(board *figures.FigurePosition) bool {
-		unitedSet.Insert(board)
-		return true
-	})
-	placeFigures_R_R_K.ForEach(func(board *figures.FigurePosition) bool {
-		unitedSet.Insert(board)
-		return true
-	})
-	placeFigures_K_R_R.ForEach(func(board *figures.FigurePosition) bool {
-		unitedSet.Insert(board)
-		return true
-	})
+	for u, s := range placeFigures_R_K_R {
+		unitedSet[u] = s
+	}
+
+	for u, s := range placeFigures_R_R_K {
+		unitedSet[u] = s
+	}
+
+	for u, s := range placeFigures_K_R_R {
+		unitedSet[u] = s
+	}
 
 	// counterOfNotUniqueItemsInSet := 0
 	// unitedSet.ForEach(func(position *figures.FigurePosition) bool {
@@ -210,8 +220,8 @@ func Test_number_of_boards_with_different_figure_variations(t *testing.T) {
 	// 	unitedBoards = append(unitedBoards, position.Board)
 	// 	return true
 	// })
-	if unitedSet.Size() != 113022 {
-		t.Errorf("placeFigures() all possible variations = %v, want %v", unitedSet.Size(), 113022)
+	if len(unitedSet) != 113022 {
+		t.Errorf("placeFigures() all possible variations = %v, want %v", len(unitedSet), 113022)
 	}
 }
 
@@ -247,7 +257,7 @@ func Test_board_with_1_figure(t *testing.T) {
 	}
 	type args struct {
 		behaviour            figures.FigureBehaviour
-		previousFigureBoards *set.HashSet[*figures.FigurePosition, string]
+		previousFigureBoards map[uint32]string
 	}
 	behaviour := &figures.King{}
 	behaviour.SetNext(&figures.Queen{})
@@ -261,9 +271,9 @@ func Test_board_with_1_figure(t *testing.T) {
 		args   args
 		want   int
 	}{
-		{"Test empty board with 1 king", fields{map[rune]int{(&figures.King{}).GetName(): 1}, &figures.King{}, figures.Placement{}}, args{&figures.King{}, set.NewHashSet[*figures.FigurePosition, string](0)}, 64},
-		{"Test empty board with 2 king", fields{map[rune]int{(&figures.King{}).GetName(): 2}, &figures.King{}, figures.Placement{}}, args{&figures.King{}, set.NewHashSet[*figures.FigurePosition, string](0)}, 3612},
-		{"Test empty board with 1 king 1 rook", fields{map[rune]int{(&figures.King{}).GetName(): 1, (&figures.Rook{}).GetName(): 1}, figureBehaviour, figures.Placement{}}, args{figureBehaviour, set.NewHashSet[*figures.FigurePosition, string](0)}, 2952},
+		{"Test empty board with 1 king", fields{map[rune]int{(&figures.King{}).GetName(): 1}, &figures.King{}, figures.Placement{}}, args{&figures.King{}, make(map[uint32]string)}, 64},
+		{"Test empty board with 2 king", fields{map[rune]int{(&figures.King{}).GetName(): 2}, &figures.King{}, figures.Placement{}}, args{&figures.King{}, make(map[uint32]string)}, 3612},
+		{"Test empty board with 1 king 1 rook", fields{map[rune]int{(&figures.King{}).GetName(): 1, (&figures.Rook{}).GetName(): 1}, figureBehaviour, figures.Placement{}}, args{figureBehaviour, make(map[uint32]string)}, 2952},
 		// {"Test empty board with 1 king 1 queen", fields{map[rune]int{(&figures.King{}).GetName(): 1, (&figures.Queen{}).GetName(): 1}, behaviour, figures.Placement{}}, args{behaviour, set.NewHashSet[*figures.FigurePosition, string](0)}, 4032},
 	}
 	for _, tt := range tests {
@@ -273,7 +283,7 @@ func Test_board_with_1_figure(t *testing.T) {
 				currentFigureBehaviour: tt.fields.currentFigureBehaviour,
 				figurePlacement:        tt.fields.figurePlacement,
 			}
-			if got := board.placeFigure(tt.args.behaviour, tt.args.previousFigureBoards); got.Size() != tt.want {
+			if got := board.placeFigure(tt.args.behaviour, tt.args.previousFigureBoards); len(got) != tt.want {
 				t.Errorf("placeFigure() = %v, want %v", got, tt.want)
 			}
 		})

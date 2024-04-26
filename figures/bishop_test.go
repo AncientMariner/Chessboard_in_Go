@@ -58,7 +58,7 @@ func TestBishop_Handle(t *testing.T) {
 			bishop := &Bishop{
 				Figure: tt.fields.Figure,
 			}
-			if got := bishop.Handle(tt.args.board); got.Size() != tt.want {
+			if got := bishop.Handle(tt.args.board); len(got) != tt.want {
 				t.Errorf("Handle() size= %v, want %v", got, tt.want)
 			}
 		})

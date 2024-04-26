@@ -1,14 +1,12 @@
 package figures
 
-import "github.com/hashicorp/go-set/v2"
-
 type Figure struct {
 	next FigureBehaviour
 }
 
 type FigureBehaviour interface {
 	SetNext(FigureBehaviour) FigureBehaviour
-	Handle(string) *set.HashSet[*FigurePosition, string]
+	Handle(string) map[uint32]string
 	GetName() rune
 	GetNext() FigureBehaviour
 }
