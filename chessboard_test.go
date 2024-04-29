@@ -193,8 +193,8 @@ func Test_number_of_boards_with_1_figure(t *testing.T) {
 		{"Test empty board with 9 queen, impossible case", args{board: NewChessboard().withQueen(9).Build()}, 0},
 		// todo
 		// 32 knights -> 3063828
-		// readme - 2 king 2 queen 2 bishop 1 knight 3063828
 		// board size change
+		// readme - 2 king 2 queen 2 bishop 1 knight 3063828 7 size board
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
