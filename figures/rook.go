@@ -84,45 +84,52 @@ func placeAttackPlacesVertically(out []rune, position int) {
 		return
 	}
 
-	positionAbove := position - defaultDimension - 1
-
-	for linesAbove := position / (defaultDimension + 1); linesAbove > 0; linesAbove-- {
-		if position >= defaultDimension+1 && positionAbove >= 0 && out[positionAbove] == emptyField {
-			out[positionAbove] = attackPlace
+	abovePosition := position - defaultDimension - 1
+	currentLine := position/(defaultDimension+1) + 1
+	for lineAbove := currentLine - 1; lineAbove > 0; lineAbove-- {
+		lineOfTheAbovePosition := abovePosition/(defaultDimension+1) + 1
+		if lineOfTheAbovePosition == lineAbove && out[abovePosition] == emptyField {
+			out[abovePosition] = attackPlace
 		}
-		positionAbove = positionAbove - defaultDimension - 1
+		abovePosition = abovePosition - defaultDimension - 1
 	}
 
-	positionBelow := position + defaultDimension + 1
+	belowPosition := position + defaultDimension + 1
+	for lineBelow := currentLine + 1; lineBelow <= defaultDimension; lineBelow++ {
+		lineOfTheBelowPosition := belowPosition/(defaultDimension+1) + 1
 
-	for linesBelow := defaultDimension - position/(defaultDimension+1); linesBelow > 0; linesBelow-- {
-		if positionBelow < len(out) && position < len(out)-defaultDimension-1 && out[positionBelow] == emptyField {
-			out[positionBelow] = attackPlace
+		if lineOfTheBelowPosition == lineBelow && out[belowPosition] == emptyField {
+			out[belowPosition] = attackPlace
 		}
-		positionBelow = positionBelow + defaultDimension + 1
+		belowPosition = belowPosition + defaultDimension + 1
 	}
 }
 
 func isAnotherFigurePresentOnTheColumn(out []rune, position int) bool {
-	numberOfLines := len(out) / (defaultDimension + 1)
-	currentLine := position / (defaultDimension + 1)
+	currentLine := position/(defaultDimension+1) + 1
 
 	var aboveLineNumbers []int
-	counterAboveLines := currentLine
-	for previousLinePosition := position - defaultDimension - 1; previousLinePosition >= 0 && counterAboveLines > 0; counterAboveLines-- {
-		if out[previousLinePosition] == emptyField || out[previousLinePosition] == attackPlace {
-			aboveLineNumbers = append(aboveLineNumbers, previousLinePosition)
+	abovePosition := position - defaultDimension - 1
+
+	for lineAbove := currentLine - 1; lineAbove > 0; lineAbove-- {
+		lineOfTheAbovePosition := abovePosition/(defaultDimension+1) + 1
+
+		if lineOfTheAbovePosition == lineAbove && position >= defaultDimension+1 && out[abovePosition] == emptyField || out[abovePosition] == attackPlace {
+			aboveLineNumbers = append(aboveLineNumbers, abovePosition)
 		}
-		previousLinePosition = previousLinePosition - defaultDimension - 1
+		abovePosition = abovePosition - defaultDimension - 1
 	}
 
 	var belowLineNumbers []int
-	var counterBelowLines = numberOfLines - currentLine - 1
-	for nextLinePosition := position + defaultDimension + 1; nextLinePosition < len(out) && counterBelowLines > 0; counterBelowLines-- {
-		if out[nextLinePosition] == emptyField || out[nextLinePosition] == attackPlace {
-			belowLineNumbers = append(belowLineNumbers, nextLinePosition)
+	belowPosition := position + defaultDimension + 1
+
+	for lineBelow := currentLine + 1; lineBelow <= defaultDimension; lineBelow++ {
+		lineOfTheBelowPosition := belowPosition/(defaultDimension+1) + 1
+
+		if lineBelow == lineOfTheBelowPosition && out[belowPosition] == emptyField || out[belowPosition] == attackPlace {
+			belowLineNumbers = append(belowLineNumbers, belowPosition)
 		}
-		nextLinePosition = nextLinePosition + defaultDimension + 1
+		belowPosition = belowPosition + defaultDimension + 1
 	}
 	return len(aboveLineNumbers)+len(belowLineNumbers) < 7
 }
