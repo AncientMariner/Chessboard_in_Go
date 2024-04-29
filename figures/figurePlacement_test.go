@@ -33,7 +33,6 @@ func TestPlacement_PlaceFigure(t *testing.T) {
 
 	item := &BoardWithFigurePosition{}
 	item.Board = "________\n________\n________\n________\n________\n________\n________\n________\n"
-	// item.number = 1
 	item.Hash()
 
 	newMap := make(map[string]string)
@@ -111,8 +110,7 @@ func TestPlacement_placeFiguresOnBoard(t *testing.T) {
 	}
 
 	item := &BoardWithFigurePosition{}
-	item.Board = string("________\n________\n________\n________\n________\n________\n________\n________\n")
-	// item.number = 1
+	item.Board = "________\n________\n________\n________\n________\n________\n________\n________\n"
 	item.Hash()
 
 	newMap := make(map[string]string)
