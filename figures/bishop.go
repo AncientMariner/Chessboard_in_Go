@@ -25,10 +25,7 @@ func (bishop *Bishop) Handle(board string) map[string]string {
 
 				b := &BoardWithFigurePosition{}
 				b.Board = string(out)
-				// b.number = i
-				// b.Hash()
-
-				boards[b.Board] = b.Board
+				boards[b.Hash()] = b.Board
 			}
 		}
 	}
@@ -82,12 +79,10 @@ func placeAttackPlacesDiagonallyAbove(out []rune, position int) {
 
 func isAnotherFigurePresentDiag(out []rune, position int) bool {
 	currentLine := position/(defaultDimension+1) + 1
-	// add above line calc
 	var diagNumbers []int
 
 	previousLinePositionLeft := position - defaultDimension - 1 - 1
 	previousLinePositionRight := position - defaultDimension - 1 + 1
-	// previousLine := currentLine - 1
 
 	for lineAbove := currentLine - 1; lineAbove > 0; lineAbove-- {
 		lineOfTheDiagAboveLeft := previousLinePositionLeft/(defaultDimension+1) + 1

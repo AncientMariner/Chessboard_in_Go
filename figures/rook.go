@@ -13,7 +13,7 @@ func (rook *Rook) Handle(board string) map[string]string {
 		}
 	}
 
-	hashSetOfBoards := make(map[string]string, countOfEmptyPlaces)
+	boards := make(map[string]string, countOfEmptyPlaces)
 
 	for i := 0; i < len(board) && len(board) == ((defaultDimension+1)*defaultDimension); i++ {
 		if board[i] == emptyField {
@@ -26,14 +26,11 @@ func (rook *Rook) Handle(board string) map[string]string {
 
 				b := &BoardWithFigurePosition{}
 				b.Board = string(out)
-				// b.number = i
-				// b.Hash()
-
-				hashSetOfBoards[b.Board] = b.Board
+				boards[b.Hash()] = b.Board
 			}
 		}
 	}
-	return hashSetOfBoards
+	return boards
 }
 
 func placeAttackPlacesHorizontally(out []rune, position int) {

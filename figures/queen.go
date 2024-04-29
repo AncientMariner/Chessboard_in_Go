@@ -18,7 +18,7 @@ func (queen *Queen) Handle(board string) map[string]string {
 		if board[i] == emptyField {
 			out := []rune(board)
 
-			if isAnotherFigureNotPresent(out, i) {
+			if !isAnotherFigurePresentOnTheLine(out, i) && !isAnotherFigurePresentOnTheColumn(out, i) && !isAnotherFigurePresentDiag(out, i) {
 				placeAttackPlacesHorizontally(out, i)
 				placeAttackPlacesVertically(out, i)
 				placeAttackPlacesDiagonallyAbove(out, i)
@@ -28,18 +28,11 @@ func (queen *Queen) Handle(board string) map[string]string {
 
 				b := &BoardWithFigurePosition{}
 				b.Board = string(out)
-				// b.number = i
-				// b.Hash()
-
-				boards[b.Board] = b.Board
+				boards[b.Hash()] = b.Board
 			}
 		}
 	}
 	return boards
-}
-
-func isAnotherFigureNotPresent(out []rune, i int) bool {
-	return !isAnotherFigurePresentOnTheLine(out, i) && !isAnotherFigurePresentOnTheColumn(out, i) && !isAnotherFigurePresentDiag(out, i)
 }
 
 func (*Queen) GetName() rune {

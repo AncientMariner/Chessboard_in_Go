@@ -16,22 +16,13 @@ type FigurePlacement interface {
 
 type BoardWithFigurePosition struct {
 	Board string
-	// number int
-	hash string
+	hash  string
 }
 
 func (e *BoardWithFigurePosition) Hash() string {
-	// algorithm := sha256.New()
-	// algorithm.Write([]byte(e.Board))
-	//
-	// sum32 := algorithm.Sum(nil)
-	//
-
 	algorithm := fnv.New32a()
 	algorithm.Write([]byte(e.Board))
-	sum32 := algorithm.Sum32()
-
-	e.hash = fmt.Sprintf("%x", sum32)
+	e.hash = fmt.Sprintf("%x", algorithm.Sum32())
 	return e.hash
 }
 
@@ -70,8 +61,8 @@ func (p *Placement) placeFiguresOnBoard(boards map[string]string, behaviour Figu
 
 		boardsWithPlacement := p.PlaceFiguresOnEmptyBoard(board, behaviour)
 
-		for u, _ := range boardsWithPlacement {
-			resultingMap[u] = u
+		for hash, element := range boardsWithPlacement {
+			resultingMap[hash] = element
 		}
 	}
 	return resultingMap

@@ -152,7 +152,6 @@ func Test_boardBuilder_addToNonEmptyChain(t *testing.T) {
 	}
 }
 
-// todo add more variations
 func Test_number_of_boards_with_1_figure(t *testing.T) {
 	type args struct {
 		board *Chessboard
@@ -168,22 +167,21 @@ func Test_number_of_boards_with_1_figure(t *testing.T) {
 		{"Test empty board with 2 rook", args{board: NewChessboard().withRook(2).Build()}, 1568},
 		{"Test empty board with 1 rook 1 rook", args{board: NewChessboard().withRook(1).withRook(1).Build()}, 1568},
 		{"Test empty board with 1 king 1 rook", args{board: NewChessboard().withKing(1).withBishop(1).Build()}, 3248},
-		{"Test empty board with 2 bishop ", args{board: NewChessboard().withBishop(2).Build()}, 1726},
-		{"Test empty board with 1 bishop 1 bishop", args{board: NewChessboard().withBishop(1).withBishop(1).Build()}, 1726},
-		{"Test empty board with 1 bishop 1 king", args{board: NewChessboard().withBishop(1).withKing(1).Build()}, 3207},
-		{"Test empty board with 1 bishop 1 king", args{board: NewChessboard().withBishop(1).withRook(1).Build()}, 2571},
+		{"Test empty board with 2 bishop ", args{board: NewChessboard().withBishop(2).Build()}, 1736},
+		{"Test empty board with 1 bishop 1 bishop", args{board: NewChessboard().withBishop(1).withBishop(1).Build()}, 1736},
+		{"Test empty board with 1 bishop 1 king", args{board: NewChessboard().withBishop(1).withKing(1).Build()}, 3178},
+		{"Test empty board with 1 bishop 1 king", args{board: NewChessboard().withBishop(1).withRook(1).Build()}, 2506},
 		{"Test empty board with 1 bishop 1 king", args{board: NewChessboard().withRook(1).withBishop(1).Build()}, 2576},
 		{"Test empty board with 1 queen", args{board: NewChessboard().withQueen(1).Build()}, 64},
-		{"Test empty board with 1 queen", args{board: NewChessboard().withQueen(2).Build()}, 1278},
-		{"Test empty board with 1 queen", args{board: NewChessboard().withQueen(1).withQueen(1).Build()}, 1278},
+		{"Test empty board with 1 queen", args{board: NewChessboard().withQueen(2).Build()}, 1288},
+		{"Test empty board with 1 queen", args{board: NewChessboard().withQueen(1).withQueen(1).Build()}, 1288},
 		{"Test empty board with 1 queen", args{board: NewChessboard().withKing(1).withQueen(1).Build()}, 2576},
-		{"Test empty board with 1 queen", args{board: NewChessboard().withQueen(1).withKing(1).Build()}, 2535},
-		// todo check hashcode
-		{"Test empty board with 1 queen", args{board: NewChessboard().withQueen(3).Build()}, 10067},
-		{"Test empty board with 1 queen", args{board: NewChessboard().withQueen(4).Build()}, 32807},
-		{"Test empty board with 1 queen", args{board: NewChessboard().withQueen(5).Build()}, 42650},
-		{"Test empty board with 1 queen", args{board: NewChessboard().withQueen(6).Build()}, 19675},
-		{"Test empty board with 1 queen", args{board: NewChessboard().withQueen(7).Build()}, 2587},
+		{"Test empty board with 1 queen", args{board: NewChessboard().withQueen(1).withKing(1).Build()}, 2506},
+		{"Test empty board with 1 queen", args{board: NewChessboard().withQueen(3).Build()}, 10320},
+		{"Test empty board with 1 queen", args{board: NewChessboard().withQueen(4).Build()}, 34568},
+		{"Test empty board with 1 queen", args{board: NewChessboard().withQueen(5).Build()}, 46736},
+		{"Test empty board with 1 queen", args{board: NewChessboard().withQueen(6).Build()}, 22708},
+		{"Test empty board with 1 queen", args{board: NewChessboard().withQueen(7).Build()}, 3192},
 		{"Test empty board with 1 queen", args{board: NewChessboard().withQueen(8).Build()}, 92},
 		{"Test empty board with 1 queen", args{board: NewChessboard().withQueen(1).withQueen(1).withQueen(1).withQueen(1).withQueen(1).withQueen(1).withQueen(1).withQueen(1).Build()}, 92},
 		{"Test empty board with 1 queen", args{board: NewChessboard().withQueen(9).Build()}, 0},
@@ -216,60 +214,43 @@ func Test_number_of_boards_with_different_figure_variations(t *testing.T) {
 		unitedSet[u] = s
 	}
 
-	// "xxxxqxxx\n" +
-	// "xxqxxxxx\n" +
-	// "qxxxxxxx\n" +
-	// "xxxxxqxx\n" +
-	// "xxxxxxxq\n" +
-	// "xqxxxxxx\n" +
-	// "xxxqxxxx\n" +
-	// "xxxxxxqx\n"
-
-	// qxxxxxxx
-	// xxxxxxqx
-	// xxxqxxxx
-	// xxxxxqxx
-	// xxxxxxxq
-	// xqxxxxxx
-	// xxxxqxxx
-	// xxqxxxxx
-
-	// counterOfNotUniqueItemsInSet := 0
-	// unitedSet.ForEach(func(position *figures.BoardWithFigurePosition) bool {
-	// 	if contains(unitedBoards, position.Board) {
-	// 		counterOfNotUniqueItemsInSet++
-	// 	}
-	// 	unitedBoards = append(unitedBoards, position.Board)
-	// 	return true
-	// })
-	if len(unitedSet) != 113022 {
-		t.Errorf("placeFigures() all possible variations = %v, want %v", len(unitedSet), 113022)
+	if len(placeFigures_R_K_R) != 49887 {
+		t.Errorf("placeFigures() all possible variations = %v, want %v", len(placeFigures_R_K_R), 49887)
+	}
+	if len(placeFigures_R_K_R) != 49887 {
+		t.Errorf("placeFigures() all possible variations = %v, want %v", len(placeFigures_R_K_R), 49887)
+	}
+	if len(placeFigures_K_R_R) != 49887 {
+		t.Errorf("placeFigures() all possible variations = %v, want %v", len(placeFigures_K_R_R), 49887)
+	}
+	if len(unitedSet) != 49887 {
+		t.Errorf("placeFigures() all possible variations = %v, want %v", len(unitedSet), 49887)
 	}
 }
 
-func contains(s []string, e string) bool {
-	for _, a := range s {
-		if a == e {
-			return true
-		}
-	}
-	return false
-}
-
-// difference returns the elements in `a` that aren't in `b`.
-func difference(a, b []string) []string {
-	mb := make(map[string]struct{}, len(b))
-	for _, x := range b {
-		mb[x] = struct{}{}
-	}
-	var diff []string
-	for _, x := range a {
-		if _, found := mb[x]; !found {
-			diff = append(diff, x)
-		}
-	}
-	return diff
-}
+// func contains(s []string, e string) bool {
+// 	for _, a := range s {
+// 		if a == e {
+// 			return true
+// 		}
+// 	}
+// 	return false
+// }
+//
+// // difference returns the elements in `a` that aren't in `b`.
+// func difference(a, b []string) []string {
+// 	mb := make(map[string]struct{}, len(b))
+// 	for _, x := range b {
+// 		mb[x] = struct{}{}
+// 	}
+// 	var diff []string
+// 	for _, x := range a {
+// 		if _, found := mb[x]; !found {
+// 			diff = append(diff, x)
+// 		}
+// 	}
+// 	return diff
+// }
 
 func Test_board_with_1_figure(t *testing.T) {
 	type fields struct {
@@ -294,7 +275,7 @@ func Test_board_with_1_figure(t *testing.T) {
 		want   int
 	}{
 		{"Test empty board with 1 king", fields{map[rune]int{(&figures.King{}).GetName(): 1}, &figures.King{}, figures.Placement{}}, args{&figures.King{}, make(map[string]string)}, 64},
-		{"Test empty board with 2 king", fields{map[rune]int{(&figures.King{}).GetName(): 2}, &figures.King{}, figures.Placement{}}, args{&figures.King{}, make(map[string]string)}, 3612},
+		{"Test empty board with 2 king", fields{map[rune]int{(&figures.King{}).GetName(): 2}, &figures.King{}, figures.Placement{}}, args{&figures.King{}, make(map[string]string)}, 1806},
 		{"Test empty board with 1 king 1 rook", fields{map[rune]int{(&figures.King{}).GetName(): 1, (&figures.Rook{}).GetName(): 1}, figureBehaviour, figures.Placement{}}, args{figureBehaviour, make(map[string]string)}, 2952},
 		// {"Test empty board with 1 king 1 queen", fields{map[rune]int{(&figures.King{}).GetName(): 1, (&figures.Queen{}).GetName(): 1}, behaviour, figures.Placement{}}, args{behaviour, set.NewHashSet[*figures.BoardWithFigurePosition, string](0)}, 4032},
 	}

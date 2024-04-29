@@ -282,7 +282,7 @@ func Test_isAnotherFigurePresentOnTheLineVertically(t *testing.T) {
 			'_', '_', '_', '_', '_', '_', '_', '_', '\n',
 			'_', '_', '_', '_', '_', '_', '_', '_', '\n',
 			'x', '_', '_', '_', '_', '_', '_', '_', '\n'},
-			0}, true},
+			0}, false},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
