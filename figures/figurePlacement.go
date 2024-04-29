@@ -1,8 +1,8 @@
 package figures
 
 import (
+	"crypto/sha512"
 	"fmt"
-	"hash/fnv"
 	"strings"
 )
 
@@ -20,9 +20,9 @@ type BoardWithFigurePosition struct {
 }
 
 func (e *BoardWithFigurePosition) Hash() string {
-	algorithm := fnv.New32a()
+	algorithm := sha512.New512_256()
 	algorithm.Write([]byte(e.Board))
-	e.hash = fmt.Sprintf("%x", algorithm.Sum32())
+	e.hash = fmt.Sprintf("%x", algorithm.Sum(nil))
 	return e.hash
 }
 

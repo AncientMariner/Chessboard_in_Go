@@ -165,7 +165,7 @@ func Test_number_of_boards_with_1_figure(t *testing.T) {
 		{"Test empty board with 2 king", args{board: NewChessboard().withKing(2).Build()}, 1806}, // 3612 if black and white king
 		{"Test empty board with 1 king 1 king", args{board: NewChessboard().withKing(1).withKing(1).Build()}, 1806},
 		{"Test empty board with 2 rook", args{board: NewChessboard().withRook(2).Build()}, 1568},
-		{"Test empty board with 8 rook", args{board: NewChessboard().withRook(8).Build()}, 40318}, // check for 40320
+		{"Test empty board with 8 rook", args{board: NewChessboard().withRook(8).Build()}, 40320},
 		{"Test empty board with 1 rook 1 rook", args{board: NewChessboard().withRook(1).withRook(1).Build()}, 1568},
 		{"Test empty board with 1 king 1 rook", args{board: NewChessboard().withKing(1).withBishop(1).Build()}, 3248},
 		{"Test empty board with 2 bishop ", args{board: NewChessboard().withBishop(2).Build()}, 1736},
