@@ -15,17 +15,24 @@ type FigurePlacement interface {
 }
 
 type BoardWithFigurePosition struct {
-	Board  string
-	number int
-	hash   uint32
+	Board string
+	// number int
+	hash string
 }
 
 func (e *BoardWithFigurePosition) Hash() string {
+	// algorithm := sha256.New()
+	// algorithm.Write([]byte(e.Board))
+	//
+	// sum32 := algorithm.Sum(nil)
+	//
+
 	algorithm := fnv.New32a()
 	algorithm.Write([]byte(e.Board))
 	sum32 := algorithm.Sum32()
-	e.hash = sum32
-	return fmt.Sprintf("%s:%d", e.Board, sum32)
+
+	e.hash = fmt.Sprintf("%x", sum32)
+	return e.hash
 }
 
 const defaultDimension = 8
@@ -45,7 +52,7 @@ func drawEmptyBoard() string {
 	return board.String()
 }
 
-func (p *Placement) PlaceFigure(numberOfFigures int, behaviour FigureBehaviour, boards map[uint32]string) map[uint32]string {
+func (p *Placement) PlaceFigure(numberOfFigures int, behaviour FigureBehaviour, boards map[string]string) map[string]string {
 	for i := 0; i < numberOfFigures; i++ {
 		if len(boards) == 0 {
 			boards = p.PlaceFiguresOnEmptyBoard(drawEmptyBoard(), behaviour)
@@ -56,19 +63,20 @@ func (p *Placement) PlaceFigure(numberOfFigures int, behaviour FigureBehaviour, 
 	return boards
 }
 
-func (p *Placement) placeFiguresOnBoard(boards map[uint32]string, behaviour FigureBehaviour) map[uint32]string {
-	var resultingMap = make(map[uint32]string)
+func (p *Placement) placeFiguresOnBoard(boards map[string]string, behaviour FigureBehaviour) map[string]string {
+	var resultingMap = make(map[string]string)
 
-	for _, ss := range boards {
-		boardsWithPlacement := p.PlaceFiguresOnEmptyBoard(ss, behaviour)
+	for _, board := range boards {
 
-		for u, s := range boardsWithPlacement {
-			resultingMap[u] = s
+		boardsWithPlacement := p.PlaceFiguresOnEmptyBoard(board, behaviour)
+
+		for u, _ := range boardsWithPlacement {
+			resultingMap[u] = u
 		}
 	}
 	return resultingMap
 }
 
-func (p *Placement) PlaceFiguresOnEmptyBoard(board string, behaviour FigureBehaviour) map[uint32]string {
+func (p *Placement) PlaceFiguresOnEmptyBoard(board string, behaviour FigureBehaviour) map[string]string {
 	return behaviour.Handle(board)
 }

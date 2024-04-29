@@ -4,7 +4,7 @@ type Bishop struct {
 	Figure
 }
 
-func (bishop *Bishop) Handle(board string) map[uint32]string {
+func (bishop *Bishop) Handle(board string) map[string]string {
 	countOfEmptyPlaces := 0
 	for i := 0; i < len(board); i++ {
 		if board[i] == emptyField {
@@ -12,7 +12,7 @@ func (bishop *Bishop) Handle(board string) map[uint32]string {
 		}
 	}
 
-	boards := make(map[uint32]string, countOfEmptyPlaces)
+	boards := make(map[string]string, countOfEmptyPlaces)
 
 	for i := 0; i < len(board) && len(board) == ((defaultDimension+1)*defaultDimension); i++ {
 		if board[i] == emptyField {
@@ -25,10 +25,10 @@ func (bishop *Bishop) Handle(board string) map[uint32]string {
 
 				b := &BoardWithFigurePosition{}
 				b.Board = string(out)
-				b.number = i
-				b.Hash()
+				// b.number = i
+				// b.Hash()
 
-				boards[b.hash] = b.Board
+				boards[b.Board] = b.Board
 			}
 		}
 	}
@@ -42,7 +42,7 @@ func placeAttackPlacesDiagonallyBelow(out []rune, position int) {
 	diagBelowRight := position + defaultDimension + 1 + 1
 	diagBelowLeft := position + defaultDimension + 1 - 1
 
-	currentLine := position/defaultDimension + 1
+	currentLine := position/(defaultDimension+1) + 1
 	for lineBelow := currentLine + 1; lineBelow <= defaultDimension; lineBelow++ {
 		lineOfTheDiagBelowRight := diagBelowRight/(defaultDimension+1) + 1
 		lineOfTheDiagBelowLeft := diagBelowLeft/(defaultDimension+1) + 1
@@ -63,55 +63,65 @@ func placeAttackPlacesDiagonallyAbove(out []rune, position int) {
 	if position >= len(out) || position == defaultDimension || position%(defaultDimension+1) == defaultDimension {
 		return
 	}
-	diagAboveRight := position - defaultDimension - 1 + 1
 	diagAboveLeft := position - defaultDimension - 1 - 1
+	diagAboveRight := position - defaultDimension - 1 + 1
 
-	for linesAbove := position / (defaultDimension + 1); linesAbove > 0; linesAbove-- {
-		if position >= defaultDimension+1 && diagAboveRight >= 0 && out[diagAboveRight] == emptyField {
-			out[diagAboveRight] = attackPlace
-		}
-		diagAboveRight = diagAboveRight - defaultDimension - 1 + 1
+	currentLine := position/(defaultDimension+1) + 1
+	for lineAbove := currentLine - 1; lineAbove > 0; lineAbove-- {
 		if position >= defaultDimension+1 && diagAboveLeft >= 0 && out[diagAboveLeft] == emptyField {
 			out[diagAboveLeft] = attackPlace
 		}
 		diagAboveLeft = diagAboveLeft - defaultDimension - 1 - 1
+
+		if position >= defaultDimension+1 && diagAboveRight >= 0 && out[diagAboveRight] == emptyField {
+			out[diagAboveRight] = attackPlace
+		}
+		diagAboveRight = diagAboveRight - defaultDimension - 1 + 1
 	}
 }
 
 func isAnotherFigurePresentDiag(out []rune, position int) bool {
-	numberOfLines := len(out) / (defaultDimension + 1)
-	currentLine := position / (defaultDimension + 1)
-
+	currentLine := position/(defaultDimension+1) + 1
+	// add above line calc
 	var diagNumbers []int
 
 	previousLinePositionLeft := position - defaultDimension - 1 - 1
 	previousLinePositionRight := position - defaultDimension - 1 + 1
-	for counterAboveLines := currentLine; previousLinePositionLeft >= 0 && previousLinePositionRight >= 0 && counterAboveLines > 0; counterAboveLines-- {
-		if out[previousLinePositionRight] != '\n' {
-			diagNumbers = append(diagNumbers, previousLinePositionRight)
-		}
-		previousLinePositionRight = previousLinePositionRight - defaultDimension - 1 + 1
-		if out[previousLinePositionLeft] != '\n' {
+	// previousLine := currentLine - 1
+
+	for lineAbove := currentLine - 1; lineAbove > 0; lineAbove-- {
+		lineOfTheDiagAboveLeft := previousLinePositionLeft/(defaultDimension+1) + 1
+		lineOfTheDiagAboveRight := previousLinePositionRight/(defaultDimension+1) + 1
+
+		if lineOfTheDiagAboveLeft == lineAbove && previousLinePositionLeft >= 0 && out[previousLinePositionLeft] != '\n' {
 			diagNumbers = append(diagNumbers, previousLinePositionLeft)
 		}
 		previousLinePositionLeft = previousLinePositionLeft - defaultDimension - 1 - 1
+		if lineOfTheDiagAboveRight == lineAbove && previousLinePositionRight >= 0 && out[previousLinePositionRight] != '\n' {
+			diagNumbers = append(diagNumbers, previousLinePositionRight)
+		}
+		previousLinePositionRight = previousLinePositionRight - defaultDimension - 1 + 1
 	}
 
 	nextLinePositionLeft := position + defaultDimension + 1 - 1
 	nextLinePositionRight := position + defaultDimension + 1 + 1
-	for counterBelowLines := numberOfLines - currentLine - 1; nextLinePositionRight < len(out) && nextLinePositionLeft < len(out) && counterBelowLines > 0; counterBelowLines-- {
-		if out[nextLinePositionRight] != '\n' {
+
+	for lineBelow := currentLine + 1; lineBelow <= defaultDimension; lineBelow++ {
+		lineOfTheDiagBelowLeft := nextLinePositionLeft/(defaultDimension+1) + 1
+		lineOfTheDiagBelowRight := nextLinePositionRight/(defaultDimension+1) + 1
+
+		if lineBelow == lineOfTheDiagBelowRight && nextLinePositionRight < len(out) && out[nextLinePositionRight] != '\n' {
 			diagNumbers = append(diagNumbers, nextLinePositionRight)
 		}
 		nextLinePositionRight = nextLinePositionRight + defaultDimension + 1 + 1
-		if out[nextLinePositionLeft] != '\n' {
+		if lineBelow == lineOfTheDiagBelowLeft && nextLinePositionLeft < len(out) && out[nextLinePositionLeft] != '\n' {
 			diagNumbers = append(diagNumbers, nextLinePositionLeft)
 		}
 		nextLinePositionLeft = nextLinePositionLeft + defaultDimension + 1 - 1
 	}
 
 	for _, number := range diagNumbers {
-		if out[number] != emptyField && out[number] != attackPlace && out[number] != '\n' {
+		if out[number] != emptyField && out[number] != attackPlace {
 			return true
 		}
 	}

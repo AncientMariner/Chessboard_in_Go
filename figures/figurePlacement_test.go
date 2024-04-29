@@ -28,15 +28,15 @@ func TestPlacement_PlaceFigure(t *testing.T) {
 	type args struct {
 		numberOfFigures int
 		behaviour       FigureBehaviour
-		boards          map[uint32]string
+		boards          map[string]string
 	}
 
 	item := &BoardWithFigurePosition{}
 	item.Board = "________\n________\n________\n________\n________\n________\n________\n________\n"
-	item.number = 1
+	// item.number = 1
 	item.Hash()
 
-	newMap := make(map[uint32]string)
+	newMap := make(map[string]string)
 	newMap[item.hash] = item.Board
 
 	tests := []struct {
@@ -48,12 +48,12 @@ func TestPlacement_PlaceFigure(t *testing.T) {
 		{"Test place figures without figures", fields{nil}, args{
 			0,
 			&King{},
-			make(map[uint32]string),
+			make(map[string]string),
 		}, 0},
 		{"Test place figures on empty board", fields{nil}, args{
 			1,
 			&King{},
-			make(map[uint32]string),
+			make(map[string]string),
 		}, 64},
 		{"Test place figures on board", fields{nil}, args{
 			1,
@@ -106,16 +106,16 @@ func TestPlacement_placeFiguresOnBoard(t *testing.T) {
 		currentPlacement FigurePlacement
 	}
 	type args struct {
-		boards    map[uint32]string
+		boards    map[string]string
 		behaviour FigureBehaviour
 	}
 
 	item := &BoardWithFigurePosition{}
 	item.Board = string("________\n________\n________\n________\n________\n________\n________\n________\n")
-	item.number = 1
+	// item.number = 1
 	item.Hash()
 
-	newMap := make(map[uint32]string)
+	newMap := make(map[string]string)
 	newMap[item.hash] = item.Board
 
 	tests := []struct {

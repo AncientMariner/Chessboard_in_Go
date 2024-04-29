@@ -4,7 +4,7 @@ type Queen struct {
 	Figure
 }
 
-func (queen *Queen) Handle(board string) map[uint32]string {
+func (queen *Queen) Handle(board string) map[string]string {
 	countOfEmptyPlaces := 0
 	for i := 0; i < len(board); i++ {
 		if board[i] == emptyField {
@@ -12,13 +12,13 @@ func (queen *Queen) Handle(board string) map[uint32]string {
 		}
 	}
 
-	hashSetOfBoards := make(map[uint32]string, countOfEmptyPlaces)
+	boards := make(map[string]string, countOfEmptyPlaces)
 
 	for i := 0; i < len(board) && len(board) == ((defaultDimension+1)*defaultDimension); i++ {
 		if board[i] == emptyField {
 			out := []rune(board)
 
-			if !isAnotherFigurePresentOnTheLine(out, i) && !isAnotherFigurePresentOnTheColumn(out, i) && !isAnotherFigurePresentDiag(out, i) {
+			if isAnotherFigureNotPresent(out, i) {
 				placeAttackPlacesHorizontally(out, i)
 				placeAttackPlacesVertically(out, i)
 				placeAttackPlacesDiagonallyAbove(out, i)
@@ -28,14 +28,18 @@ func (queen *Queen) Handle(board string) map[uint32]string {
 
 				b := &BoardWithFigurePosition{}
 				b.Board = string(out)
-				b.number = i
-				b.Hash()
+				// b.number = i
+				// b.Hash()
 
-				hashSetOfBoards[b.hash] = b.Board
+				boards[b.Board] = b.Board
 			}
 		}
 	}
-	return hashSetOfBoards
+	return boards
+}
+
+func isAnotherFigureNotPresent(out []rune, i int) bool {
+	return !isAnotherFigurePresentOnTheLine(out, i) && !isAnotherFigurePresentOnTheColumn(out, i) && !isAnotherFigurePresentDiag(out, i)
 }
 
 func (*Queen) GetName() rune {

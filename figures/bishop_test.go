@@ -44,12 +44,12 @@ func TestBishop_Handle(t *testing.T) {
 	}{
 		{"Test handle board size 8 is not possible", fields{Figure{next: nil}}, args{board: "________\n"}, 0},
 		{"Test handle empty board size 64", fields{Figure{next: nil}}, args{board: "________\n________\n________\n________\n________\n________\n________\n________\n"}, 64},
-		{"Test handle board with 1 king size 48", fields{Figure{next: nil}}, args{board: "xxx_____\nxkx_____\nxxx_____\n________\n________\n________\n________\n________\n"}, 48},
-		{"Test handle board with kings size 40", fields{Figure{next: nil}}, args{board: "xxx_____\nxkx_____\nxxx_____\n________\n________\n_____xxx\n_____xkx\n_____xxx\n"}, 40},
-		{"Test handle board with kings size 28", fields{Figure{next: nil}}, args{board: "xxx_____\nxkx_____\nxxxxxx__\n___xkx__\n___xxx__\n_____xxx\n_____xkx\n_____xxx\n"}, 28},
-		{"Test handle board with kings size 20", fields{Figure{next: nil}}, args{board: "xxx_____\nxkx_____\nxxxxxx__\n___xkx__\n___xxx__\n__xxxxxx\n__xkxxkx\n__xxxxxx\n"}, 16},
-		{"Test handle board with kings size 11", fields{Figure{next: nil}}, args{board: "xxxxxx__\nxkxxkx__\nxxxxxx__\n___xkx__\n___xxx__\n__xxxxxx\n__xkxxkx\n__xxxxxx\n"}, 7},
-		{"Test handle board with kings size 7", fields{Figure{next: nil}}, args{board: "xxxxxx__\nxkxxkx__\nxxxxxx__\nxkxxkx__\nxxxxxx__\nxxxxxxxx\n__xkxxkx\n__xxxxxx\n"}, 5},
+		{"Test handle board with 1 king size 50", fields{Figure{next: nil}}, args{board: "xxx_____\nxkx_____\nxxx_____\n________\n________\n________\n________\n________\n"}, 50},
+		{"Test handle board with kings size 44", fields{Figure{next: nil}}, args{board: "xxx_____\nxkx_____\nxxx_____\n________\n________\n_____xxx\n_____xkx\n_____xxx\n"}, 44},
+		{"Test handle board with kings size 32", fields{Figure{next: nil}}, args{board: "xxx_____\nxkx_____\nxxxxxx__\n___xkx__\n___xxx__\n_____xxx\n_____xkx\n_____xxx\n"}, 32},
+		{"Test handle board with kings size 20", fields{Figure{next: nil}}, args{board: "xxx_____\nxkx_____\nxxxxxx__\n___xkx__\n___xxx__\n__xxxxxx\n__xkxxkx\n__xxxxxx\n"}, 20},
+		{"Test handle board with kings size 11", fields{Figure{next: nil}}, args{board: "xxxxxx__\nxkxxkx__\nxxxxxx__\n___xkx__\n___xxx__\n__xxxxxx\n__xkxxkx\n__xxxxxx\n"}, 11},
+		{"Test handle board with kings size 7", fields{Figure{next: nil}}, args{board: "xxxxxx__\nxkxxkx__\nxxxxxx__\nxkxxkx__\nxxxxxx__\nxxxxxxxx\n__xkxxkx\n__xxxxxx\n"}, 7},
 		{"Test handle board with kings size 5", fields{Figure{next: nil}}, args{board: "xxxxxx__\nxkxxkx__\nxxxxxx__\nxkxxkxxx\nxxxxxxxk\nxxxxxxxx\n__xkxxkx\n__xxxxxx\n"}, 5},
 		{"Test handle board with kings size 1", fields{Figure{next: nil}}, args{board: "xxxxxxxx\nxkxxkxxk\nxxxxxxxx\nxkxxkxxx\nxxxxxxxk\nxxxxxxxx\n__xkxxkx\n__xxxxxx\n"}, 1},
 	}

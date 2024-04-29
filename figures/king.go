@@ -4,7 +4,7 @@ type King struct {
 	Figure
 }
 
-func (king *King) Handle(board string) map[uint32]string {
+func (king *King) Handle(board string) map[string]string {
 
 	countOfEmptyPlaces := 0
 	for i := 0; i < len(board); i++ {
@@ -13,7 +13,7 @@ func (king *King) Handle(board string) map[uint32]string {
 		}
 	}
 
-	hashSetOfBoards := make(map[uint32]string, countOfEmptyPlaces)
+	hashSetOfBoards := make(map[string]string, countOfEmptyPlaces)
 
 	for i := 0; i < len(board) && len(board) == ((defaultDimension+1)*defaultDimension); i++ {
 		if board[i] == emptyField {
@@ -28,10 +28,10 @@ func (king *King) Handle(board string) map[uint32]string {
 
 				b := &BoardWithFigurePosition{}
 				b.Board = string(out)
-				b.number = i
-				b.Hash()
+				// b.number = i
+				// b.Hash()
 
-				hashSetOfBoards[b.hash] = b.Board
+				hashSetOfBoards[b.Board] = b.Board
 			}
 		}
 	}

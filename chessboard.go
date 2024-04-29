@@ -16,12 +16,12 @@ func main() {
 	fmt.Printf("\nboardsWithFigures.Size() %d", len(boardsWithFigures))
 }
 
-func (board *Chessboard) placeFigures() map[uint32]string {
+func (board *Chessboard) placeFigures() map[string]string {
 
-	return board.placeFigure(board.currentFigureBehaviour, make(map[uint32]string))
+	return board.placeFigure(board.currentFigureBehaviour, make(map[string]string))
 }
 
-func (board *Chessboard) placeFigure(behaviour figures.FigureBehaviour, previousFigureBoards map[uint32]string) map[uint32]string {
+func (board *Chessboard) placeFigure(behaviour figures.FigureBehaviour, previousFigureBoards map[string]string) map[string]string {
 	result := board.figurePlacement.PlaceFigure(board.figureQuantityMap[behaviour.GetName()], behaviour, previousFigureBoards)
 
 	if behaviour.GetNext() != nil {

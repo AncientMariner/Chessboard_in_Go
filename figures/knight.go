@@ -5,7 +5,7 @@ type Knight struct {
 	// add placement behaviour
 }
 
-func (knight *Knight) Handle(request string) map[uint32]string {
+func (knight *Knight) Handle(request string) map[string]string {
 	if request == "Hello" {
 		return nil
 	}
