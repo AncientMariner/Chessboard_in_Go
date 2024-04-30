@@ -20,7 +20,9 @@ func (knight *Knight) Handle(board string) map[string]string {
 			out := []rune(board)
 
 			if !isAnotherFigurePresentBelow(out, i) && !isAnotherFigurePresentBelow(out, i) {
-				placeAttackPlaces(out, i)
+				placeAttackPlacesBelow(out, i)
+				placeAttackPlacesAbove(out, i)
+
 				out[i] = knight.GetName()
 
 				b := &BoardWithFigurePosition{}
@@ -32,7 +34,7 @@ func (knight *Knight) Handle(board string) map[string]string {
 	return boards
 }
 
-func placeAttackPlaces(out []rune, position int) {
+func placeAttackPlacesBelow(out []rune, position int) {
 	if position >= len(out) || position == defaultDimension || position%(defaultDimension+1) == defaultDimension {
 		return
 	}
@@ -62,6 +64,40 @@ func placeAttackPlaces(out []rune, position int) {
 	below2LineRight := positionBelow2LinesRight/(defaultDimension+1) + 1
 	if line2Below == below2LineRight && positionBelow2LinesRight < len(out) && out[positionBelow2LinesRight] == emptyField {
 		out[positionBelow2LinesRight] = attackPlace
+	}
+}
+
+func placeAttackPlacesAbove(out []rune, position int) {
+	if position >= len(out) || position == defaultDimension || position%(defaultDimension+1) == defaultDimension {
+		return
+	}
+	currentLine := position/(defaultDimension+1) + 1
+
+	positionAboveLineLeft := position - defaultDimension - 1 - 2
+	positionAboveLineRight := position - defaultDimension - 1 + 2
+
+	lineAbove := currentLine - 1
+	aboveLineLeft := positionAboveLineLeft/(defaultDimension+1) + 1
+	aboveLineRight := positionAboveLineRight/(defaultDimension+1) + 1
+
+	if aboveLineLeft == lineAbove && positionAboveLineLeft >= 0 && out[positionAboveLineLeft] == emptyField {
+		out[positionAboveLineLeft] = attackPlace
+	}
+	if aboveLineRight == lineAbove && positionAboveLineRight >= 0 && out[positionAboveLineRight] == emptyField {
+		out[positionAboveLineRight] = attackPlace
+	}
+
+	positionAbove2LinesLeft := position - 2*(defaultDimension+1) - 1
+	positionAbove2LinesRight := position - 2*(defaultDimension+1) + 1
+
+	above2LineLeft := positionAbove2LinesLeft/(defaultDimension+1) + 1
+	above2LineRight := positionAbove2LinesRight/(defaultDimension+1) + 1
+	line2Above := currentLine - 1 - 1
+	if above2LineLeft == line2Above && positionAbove2LinesLeft >= 0 && out[positionAbove2LinesLeft] != '\n' {
+		out[positionAbove2LinesLeft] = attackPlace
+	}
+	if above2LineRight == line2Above && positionAbove2LinesRight >= 0 && out[positionAbove2LinesRight] != '\n' {
+		out[positionAbove2LinesRight] = attackPlace
 	}
 }
 

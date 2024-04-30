@@ -44,6 +44,12 @@ func TestKnight_Handle(t *testing.T) {
 	}{
 		{"Test handle board size 8 is not possible", fields{Figure{next: nil}}, args{board: "________\n"}, 0},
 		{"Test handle empty board size 64", fields{Figure{next: nil}}, args{board: "________\n________\n________\n________\n________\n________\n________\n________\n"}, 64},
+		{"Test handle empty board size 64", fields{Figure{next: nil}}, args{board: "xxx_____\nxkx_____\nxxx_____\n________\n________\n________\n________\n________\n"}, 54},
+		{"Test handle empty board size 64", fields{Figure{next: nil}}, args{board: "xxx_____\nxkx_____\nxxx_____\n___xxx__\n___xkx__\n___xxx__\n________\n________\n"}, 41},
+		{"Test handle empty board size 64", fields{Figure{next: nil}}, args{board: "xxx_____\nxkx_____\nxxx_____\n___xxx__\n___xkx__\n___xxx__\nxxx__xxx\nxkx__xkx\n"}, 24},
+		{"Test handle empty board size 64", fields{Figure{next: nil}}, args{board: "xxx__xxx\nxkx__xkx\nxxx__xxx\nxxxxxx__\nxkxxkx__\nxxxxxx__\nxxx__xxx\nxkx__xkx\n"}, 9},
+		{"Test handle empty board size 64", fields{Figure{next: nil}}, args{board: "xxx__xxx\nxkx__xkx\nxxx__xxx\nxxxxxx__\nxkxxkxxx\nxxxxxxxk\nxxxxxxxx\nxkxkxxkx\n"}, 4},
+		{"Test handle empty board size 64", fields{Figure{next: nil}}, args{board: "xxxxxxxx\nxkxkxxkx\nxxxxxxxx\nxxxxxx__\nxkxxkxxx\nxxxxxxxk\nxxxxxxxx\nxkxkxxkx\n"}, 1},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -173,7 +179,7 @@ func Test_isAnotherFigurePresentBelow(t *testing.T) {
 	}
 }
 
-func Test_placeAttackPlacesHorizontally1(t *testing.T) {
+func Test_placeAttackPlacesBelow(t *testing.T) {
 	type args struct {
 		out      []rune
 		position int
@@ -190,9 +196,39 @@ func Test_placeAttackPlacesHorizontally1(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			placeAttackPlaces(tt.args.out, tt.args.position)
+			placeAttackPlacesBelow(tt.args.out, tt.args.position)
 			if !reflect.DeepEqual(tt.args.out, tt.want) {
-				t.Errorf("placeAttackPlacesHorizontally1() = %v, want %v", tt.args.out, tt.want)
+				t.Errorf("placeAttackPlacesBelow() = %v, want %v", tt.args.out, tt.want)
+			}
+		})
+	}
+}
+
+func Test_placeAttackPlacesAbove(t *testing.T) {
+	type args struct {
+		out      []rune
+		position int
+	}
+	tests := []struct {
+		name string
+		args args
+		want []rune
+	}{
+		{"Test above", args{
+			out:      []rune{'_', '_', '_', '_', '_', '_', '_', '_', '\n', '_', '_', '_', '_', '_', '_', '_', '_', '\n', '_', '_', '_', '_', '_', '_', '_', '_', '\n'},
+			position: 20,
+		}, []rune{'_', 'x', '_', 'x', '_', '_', '_', '_', '\n', 'x', '_', '_', '_', 'x', '_', '_', '_', '\n', '_', '_', '_', '_', '_', '_', '_', '_', '\n'}},
+
+		{"Test below", args{
+			out:      []rune{'_', '_', '_', '_', '_', '_', '_', '_', '\n', '_', '_', '_', '_', '_', '_', '_', '_', '\n', '_', '_', '_', '_', '_', '_', '_', '_', '\n'},
+			position: 18,
+		}, []rune{'_', 'x', '_', '_', '_', '_', '_', '_', '\n', '_', '_', 'x', '_', '_', '_', '_', '_', '\n', '_', '_', '_', '_', '_', '_', '_', '_', '\n'}},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			placeAttackPlacesAbove(tt.args.out, tt.args.position)
+			if !reflect.DeepEqual(tt.args.out, tt.want) {
+				t.Errorf("placeAttackPlacesAbove() = %v, want %v", tt.args.out, tt.want)
 			}
 		})
 	}
