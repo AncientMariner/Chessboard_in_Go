@@ -81,8 +81,18 @@ func (b *boardBuilder) withRook(quantity int) ChessboardBuilder {
 	return b.addToChain(figure)
 }
 
+// new chessboard with default size 8
 func NewChessboard() ChessboardBuilder {
-	return &boardBuilder{chessboard: &Chessboard{}, figureQuantityMap: make(map[rune]int)}
+	chessboard := &Chessboard{}
+	chessboard.figurePlacement.SetDimension(8)
+	return &boardBuilder{chessboard: chessboard, figureQuantityMap: make(map[rune]int)}
+}
+
+// new chessboard with custom default size
+func NewChessboardWithSize(size int) ChessboardBuilder {
+	chessboard := &Chessboard{}
+	chessboard.figurePlacement.SetDimension(size)
+	return &boardBuilder{chessboard: chessboard, figureQuantityMap: make(map[rune]int)}
 }
 
 func (b *boardBuilder) addToChain(figure figures.FigureBehaviour) ChessboardBuilder {

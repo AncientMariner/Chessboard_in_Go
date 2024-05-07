@@ -26,7 +26,8 @@ func (e *BoardWithFigurePosition) Hash() string {
 	return e.hash
 }
 
-const defaultDimension = 8
+var defaultDimension = 8
+
 const emptyField = '_'
 const attackPlace = 'x'
 
@@ -41,6 +42,10 @@ func drawEmptyBoard() string {
 		board.WriteString("\n")
 	}
 	return board.String()
+}
+
+func (p *Placement) SetDimension(value int) {
+	defaultDimension = value
 }
 
 func (p *Placement) PlaceFigure(numberOfFigures int, behaviour FigureBehaviour, boards map[string]string) map[string]string {

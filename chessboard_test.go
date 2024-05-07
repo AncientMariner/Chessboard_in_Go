@@ -184,7 +184,8 @@ func Test_number_of_boards_with_1_figure(t *testing.T) {
 		{"Test empty board with 1 king 1 knight", args{board: NewChessboard().withKing(1).withKnight(1).Build()}, 3456},
 		{"Test empty board with 1 knight 1 king", args{board: NewChessboard().withKnight(1).withKing(1).Build()}, 3288},
 		{"Test empty board with 1 queen 1 knight", args{board: NewChessboard().withQueen(1).withKnight(1).Build()}, 2338},
-		{"Test empty board with 1 bishop 1 knight", args{board: NewChessboard().withQueen(1).withBishop(1).Build()}, 2506},
+		{"Test empty board with 1 queen 1 bishop", args{board: NewChessboard().withQueen(1).withBishop(1).Build()}, 2506},
+		{"Test empty board with 1 bishop 1 knight", args{board: NewChessboard().withRook(1).withKnight(1).Build()}, 2968},
 		{"Test empty board with 1 queen 1 rook", args{board: NewChessboard().withQueen(1).withRook(1).Build()}, 2506},
 		{"Test empty board with 1 queen 1 rook", args{board: NewChessboard().withRook(1).withKnight(1).Build()}, 2968},
 		{"Test empty board with 1 queen 1 rook", args{board: NewChessboard().withBishop(1).withKnight(1).Build()}, 3234},
@@ -202,10 +203,27 @@ func Test_number_of_boards_with_1_figure(t *testing.T) {
 		{"Test empty board with 8 queen", args{board: NewChessboard().withQueen(8).Build()}, 92},
 		{"Test empty board with 8 queen", args{board: NewChessboard().withQueen(1).withQueen(1).withQueen(1).withQueen(1).withQueen(1).withQueen(1).withQueen(1).withQueen(1).Build()}, 92},
 		{"Test empty board with 9 queen, impossible case", args{board: NewChessboard().withQueen(9).Build()}, 0},
-		// {"Test empty board with 2 king 2 queen 2 bishop 1 knight", args{board: NewChessboard().withKing(2).withQueen(2).withBishop(2).withKnight(1).withQueen(1).withQueen(1).withQueen(1).withQueen(1).withQueen(1).Build()}, 1806},
-		// todo
-		// board size change
-		// readme - 2 king 2 queen 2 bishop 1 knight 3063828 7 size board
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := tt.args.board.placeFigures(); len(got) != tt.want {
+				t.Errorf("placeFigures() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func Test_number_of_boards_with_1_figure_7x7(t *testing.T) {
+	type args struct {
+		board *Chessboard
+	}
+	tests := []struct {
+		name string
+		args args
+		want int
+	}{
+		{"Test empty board 7x7 with 1 king", args{board: NewChessboardWithSize(7).withKing(1).Build()}, 49},
+		{"Test empty 7x7 board with 2 king 2 queen 2 bishop 1 knight", args{board: NewChessboardWithSize(7).withKing(2).withQueen(2).withBishop(2).withKnight(1).Build()}, 3761852},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

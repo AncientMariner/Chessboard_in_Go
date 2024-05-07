@@ -76,7 +76,7 @@ func isAnotherFigurePresentOnTheLine(out []rune, position int) bool {
 		}
 		nextPosition++
 	}
-	return len(previousPositionNumbers)+len(nextPositionNumbers) < 7
+	return len(previousPositionNumbers)+len(nextPositionNumbers) < defaultDimension-1
 }
 
 func placeAttackPlacesVertically(out []rune, position int) {
@@ -131,7 +131,7 @@ func isAnotherFigurePresentOnTheColumn(out []rune, position int) bool {
 		}
 		belowPosition = belowPosition + defaultDimension + 1
 	}
-	return len(aboveLineNumbers)+len(belowLineNumbers) < 7
+	return len(aboveLineNumbers)+len(belowLineNumbers) < defaultDimension-1
 }
 
 func (*Rook) GetName() rune {
