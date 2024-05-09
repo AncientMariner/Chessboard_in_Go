@@ -1,5 +1,7 @@
 package figures
 
+var _ FigureBehaviour = (*Queen)(nil)
+
 type Queen struct {
 	Figure
 }

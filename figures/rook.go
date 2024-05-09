@@ -1,5 +1,7 @@
 package figures
 
+var _ FigureBehaviour = (*Rook)(nil)
+
 type Rook struct {
 	Figure
 }

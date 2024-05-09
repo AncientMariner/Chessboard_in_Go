@@ -1,5 +1,7 @@
 package figures
 
+var _ FigureBehaviour = (*Bishop)(nil)
+
 type Bishop struct {
 	Figure
 }
