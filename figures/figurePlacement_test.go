@@ -23,7 +23,6 @@ func Test_drawEmptyBoard(t *testing.T) {
 
 func TestPlacement_PlaceFigure(t *testing.T) {
 	type fields struct {
-		currentPlacement FigurePlacement
 	}
 	type args struct {
 		numberOfFigures int
@@ -44,17 +43,17 @@ func TestPlacement_PlaceFigure(t *testing.T) {
 		args   args
 		want   int
 	}{
-		{"Test place figures without figures", fields{nil}, args{
+		{"Test place figures without figures", fields{}, args{
 			0,
 			&King{},
 			make(map[string]string),
 		}, 0},
-		{"Test place figures on empty board", fields{nil}, args{
+		{"Test place figures on empty board", fields{}, args{
 			1,
 			&King{},
 			make(map[string]string),
 		}, 64},
-		{"Test place figures on board", fields{nil}, args{
+		{"Test place figures on board", fields{}, args{
 			1,
 			&King{},
 			newMap,
@@ -62,9 +61,7 @@ func TestPlacement_PlaceFigure(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			p := &Placement{
-				currentPlacement: tt.fields.currentPlacement,
-			}
+			p := &Placement{}
 			if got := p.PlaceFigure(tt.args.numberOfFigures, tt.args.behaviour, tt.args.boards); len(got) != tt.want {
 				t.Errorf("PlaceFigure() = %v, want %v", got, tt.want)
 			}
@@ -74,7 +71,6 @@ func TestPlacement_PlaceFigure(t *testing.T) {
 
 func TestPlacement_PlaceFiguresOnEmptyBoard(t *testing.T) {
 	type fields struct {
-		currentPlacement FigurePlacement
 	}
 	type args struct {
 		board     string
@@ -86,13 +82,11 @@ func TestPlacement_PlaceFiguresOnEmptyBoard(t *testing.T) {
 		args   args
 		want   int
 	}{
-		{"Test placement on empty board", fields{nil}, args{"________\n________\n________\n________\n________\n________\n________\n________\n", &King{}}, 64},
+		{"Test placement on empty board", fields{}, args{"________\n________\n________\n________\n________\n________\n________\n________\n", &King{}}, 64},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			p := &Placement{
-				currentPlacement: tt.fields.currentPlacement,
-			}
+			p := &Placement{}
 			if got := p.PlaceFiguresOnEmptyBoard(tt.args.board, tt.args.behaviour); len(got) != tt.want {
 				t.Errorf("PlaceFiguresOnEmptyBoard() = %v, want %v", got, tt.want)
 			}
@@ -102,7 +96,6 @@ func TestPlacement_PlaceFiguresOnEmptyBoard(t *testing.T) {
 
 func TestPlacement_placeFiguresOnBoard(t *testing.T) {
 	type fields struct {
-		currentPlacement FigurePlacement
 	}
 	type args struct {
 		boards    map[string]string
@@ -122,13 +115,11 @@ func TestPlacement_placeFiguresOnBoard(t *testing.T) {
 		args   args
 		want   int
 	}{
-		{"Test placement on board", fields{nil}, args{newMap, &King{}}, 64},
+		{"Test placement on board", fields{}, args{newMap, &King{}}, 64},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			p := &Placement{
-				currentPlacement: tt.fields.currentPlacement,
-			}
+			p := &Placement{}
 			if got := p.placeFiguresOnBoard(tt.args.boards, tt.args.behaviour); len(got) != tt.want {
 				t.Errorf("placeFiguresOnBoard() = %v, want %v", got, tt.want)
 			}

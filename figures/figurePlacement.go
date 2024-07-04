@@ -7,11 +7,6 @@ import (
 )
 
 type Placement struct {
-	currentPlacement FigurePlacement
-}
-
-type FigurePlacement interface {
-	PlaceFiguresOnBoard([]string) FigurePlacement
 }
 
 type BoardWithFigurePosition struct {
