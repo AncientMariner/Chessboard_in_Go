@@ -9,16 +9,10 @@ import (
 type Placement struct {
 }
 
-type BoardWithFigurePosition struct {
-	Board string
-	hash  string
-}
-
-func (e *BoardWithFigurePosition) Hash() string {
+func Hash(s string) string {
 	algorithm := sha512.New512_256()
-	algorithm.Write([]byte(e.Board))
-	e.hash = fmt.Sprintf("%x", algorithm.Sum(nil))
-	return e.hash
+	algorithm.Write([]byte(s))
+	return fmt.Sprintf("%x", algorithm.Sum(nil))
 }
 
 var defaultDimension = 8

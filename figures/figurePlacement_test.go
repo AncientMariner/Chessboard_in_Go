@@ -30,12 +30,11 @@ func TestPlacement_PlaceFigure(t *testing.T) {
 		boards          map[string]string
 	}
 
-	item := &BoardWithFigurePosition{}
-	item.Board = "________\n________\n________\n________\n________\n________\n________\n________\n"
-	item.Hash()
+	board := "________\n________\n________\n________\n________\n________\n________\n________\n"
+	hash := Hash(board)
 
 	newMap := make(map[string]string)
-	newMap[item.hash] = item.Board
+	newMap[hash] = board
 
 	tests := []struct {
 		name   string
@@ -102,12 +101,11 @@ func TestPlacement_placeFiguresOnBoard(t *testing.T) {
 		behaviour FigureBehaviour
 	}
 
-	item := &BoardWithFigurePosition{}
-	item.Board = "________\n________\n________\n________\n________\n________\n________\n________\n"
-	item.Hash()
+	board := "________\n________\n________\n________\n________\n________\n________\n________\n"
+	hash := Hash(board)
 
 	newMap := make(map[string]string)
-	newMap[item.hash] = item.Board
+	newMap[hash] = board
 
 	tests := []struct {
 		name   string

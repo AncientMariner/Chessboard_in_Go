@@ -28,9 +28,7 @@ func (queen *Queen) Handle(board string) map[string]string {
 
 				out[i] = queen.GetName()
 
-				b := &BoardWithFigurePosition{}
-				b.Board = string(out)
-				boards[b.Hash()] = b.Board
+				boards[Hash(string(out))] = string(out)
 			}
 		}
 	}

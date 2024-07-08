@@ -26,9 +26,7 @@ func (rook *Rook) Handle(board string) map[string]string {
 				placeAttackPlacesVertically(out, i)
 				out[i] = rook.GetName()
 
-				b := &BoardWithFigurePosition{}
-				b.Board = string(out)
-				boards[b.Hash()] = b.Board
+				boards[Hash(string(out))] = string(out)
 			}
 		}
 	}

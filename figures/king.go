@@ -28,9 +28,7 @@ func (king *King) Handle(board string) map[string]string {
 				king.placeDiagonallyBelow(out, i)
 				out[i] = king.GetName()
 
-				b := &BoardWithFigurePosition{}
-				b.Board = string(out)
-				boards[b.Hash()] = b.Board
+				boards[Hash(string(out))] = string(out)
 			}
 		}
 	}

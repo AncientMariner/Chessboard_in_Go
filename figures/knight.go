@@ -27,9 +27,7 @@ func (knight *Knight) Handle(board string) map[string]string {
 
 				out[i] = knight.GetName()
 
-				b := &BoardWithFigurePosition{}
-				b.Board = string(out)
-				boards[b.Hash()] = b.Board
+				boards[Hash(string(out))] = string(out)
 			}
 		}
 	}
