@@ -206,8 +206,8 @@ func Test_number_of_boards_with_1_figure(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := tt.args.board.placeFigures(); len(got) != tt.want {
-				t.Errorf("placeFigures() = %v, want %v", got, tt.want)
+			if got := tt.args.board.calculateBoards(); len(got) != tt.want {
+				t.Errorf("calculateBoards() = %v, want %v", got, tt.want)
 			}
 		})
 	}
@@ -227,43 +227,43 @@ func Test_number_of_boards_with_1_figure_7x7(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := tt.args.board.placeFigures(); len(got) != tt.want {
-				t.Errorf("placeFigures() = %v, want %v", got, tt.want)
+			if got := tt.args.board.calculateBoards(); len(got) != tt.want {
+				t.Errorf("calculateBoards() = %v, want %v", got, tt.want)
 			}
 		})
 	}
 }
 
 func Test_number_of_boards_with_different_figure_variations(t *testing.T) {
-	placeFigures_R_K_R := NewChessboard().withRook(1).withKing(1).withRook(1).Build().placeFigures()
-	placeFigures_R_R_K := NewChessboard().withRook(1).withRook(1).withKing(1).Build().placeFigures()
-	placeFigures_K_R_R := NewChessboard().withKing(1).withRook(1).withRook(1).Build().placeFigures()
+	calculateBoards_R_K_R := NewChessboard().withRook(1).withKing(1).withRook(1).Build().calculateBoards()
+	calculateBoards_R_R_K := NewChessboard().withRook(1).withRook(1).withKing(1).Build().calculateBoards()
+	calculateBoards_K_R_R := NewChessboard().withKing(1).withRook(1).withRook(1).Build().calculateBoards()
 
-	var unitedSet = make(map[string]string, len(placeFigures_R_K_R)+len(placeFigures_R_R_K)+len(placeFigures_K_R_R))
+	var unitedSet = make(map[string]string, len(calculateBoards_R_K_R)+len(calculateBoards_R_R_K)+len(calculateBoards_K_R_R))
 
-	for u, s := range placeFigures_R_K_R {
+	for u, s := range calculateBoards_R_K_R {
 		unitedSet[u] = s
 	}
 
-	for u, s := range placeFigures_R_R_K {
+	for u, s := range calculateBoards_R_R_K {
 		unitedSet[u] = s
 	}
 
-	for u, s := range placeFigures_K_R_R {
+	for u, s := range calculateBoards_K_R_R {
 		unitedSet[u] = s
 	}
 
-	if len(placeFigures_R_K_R) != 49887 {
-		t.Errorf("placeFigures() all possible variations = %v, want %v", len(placeFigures_R_K_R), 49887)
+	if len(calculateBoards_R_K_R) != 49887 {
+		t.Errorf("calculateBoards() all possible variations = %v, want %v", len(calculateBoards_R_K_R), 49887)
 	}
-	if len(placeFigures_R_K_R) != 49887 {
-		t.Errorf("placeFigures() all possible variations = %v, want %v", len(placeFigures_R_K_R), 49887)
+	if len(calculateBoards_R_K_R) != 49887 {
+		t.Errorf("calculateBoards() all possible variations = %v, want %v", len(calculateBoards_R_K_R), 49887)
 	}
-	if len(placeFigures_K_R_R) != 49887 {
-		t.Errorf("placeFigures() all possible variations = %v, want %v", len(placeFigures_K_R_R), 49887)
+	if len(calculateBoards_K_R_R) != 49887 {
+		t.Errorf("calculateBoards() all possible variations = %v, want %v", len(calculateBoards_K_R_R), 49887)
 	}
 	if len(unitedSet) != 49887 {
-		t.Errorf("placeFigures() all possible variations = %v, want %v", len(unitedSet), 49887)
+		t.Errorf("calculateBoards() all possible variations = %v, want %v", len(unitedSet), 49887)
 	}
 }
 
@@ -325,8 +325,8 @@ func Test_board_with_1_figure(t *testing.T) {
 				currentFigureBehaviour: tt.fields.currentFigureBehaviour,
 				figurePlacement:        tt.fields.figurePlacement,
 			}
-			if got := board.placeFigure(tt.args.behaviour, tt.args.previousFigureBoards); len(got) != tt.want {
-				t.Errorf("placeFigure() = %v, want %v", got, tt.want)
+			if got := board.calculateBoard(tt.args.behaviour, tt.args.previousFigureBoards); len(got) != tt.want {
+				t.Errorf("calculateBoard() = %v, want %v", got, tt.want)
 			}
 		})
 	}

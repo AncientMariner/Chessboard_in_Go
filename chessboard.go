@@ -10,22 +10,22 @@ func main() {
 	// board := NewChessboard().withKing(1).withQueen(2).Build()
 	board := NewChessboard().withKing(1).Build()
 	// board := NewChessboard().withKing(1).withQueen(1).withKnight(2).withRook(2).withBishop(2).Build()
-	boardsWithFigures := board.placeFigures()
+	boardsWithFigures := board.calculateBoards()
 
 	fmt.Printf("\nfigures %v", board)
 	fmt.Printf("\nboardsWithFigures.Size() %d", len(boardsWithFigures))
 }
 
-func (board *Chessboard) placeFigures() map[string]string {
+func (board *Chessboard) calculateBoards() map[string]string {
 
-	return board.placeFigure(board.currentFigureBehaviour, make(map[string]string))
+	return board.calculateBoard(board.currentFigureBehaviour, make(map[string]string))
 }
 
-func (board *Chessboard) placeFigure(behaviour figures.FigureBehaviour, previousFigureBoards map[string]string) map[string]string {
+func (board *Chessboard) calculateBoard(behaviour figures.FigureBehaviour, previousFigureBoards map[string]string) map[string]string {
 	result := board.figurePlacement.PlaceFigure(board.figureQuantityMap[behaviour.GetName()], behaviour, previousFigureBoards)
 
 	if behaviour.GetNext() != nil {
-		result = board.placeFigure(behaviour.GetNext(), result)
+		result = board.calculateBoard(behaviour.GetNext(), result)
 	}
 	return result
 }
