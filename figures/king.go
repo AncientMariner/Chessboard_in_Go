@@ -72,7 +72,7 @@ func isAnotherFigurePresent(out []rune, position int) bool {
 	}
 
 	positionAbove := position - defaultDimension - 1
-	if position >= defaultDimension+1 && out[positionAbove] != '\n' {
+	if previousLineExists && out[positionAbove] != '\n' {
 		positionsAround = append(positionsAround, positionAbove)
 	}
 	positionBelow := position + defaultDimension + 1
