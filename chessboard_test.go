@@ -152,7 +152,7 @@ func Test_boardBuilder_addToNonEmptyChain(t *testing.T) {
 	}
 }
 
-func Test_number_of_boards_with_1_figure(t *testing.T) {
+func Test_different_combinations(t *testing.T) {
 	type args struct {
 		board *Chessboard
 	}
@@ -203,6 +203,30 @@ func Test_number_of_boards_with_1_figure(t *testing.T) {
 		{"Test empty board with 8 queen", args{board: NewChessboard().withQueen(8).Build()}, 92},
 		{"Test empty board with 8 queen", args{board: NewChessboard().withQueen(1).withQueen(1).withQueen(1).withQueen(1).withQueen(1).withQueen(1).withQueen(1).withQueen(1).Build()}, 92},
 		{"Test empty board with 9 queen, impossible case", args{board: NewChessboard().withQueen(9).Build()}, 0},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := tt.args.board.calculateBoards(); len(got) != tt.want {
+				t.Errorf("calculateBoards() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func Test_different_combinations_long_running(t *testing.T) {
+	type args struct {
+		board *Chessboard
+	}
+	tests := []struct {
+		name string
+		args args
+		want int
+	}{
+		// {"Test empty board with 16 king", args{board: NewChessboard().withKing(16).Build()}, 1806},
+		{"Test empty board with 8 rook", args{board: NewChessboard().withRook(8).Build()}, 40320},
+		// {"Test empty board with 14 bishop", args{board: NewChessboard().withBishop(14).Build()}, 1736},
+		// {"Test empty board with 32 knight", args{board: NewChessboard().withKnight(32).Build()}, 3063828},
+		// {"Test empty board with 16 king 14 bishop", args{board: NewChessboard().withKing(16).withBishop(14).Build()}, 3063828},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
