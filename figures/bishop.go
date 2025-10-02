@@ -7,14 +7,7 @@ type Bishop struct {
 }
 
 func (bishop *Bishop) Handle(board string) map[string]string {
-	countOfEmptyPlaces := 0
-	for i := 0; i < len(board); i++ {
-		if board[i] == emptyField {
-			countOfEmptyPlaces++
-		}
-	}
-
-	boards := make(map[string]string, countOfEmptyPlaces)
+	boards := make(map[string]string, getCountOfEmptyPlaces(board))
 
 	for i := 0; i < len(board) && len(board) == ((defaultDimension+1)*defaultDimension); i++ {
 		if board[i] == emptyField {

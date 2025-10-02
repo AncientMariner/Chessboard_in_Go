@@ -3,17 +3,21 @@ package main
 import (
 	"Chessboard_in_Go/figures"
 	"fmt"
-	// "github.com/hashicorp/go-set/v2"
 )
 
 func main() {
+	// test example
 	// board := NewChessboard().withKing(1).withQueen(2).Build()
-	board := NewChessboard().withKing(1).Build()
+	// 	board := NewChessboard().withKing(1).Build()
 	// board := NewChessboard().withKing(1).withQueen(1).withKnight(2).withRook(2).withBishop(2).Build()
-	boardsWithFigures := board.calculateBoards()
+	// 	boardsWithFigures := board.calculateBoards()
+	//
+	// 	fmt.Printf("\nfigures %v", board)
+	// 	fmt.Printf("\nboardsWithFigures.Size() %d", len(boardsWithFigures))
 
-	fmt.Printf("\nfigures %v", board)
-	fmt.Printf("\nboardsWithFigures.Size() %d", len(boardsWithFigures))
+	testMap := make(map[string][]string)
+	testMap["test"] = append(testMap["test"], "test5")
+	fmt.Printf("\ntestMap %v", testMap["test"])
 }
 
 func (board *Chessboard) calculateBoards() map[string]string {
@@ -22,7 +26,7 @@ func (board *Chessboard) calculateBoards() map[string]string {
 }
 
 func (board *Chessboard) calculateBoard(behaviour figures.FigureBehaviour, previousFigureBoards map[string]string) map[string]string {
-	result := board.figurePlacement.PlaceFigure(board.figureQuantityMap[behaviour.GetName()], behaviour, previousFigureBoards)
+	result := board.figurePlacement.PlaceFigures(board.figureQuantityMap[behaviour.GetName()], behaviour, previousFigureBoards)
 
 	if behaviour.GetNext() != nil {
 		result = board.calculateBoard(behaviour.GetNext(), result)
@@ -81,14 +85,14 @@ func (b *boardBuilder) withRook(quantity int) ChessboardBuilder {
 	return b.addToChain(figure)
 }
 
-// new chessboard with default size 8
+// NewChessboard with default size 8
 func NewChessboard() ChessboardBuilder {
 	chessboard := &Chessboard{}
 	chessboard.figurePlacement.SetDimension(8)
 	return &boardBuilder{chessboard: chessboard, figureQuantityMap: make(map[rune]int)}
 }
 
-// new chessboard with custom default size
+// NewChessboardWithSize custom default size
 func NewChessboardWithSize(size int) ChessboardBuilder {
 	chessboard := &Chessboard{}
 	chessboard.figurePlacement.SetDimension(size)

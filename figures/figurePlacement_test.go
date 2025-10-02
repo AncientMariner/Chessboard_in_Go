@@ -21,9 +21,7 @@ func Test_drawEmptyBoard(t *testing.T) {
 	}
 }
 
-func TestPlacement_PlaceFigure(t *testing.T) {
-	type fields struct {
-	}
+func TestPlacement_PlaceFigures(t *testing.T) {
 	type args struct {
 		numberOfFigures int
 		behaviour       FigureBehaviour
@@ -37,22 +35,21 @@ func TestPlacement_PlaceFigure(t *testing.T) {
 	newMap[hash] = board
 
 	tests := []struct {
-		name   string
-		fields fields
-		args   args
-		want   int
+		name string
+		args args
+		want int
 	}{
-		{"Test place figures without figures", fields{}, args{
+		{"Test place figures without figures", args{
 			0,
 			&King{},
 			make(map[string]string),
 		}, 0},
-		{"Test place figures on empty board", fields{}, args{
+		{"Test place figures on empty board", args{
 			1,
 			&King{},
 			make(map[string]string),
 		}, 64},
-		{"Test place figures on board", fields{}, args{
+		{"Test place figures on board", args{
 			1,
 			&King{},
 			newMap,
@@ -61,14 +58,14 @@ func TestPlacement_PlaceFigure(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			p := &Placement{}
-			if got := p.PlaceFigure(tt.args.numberOfFigures, tt.args.behaviour, tt.args.boards); len(got) != tt.want {
-				t.Errorf("PlaceFigure() = %v, want %v", got, tt.want)
+			if got := p.PlaceFigures(tt.args.numberOfFigures, tt.args.behaviour, tt.args.boards); len(got) != tt.want {
+				t.Errorf("PlaceFigures() = %v, want %v", got, tt.want)
 			}
 		})
 	}
 }
 
-func TestPlacement_PlaceFiguresOnEmptyBoard(t *testing.T) {
+func TestPlacement_placeFiguresOnBoard(t *testing.T) {
 	type fields struct {
 	}
 	type args struct {
@@ -86,14 +83,14 @@ func TestPlacement_PlaceFiguresOnEmptyBoard(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			p := &Placement{}
-			if got := p.PlaceFiguresOnEmptyBoard(tt.args.board, tt.args.behaviour); len(got) != tt.want {
+			if got := p.placeFigureOnBoard(tt.args.board, tt.args.behaviour); len(got) != tt.want {
 				t.Errorf("PlaceFiguresOnEmptyBoard() = %v, want %v", got, tt.want)
 			}
 		})
 	}
 }
 
-func TestPlacement_placeFiguresOnBoard(t *testing.T) {
+func TestPlacement_placeFigure(t *testing.T) {
 	type fields struct {
 	}
 	type args struct {
@@ -118,8 +115,8 @@ func TestPlacement_placeFiguresOnBoard(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			p := &Placement{}
-			if got := p.placeFiguresOnBoard(tt.args.boards, tt.args.behaviour); len(got) != tt.want {
-				t.Errorf("placeFiguresOnBoard() = %v, want %v", got, tt.want)
+			if got := p.placeFigure(tt.args.boards, tt.args.behaviour); len(got) != tt.want {
+				t.Errorf("placeFigure() = %v, want %v", got, tt.want)
 			}
 		})
 	}
