@@ -37,23 +37,22 @@ func (p *Placement) SetDimension(value int) {
 	defaultDimension = value
 }
 
-func (p *Placement) PlaceFigure(numberOfFigures int, behaviour FigureBehaviour, boards map[string]string) map[string]string {
+func (p *Placement) PlaceFigures(numberOfFigures int, behaviour FigureBehaviour, boards map[string]string) map[string]string {
+	if len(boards) == 0 {
+		boards = p.placeFigureOnBoard(drawEmptyBoard(), behaviour)
+	}
 	for i := 0; i < numberOfFigures; i++ {
-		if len(boards) == 0 {
-			boards = p.PlaceFiguresOnEmptyBoard(drawEmptyBoard(), behaviour)
-		} else {
-			boards = p.placeFiguresOnBoard(boards, behaviour)
-		}
+		boards = p.placeFigure(boards, behaviour)
 	}
 	return boards
 }
 
-func (p *Placement) placeFiguresOnBoard(boards map[string]string, behaviour FigureBehaviour) map[string]string {
+func (p *Placement) placeFigure(boards map[string]string, behaviour FigureBehaviour) map[string]string {
 	var resultingMap = make(map[string]string)
 
 	for _, board := range boards {
 
-		boardsWithPlacement := p.PlaceFiguresOnEmptyBoard(board, behaviour)
+		boardsWithPlacement := p.placeFigureOnBoard(board, behaviour)
 
 		for hash, element := range boardsWithPlacement {
 			resultingMap[hash] = element
@@ -62,6 +61,6 @@ func (p *Placement) placeFiguresOnBoard(boards map[string]string, behaviour Figu
 	return resultingMap
 }
 
-func (p *Placement) PlaceFiguresOnEmptyBoard(board string, behaviour FigureBehaviour) map[string]string {
+func (p *Placement) placeFigureOnBoard(board string, behaviour FigureBehaviour) map[string]string {
 	return behaviour.Handle(board)
 }
