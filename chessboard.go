@@ -2,7 +2,6 @@ package main
 
 import (
 	"Chessboard_in_Go/figures"
-	"fmt"
 )
 
 func main() {
@@ -14,10 +13,6 @@ func main() {
 	//
 	// 	fmt.Printf("\nfigures %v", board)
 	// 	fmt.Printf("\nboardsWithFigures.Size() %d", len(boardsWithFigures))
-
-	testMap := make(map[string][]string)
-	testMap["test"] = append(testMap["test"], "test5")
-	fmt.Printf("\ntestMap %v", testMap["test"])
 }
 
 func (board *Chessboard) calculateBoards() map[string]string {
@@ -46,6 +41,7 @@ type ChessboardBuilder interface {
 	withBishop(int) ChessboardBuilder
 	withKnight(int) ChessboardBuilder
 	withRook(int) ChessboardBuilder
+	addFigure(figures.FigureBehaviour, int) ChessboardBuilder
 	Build() *Chessboard
 }
 
@@ -56,31 +52,26 @@ type boardBuilder struct {
 }
 
 func (b *boardBuilder) withKing(quantity int) ChessboardBuilder {
-	figure := &figures.King{}
-	b.figureQuantityMap[figure.GetName()] = quantity
-	return b.addToChain(figure)
+	return b.addFigure(&figures.King{}, quantity)
 }
 
 func (b *boardBuilder) withQueen(quantity int) ChessboardBuilder {
-	figure := &figures.Queen{}
-	b.figureQuantityMap[figure.GetName()] = quantity
-	return b.addToChain(figure)
+	return b.addFigure(&figures.Queen{}, quantity)
 }
 
 func (b *boardBuilder) withBishop(quantity int) ChessboardBuilder {
-	figure := &figures.Bishop{}
-	b.figureQuantityMap[figure.GetName()] = quantity
-	return b.addToChain(figure)
+	return b.addFigure(&figures.Bishop{}, quantity)
 }
 
 func (b *boardBuilder) withKnight(quantity int) ChessboardBuilder {
-	figure := &figures.Knight{}
-	b.figureQuantityMap[figure.GetName()] = quantity
-	return b.addToChain(figure)
+	return b.addFigure(&figures.Knight{}, quantity)
 }
 
 func (b *boardBuilder) withRook(quantity int) ChessboardBuilder {
-	figure := &figures.Rook{}
+	return b.addFigure(&figures.Rook{}, quantity)
+}
+
+func (b *boardBuilder) addFigure(figure figures.FigureBehaviour, quantity int) ChessboardBuilder {
 	b.figureQuantityMap[figure.GetName()] = quantity
 	return b.addToChain(figure)
 }

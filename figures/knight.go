@@ -16,10 +16,10 @@ func (knight *Knight) Handle(board string) map[string]string {
 			if !isAnotherFigurePresentBelow(out, i) && !isAnotherFigurePresentBelow(out, i) {
 				placeAttackPlacesBelow(out, i)
 				placeAttackPlacesAbove(out, i)
-
 				out[i] = knight.GetName()
+				outAsString := string(out)
 
-				boards[Hash(string(out))] = string(out)
+				boards[GenerateHash(outAsString)] = outAsString
 			}
 		}
 	}

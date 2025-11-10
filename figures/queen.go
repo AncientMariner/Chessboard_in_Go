@@ -20,8 +20,9 @@ func (queen *Queen) Handle(board string) map[string]string {
 				placeAttackPlacesDiagonallyBelow(out, i)
 
 				out[i] = queen.GetName()
+				outAsString := string(out)
 
-				boards[Hash(string(out))] = string(out)
+				boards[GenerateHash(outAsString)] = outAsString
 			}
 		}
 	}

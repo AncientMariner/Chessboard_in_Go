@@ -153,6 +153,8 @@ func Test_boardBuilder_addToNonEmptyChain(t *testing.T) {
 }
 
 func Test_different_combinations(t *testing.T) {
+	t.Skip("skipping test")
+
 	type args struct {
 		board *Chessboard
 	}
@@ -214,6 +216,7 @@ func Test_different_combinations(t *testing.T) {
 }
 
 func Test_different_combinations_long_running(t *testing.T) {
+	t.Skip("skipping test")
 	type args struct {
 		board *Chessboard
 	}

@@ -19,8 +19,9 @@ func (king *King) Handle(board string) map[string]string {
 				king.placeDiagonallyAbove(out, i)
 				king.placeDiagonallyBelow(out, i)
 				out[i] = king.GetName()
+				outAsString := string(out)
 
-				boards[Hash(string(out))] = string(out)
+				boards[GenerateHash(outAsString)] = outAsString
 			}
 		}
 	}

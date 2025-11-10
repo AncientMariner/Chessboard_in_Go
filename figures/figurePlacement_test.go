@@ -29,7 +29,7 @@ func TestPlacement_PlaceFigures(t *testing.T) {
 	}
 
 	board := "________\n________\n________\n________\n________\n________\n________\n________\n"
-	hash := Hash(board)
+	hash := GenerateHash(board)
 
 	newMap := make(map[string]string)
 	newMap[hash] = board
@@ -99,7 +99,7 @@ func TestPlacement_placeFigure(t *testing.T) {
 	}
 
 	board := "________\n________\n________\n________\n________\n________\n________\n________\n"
-	hash := Hash(board)
+	hash := GenerateHash(board)
 
 	newMap := make(map[string]string)
 	newMap[hash] = board

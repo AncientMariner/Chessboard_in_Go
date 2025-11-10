@@ -17,8 +17,9 @@ func (bishop *Bishop) Handle(board string) map[string]string {
 				placeAttackPlacesDiagonallyAbove(out, i)
 				placeAttackPlacesDiagonallyBelow(out, i)
 				out[i] = bishop.GetName()
+				outAsString := string(out)
 
-				boards[Hash(string(out))] = string(out)
+				boards[GenerateHash(outAsString)] = outAsString
 			}
 		}
 	}

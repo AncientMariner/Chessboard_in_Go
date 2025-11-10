@@ -17,8 +17,9 @@ func (rook *Rook) Handle(board string) map[string]string {
 				placeAttackPlacesHorizontally(out, i)
 				placeAttackPlacesVertically(out, i)
 				out[i] = rook.GetName()
+				outAsString := string(out)
 
-				boards[Hash(string(out))] = string(out)
+				boards[GenerateHash(outAsString)] = outAsString
 			}
 		}
 	}

@@ -9,7 +9,7 @@ import (
 type Placement struct {
 }
 
-func Hash(s string) string {
+func GenerateHash(s string) string {
 	algorithm := sha512.New512_256()
 	algorithm.Write([]byte(s))
 	return fmt.Sprintf("%x", algorithm.Sum(nil))
