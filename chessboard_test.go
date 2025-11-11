@@ -1,9 +1,10 @@
 package main
 
 import (
-	"Chessboard_in_Go/figures"
 	"reflect"
 	"testing"
+
+	"Chessboard_in_Go/figures"
 )
 
 func TestNewChessBoard(t *testing.T) {
@@ -209,14 +210,13 @@ func Test_different_combinations(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			if got := tt.args.board.calculateBoards(); len(got) != tt.want {
-				t.Errorf("calculateBoards() = %v, want %v", got, tt.want)
+				t.Errorf("calculateBoards() = %v, want %v", len(got), tt.want)
 			}
 		})
 	}
 }
 
 func Test_different_combinations_long_running(t *testing.T) {
-	t.Skip("skipping test")
 	type args struct {
 		board *Chessboard
 	}
@@ -234,7 +234,7 @@ func Test_different_combinations_long_running(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			if got := tt.args.board.calculateBoards(); len(got) != tt.want {
-				t.Errorf("calculateBoards() = %v, want %v", got, tt.want)
+				t.Errorf("calculateBoards() = %v, want %v", len(got), tt.want)
 			}
 		})
 	}
@@ -343,7 +343,6 @@ func Test_board_with_1_figure(t *testing.T) {
 		{"Test empty board with 1 king", fields{map[rune]int{(&figures.King{}).GetName(): 1}, &figures.King{}, figures.Placement{}}, args{&figures.King{}, make(map[string]string)}, 64},
 		{"Test empty board with 2 king", fields{map[rune]int{(&figures.King{}).GetName(): 2}, &figures.King{}, figures.Placement{}}, args{&figures.King{}, make(map[string]string)}, 1806},
 		{"Test empty board with 1 king 1 rook", fields{map[rune]int{(&figures.King{}).GetName(): 1, (&figures.Rook{}).GetName(): 1}, figureBehaviour, figures.Placement{}}, args{figureBehaviour, make(map[string]string)}, 2952},
-		// {"Test empty board with 1 king 1 queen", fields{map[rune]int{(&figures.King{}).GetName(): 1, (&figures.Queen{}).GetName(): 1}, behaviour, figures.Placement{}}, args{behaviour, set.NewHashSet[*figures.BoardWithFigurePosition, string](0)}, 4032},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -353,7 +352,7 @@ func Test_board_with_1_figure(t *testing.T) {
 				figurePlacement:        tt.fields.figurePlacement,
 			}
 			if got := board.calculateBoard(tt.args.behaviour, tt.args.previousFigureBoards); len(got) != tt.want {
-				t.Errorf("calculateBoard() = %v, want %v", got, tt.want)
+				t.Errorf("calculateBoard() = %d, want %d", len(got), tt.want)
 			}
 		})
 	}

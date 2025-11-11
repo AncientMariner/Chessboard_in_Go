@@ -38,11 +38,12 @@ func (p *Placement) SetDimension(value int) {
 }
 
 func (p *Placement) PlaceFigures(numberOfFigures int, behaviour FigureBehaviour, boards map[string]string) map[string]string {
-	if len(boards) == 0 {
-		boards = p.placeFigureOnBoard(drawEmptyBoard(), behaviour)
-	}
 	for i := 0; i < numberOfFigures; i++ {
-		boards = p.placeFigure(boards, behaviour)
+		if len(boards) == 0 {
+			boards = p.placeFigureOnBoard(drawEmptyBoard(), behaviour)
+		} else {
+			boards = p.placeFigure(boards, behaviour)
+		}
 	}
 	return boards
 }

@@ -57,7 +57,7 @@ func TestKnight_Handle(t *testing.T) {
 				Figure: tt.fields.Figure,
 			}
 			if got := knight.Handle(tt.args.board); len(got) != tt.want {
-				t.Errorf("Handle() = %v, want %v", got, tt.want)
+				t.Errorf("Handle() = %v, want %v", len(got), tt.want)
 			}
 		})
 	}

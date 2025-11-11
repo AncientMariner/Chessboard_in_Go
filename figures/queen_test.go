@@ -70,7 +70,7 @@ func TestQueen_Handle(t *testing.T) {
 				Figure: tt.fields.Figure,
 			}
 			if got := queen.Handle(tt.args.board); len(got) != tt.want {
-				t.Errorf("Handle() size= %v, want %v", got, tt.want)
+				t.Errorf("Handle() size= %v, want %v", len(got), tt.want)
 			}
 		})
 	}
