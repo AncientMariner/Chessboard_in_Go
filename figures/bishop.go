@@ -11,7 +11,7 @@ func (bishop *Bishop) Handle(board string) map[string]string {
 
 	for i := 0; i < len(board) && len(board) == ((defaultDimension+1)*defaultDimension); i++ {
 		if board[i] == emptyField {
-			out := []rune(board)
+			out := []byte(board)
 
 			if !isAnotherFigurePresentDiag(out, i) {
 				placeAttackPlacesDiagonallyAbove(out, i)
@@ -26,7 +26,7 @@ func (bishop *Bishop) Handle(board string) map[string]string {
 	return boards
 }
 
-func placeAttackPlacesDiagonallyBelow(out []rune, position int) {
+func placeAttackPlacesDiagonallyBelow(out []byte, position int) {
 	if position >= len(out) || position == defaultDimension || position%(defaultDimension+1) == defaultDimension {
 		return
 	}
@@ -50,7 +50,7 @@ func placeAttackPlacesDiagonallyBelow(out []rune, position int) {
 	}
 }
 
-func placeAttackPlacesDiagonallyAbove(out []rune, position int) {
+func placeAttackPlacesDiagonallyAbove(out []byte, position int) {
 	if position >= len(out) || position == defaultDimension || position%(defaultDimension+1) == defaultDimension {
 		return
 	}
@@ -71,7 +71,7 @@ func placeAttackPlacesDiagonallyAbove(out []rune, position int) {
 	}
 }
 
-func isAnotherFigurePresentDiag(out []rune, position int) bool {
+func isAnotherFigurePresentDiag(out []byte, position int) bool {
 	currentLine := position/(defaultDimension+1) + 1
 	var diagNumbers []int
 
@@ -117,6 +117,6 @@ func isAnotherFigurePresentDiag(out []rune, position int) bool {
 	return false
 }
 
-func (*Bishop) GetName() rune {
+func (*Bishop) GetName() byte {
 	return 'b'
 }

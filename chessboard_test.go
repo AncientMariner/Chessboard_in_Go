@@ -12,7 +12,7 @@ func TestNewChessBoard(t *testing.T) {
 		name string
 		want ChessboardBuilder
 	}{
-		{"Test empty chessboard", &boardBuilder{chessboard: &Chessboard{}, figureQuantityMap: make(map[rune]int)}},
+		{"Test empty chessboard", &boardBuilder{chessboard: &Chessboard{}, figureQuantityMap: make(map[byte]int)}},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -27,7 +27,7 @@ func Test_boardBuilder_Build(t *testing.T) {
 	type fields struct {
 		chessboard             *Chessboard
 		currentFigureBehaviour figures.FigureBehaviour
-		figureQuantityMap      map[rune]int
+		figureQuantityMap      map[byte]int
 	}
 	tests := []struct {
 		name   string
@@ -37,7 +37,7 @@ func Test_boardBuilder_Build(t *testing.T) {
 		{"Test build", fields{
 			chessboard:             &Chessboard{},
 			currentFigureBehaviour: nil,
-			figureQuantityMap:      make(map[rune]int),
+			figureQuantityMap:      make(map[byte]int),
 		}, &Chessboard{}},
 	}
 	for _, tt := range tests {
@@ -58,7 +58,7 @@ func Test_boardBuilder_addToEmptyChain(t *testing.T) {
 	type fields struct {
 		chessboard             *Chessboard
 		currentFigureBehaviour figures.FigureBehaviour
-		figureQuantityMap      map[rune]int
+		figureQuantityMap      map[byte]int
 	}
 	type args struct {
 		figure figures.FigureBehaviour
@@ -108,7 +108,7 @@ func Test_boardBuilder_addToNonEmptyChain(t *testing.T) {
 	type fields struct {
 		chessboard             *Chessboard
 		currentFigureBehaviour figures.FigureBehaviour
-		figureQuantityMap      map[rune]int
+		figureQuantityMap      map[byte]int
 	}
 	type args struct {
 		figure figures.FigureBehaviour
@@ -122,21 +122,21 @@ func Test_boardBuilder_addToNonEmptyChain(t *testing.T) {
 	}{
 		{"Test add to chain", fields{
 			&Chessboard{
-				map[rune]int{'k': 1},
+				map[byte]int{'k': 1},
 				&figures.King{},
 				figures.Placement{},
 			},
 			&figures.Queen{},
-			map[rune]int{'q': 1},
+			map[byte]int{'q': 1},
 		}, args{figure: &figures.Queen{}},
 			&boardBuilder{
 				&Chessboard{
-					map[rune]int{'k': 1},
+					map[byte]int{'k': 1},
 					&figures.King{},
 					figures.Placement{},
 				},
 				&figures.Queen{},
-				map[rune]int{'q': 1},
+				map[byte]int{'q': 1},
 			}},
 	}
 	for _, tt := range tests {
@@ -320,7 +320,7 @@ func Test_number_of_boards_with_different_figure_variations(t *testing.T) {
 
 func Test_board_with_1_figure(t *testing.T) {
 	type fields struct {
-		figureQuantityMap      map[rune]int
+		figureQuantityMap      map[byte]int
 		currentFigureBehaviour figures.FigureBehaviour
 		figurePlacement        figures.Placement
 	}
@@ -340,9 +340,9 @@ func Test_board_with_1_figure(t *testing.T) {
 		args   args
 		want   int
 	}{
-		{"Test empty board with 1 king", fields{map[rune]int{(&figures.King{}).GetName(): 1}, &figures.King{}, figures.Placement{}}, args{&figures.King{}, make(map[string]string)}, 64},
-		{"Test empty board with 2 king", fields{map[rune]int{(&figures.King{}).GetName(): 2}, &figures.King{}, figures.Placement{}}, args{&figures.King{}, make(map[string]string)}, 1806},
-		{"Test empty board with 1 king 1 rook", fields{map[rune]int{(&figures.King{}).GetName(): 1, (&figures.Rook{}).GetName(): 1}, figureBehaviour, figures.Placement{}}, args{figureBehaviour, make(map[string]string)}, 2952},
+		{"Test empty board with 1 king", fields{map[byte]int{(&figures.King{}).GetName(): 1}, &figures.King{}, figures.Placement{}}, args{&figures.King{}, make(map[string]string)}, 64},
+		{"Test empty board with 2 king", fields{map[byte]int{(&figures.King{}).GetName(): 2}, &figures.King{}, figures.Placement{}}, args{&figures.King{}, make(map[string]string)}, 1806},
+		{"Test empty board with 1 king 1 rook", fields{map[byte]int{(&figures.King{}).GetName(): 1, (&figures.Rook{}).GetName(): 1}, figureBehaviour, figures.Placement{}}, args{figureBehaviour, make(map[string]string)}, 2952},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -362,7 +362,7 @@ func Test_boardBuilder_withKing(t *testing.T) {
 	type fields struct {
 		chessboard             *Chessboard
 		currentFigureBehaviour figures.FigureBehaviour
-		figureQuantityMap      map[rune]int
+		figureQuantityMap      map[byte]int
 	}
 	type args struct {
 		quantity int
@@ -371,13 +371,13 @@ func Test_boardBuilder_withKing(t *testing.T) {
 		name   string
 		fields fields
 		args   args
-		want1  rune
+		want1  byte
 		want2  int
 	}{
 		{"Test builder with king", fields{
 			&Chessboard{},
 			nil,
-			make(map[rune]int),
+			make(map[byte]int),
 		}, args{quantity: 1}, 'k', 1},
 	}
 	for _, tt := range tests {
@@ -408,7 +408,7 @@ func Test_boardBuilder_withQueen(t *testing.T) {
 	type fields struct {
 		chessboard             *Chessboard
 		currentFigureBehaviour figures.FigureBehaviour
-		figureQuantityMap      map[rune]int
+		figureQuantityMap      map[byte]int
 	}
 	type args struct {
 		quantity int
@@ -417,13 +417,13 @@ func Test_boardBuilder_withQueen(t *testing.T) {
 		name   string
 		fields fields
 		args   args
-		want1  rune
+		want1  byte
 		want2  int
 	}{
 		{"Test builder with queen", fields{
 			&Chessboard{},
 			nil,
-			make(map[rune]int),
+			make(map[byte]int),
 		}, args{quantity: 1}, 'q', 1},
 	}
 	for _, tt := range tests {
@@ -454,7 +454,7 @@ func Test_boardBuilder_withBishop(t *testing.T) {
 	type fields struct {
 		chessboard             *Chessboard
 		currentFigureBehaviour figures.FigureBehaviour
-		figureQuantityMap      map[rune]int
+		figureQuantityMap      map[byte]int
 	}
 	type args struct {
 		quantity int
@@ -463,13 +463,13 @@ func Test_boardBuilder_withBishop(t *testing.T) {
 		name   string
 		fields fields
 		args   args
-		want1  rune
+		want1  byte
 		want2  int
 	}{
 		{"Test builder with bishop", fields{
 			&Chessboard{},
 			nil,
-			make(map[rune]int),
+			make(map[byte]int),
 		}, args{quantity: 1}, 'b', 1},
 	}
 	for _, tt := range tests {
@@ -500,7 +500,7 @@ func Test_boardBuilder_withKnight(t *testing.T) {
 	type fields struct {
 		chessboard             *Chessboard
 		currentFigureBehaviour figures.FigureBehaviour
-		figureQuantityMap      map[rune]int
+		figureQuantityMap      map[byte]int
 	}
 	type args struct {
 		quantity int
@@ -509,13 +509,13 @@ func Test_boardBuilder_withKnight(t *testing.T) {
 		name   string
 		fields fields
 		args   args
-		want1  rune
+		want1  byte
 		want2  int
 	}{
 		{"Test builder with knight", fields{
 			&Chessboard{},
 			nil,
-			make(map[rune]int),
+			make(map[byte]int),
 		}, args{quantity: 1}, 'n', 1},
 	}
 	for _, tt := range tests {
@@ -546,7 +546,7 @@ func Test_boardBuilder_withRook(t *testing.T) {
 	type fields struct {
 		chessboard             *Chessboard
 		currentFigureBehaviour figures.FigureBehaviour
-		figureQuantityMap      map[rune]int
+		figureQuantityMap      map[byte]int
 	}
 	type args struct {
 		quantity int
@@ -555,13 +555,13 @@ func Test_boardBuilder_withRook(t *testing.T) {
 		name   string
 		fields fields
 		args   args
-		want1  rune
+		want1  byte
 		want2  int
 	}{
 		{"Test builder with rook", fields{
 			&Chessboard{},
 			nil,
-			make(map[rune]int),
+			make(map[byte]int),
 		}, args{quantity: 1}, 'r', 1},
 	}
 	for _, tt := range tests {

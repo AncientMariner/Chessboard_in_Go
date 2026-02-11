@@ -11,7 +11,7 @@ func (rook *Rook) Handle(board string) map[string]string {
 
 	for i := 0; i < len(board) && len(board) == ((defaultDimension+1)*defaultDimension); i++ {
 		if board[i] == emptyField {
-			out := []rune(board)
+			out := []byte(board)
 
 			if !isAnotherFigurePresentOnTheLine(out, i) && !isAnotherFigurePresentOnTheColumn(out, i) {
 				placeAttackPlacesHorizontally(out, i)
@@ -26,7 +26,7 @@ func (rook *Rook) Handle(board string) map[string]string {
 	return boards
 }
 
-func placeAttackPlacesHorizontally(out []rune, position int) {
+func placeAttackPlacesHorizontally(out []byte, position int) {
 	if position >= len(out) || position == defaultDimension || position%(defaultDimension+1) == defaultDimension {
 		return
 	}
@@ -49,7 +49,7 @@ func placeAttackPlacesHorizontally(out []rune, position int) {
 	}
 }
 
-func isAnotherFigurePresentOnTheLine(out []rune, position int) bool {
+func isAnotherFigurePresentOnTheLine(out []byte, position int) bool {
 	var counterOfLeftPositions = (position) % (defaultDimension + 1)
 	var counterOfRightPositions = defaultDimension - ((position) % (defaultDimension + 1)) - 1
 
@@ -72,7 +72,7 @@ func isAnotherFigurePresentOnTheLine(out []rune, position int) bool {
 	return len(previousPositionNumbers)+len(nextPositionNumbers) < defaultDimension-1
 }
 
-func placeAttackPlacesVertically(out []rune, position int) {
+func placeAttackPlacesVertically(out []byte, position int) {
 	if position >= len(out) || position == defaultDimension || position%(defaultDimension+1) == defaultDimension {
 		return
 	}
@@ -98,7 +98,7 @@ func placeAttackPlacesVertically(out []rune, position int) {
 	}
 }
 
-func isAnotherFigurePresentOnTheColumn(out []rune, position int) bool {
+func isAnotherFigurePresentOnTheColumn(out []byte, position int) bool {
 	currentLine := position/(defaultDimension+1) + 1
 
 	var aboveLineNumbers []int
@@ -127,6 +127,6 @@ func isAnotherFigurePresentOnTheColumn(out []rune, position int) bool {
 	return len(aboveLineNumbers)+len(belowLineNumbers) < defaultDimension-1
 }
 
-func (*Rook) GetName() rune {
+func (*Rook) GetName() byte {
 	return 'r'
 }

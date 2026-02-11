@@ -30,7 +30,7 @@ func (board *Chessboard) calculateBoard(behaviour figures.FigureBehaviour, previ
 }
 
 type Chessboard struct {
-	figureQuantityMap      map[rune]int
+	figureQuantityMap      map[byte]int
 	currentFigureBehaviour figures.FigureBehaviour
 	figurePlacement        figures.Placement
 }
@@ -48,7 +48,7 @@ type ChessboardBuilder interface {
 type boardBuilder struct {
 	chessboard             *Chessboard
 	currentFigureBehaviour figures.FigureBehaviour
-	figureQuantityMap      map[rune]int
+	figureQuantityMap      map[byte]int
 }
 
 func (b *boardBuilder) withKing(quantity int) ChessboardBuilder {
@@ -80,14 +80,14 @@ func (b *boardBuilder) addFigure(figure figures.FigureBehaviour, quantity int) C
 func NewChessboard() ChessboardBuilder {
 	chessboard := &Chessboard{}
 	chessboard.figurePlacement.SetDimension(8)
-	return &boardBuilder{chessboard: chessboard, figureQuantityMap: make(map[rune]int)}
+	return &boardBuilder{chessboard: chessboard, figureQuantityMap: make(map[byte]int)}
 }
 
 // NewChessboardWithSize custom default size
 func NewChessboardWithSize(size int) ChessboardBuilder {
 	chessboard := &Chessboard{}
 	chessboard.figurePlacement.SetDimension(size)
-	return &boardBuilder{chessboard: chessboard, figureQuantityMap: make(map[rune]int)}
+	return &boardBuilder{chessboard: chessboard, figureQuantityMap: make(map[byte]int)}
 }
 
 func (b *boardBuilder) addToChain(figure figures.FigureBehaviour) ChessboardBuilder {

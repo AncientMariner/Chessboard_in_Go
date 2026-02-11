@@ -11,7 +11,7 @@ func (queen *Queen) Handle(board string) map[string]string {
 
 	for i := 0; i < len(board) && len(board) == ((defaultDimension+1)*defaultDimension); i++ {
 		if board[i] == emptyField {
-			out := []rune(board)
+			out := []byte(board)
 
 			if !isAnotherFigurePresentOnTheLine(out, i) && !isAnotherFigurePresentOnTheColumn(out, i) && !isAnotherFigurePresentDiag(out, i) {
 				placeAttackPlacesHorizontally(out, i)
@@ -29,6 +29,6 @@ func (queen *Queen) Handle(board string) map[string]string {
 	return boards
 }
 
-func (*Queen) GetName() rune {
+func (*Queen) GetName() byte {
 	return 'q'
 }

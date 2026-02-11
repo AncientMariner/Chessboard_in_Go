@@ -11,7 +11,7 @@ func (king *King) Handle(board string) map[string]string {
 
 	for i := 0; i < len(board) && len(board) == ((defaultDimension+1)*defaultDimension); i++ {
 		if board[i] == emptyField {
-			out := []rune(board)
+			out := []byte(board)
 
 			if !isAnotherFigurePresent(out, i) {
 				king.placeAttackPlacesHorizontally(out, i)
@@ -28,7 +28,7 @@ func (king *King) Handle(board string) map[string]string {
 	return boards
 }
 
-func isAnotherFigurePresent(out []rune, position int) bool {
+func isAnotherFigurePresent(out []byte, position int) bool {
 
 	positionOneLineAbove := position - defaultDimension - 1
 	var positionsAround []int
@@ -81,7 +81,7 @@ func isAnotherFigurePresent(out []rune, position int) bool {
 	return false
 }
 
-func (king *King) placeDiagonallyAbove(out []rune, position int) {
+func (king *King) placeDiagonallyAbove(out []byte, position int) {
 	if position == defaultDimension || position%(defaultDimension+1) == defaultDimension {
 		return
 	}
@@ -99,7 +99,7 @@ func (king *King) placeDiagonallyAbove(out []rune, position int) {
 	}
 }
 
-func (king *King) placeDiagonallyBelow(out []rune, position int) {
+func (king *King) placeDiagonallyBelow(out []byte, position int) {
 	if position == defaultDimension || position%(defaultDimension+1) == defaultDimension {
 		return
 	}
@@ -115,7 +115,7 @@ func (king *King) placeDiagonallyBelow(out []rune, position int) {
 	}
 }
 
-func (king *King) placeAttackPlacesVertically(out []rune, position int) {
+func (king *King) placeAttackPlacesVertically(out []byte, position int) {
 	positionAbove := position - defaultDimension - 1
 	if position >= defaultDimension+1 && out[positionAbove] == emptyField {
 		out[positionAbove] = attackPlace
@@ -126,7 +126,7 @@ func (king *King) placeAttackPlacesVertically(out []rune, position int) {
 	}
 }
 
-func (king *King) placeAttackPlacesHorizontally(out []rune, position int) {
+func (king *King) placeAttackPlacesHorizontally(out []byte, position int) {
 	if position == defaultDimension || position%(defaultDimension+1) == defaultDimension {
 		return
 	}
@@ -140,6 +140,6 @@ func (king *King) placeAttackPlacesHorizontally(out []rune, position int) {
 	}
 }
 
-func (*King) GetName() rune {
+func (*King) GetName() byte {
 	return 'k'
 }

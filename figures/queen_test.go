@@ -11,7 +11,7 @@ func TestQueen_GetName(t *testing.T) {
 	tests := []struct {
 		name   string
 		fields fields
-		want   rune
+		want   byte
 	}{
 		{"Test get name", fields{Figure{}}, 'q'},
 		{"Test get name with empty figure", fields{}, 'q'},

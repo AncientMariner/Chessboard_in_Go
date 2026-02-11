@@ -11,7 +11,7 @@ func (knight *Knight) Handle(board string) map[string]string {
 
 	for i := 0; i < len(board) && len(board) == ((defaultDimension+1)*defaultDimension); i++ {
 		if board[i] == emptyField {
-			out := []rune(board)
+			out := []byte(board)
 
 			if !isAnotherFigurePresentBelow(out, i) && !isAnotherFigurePresentBelow(out, i) {
 				placeAttackPlacesBelow(out, i)
@@ -26,7 +26,7 @@ func (knight *Knight) Handle(board string) map[string]string {
 	return boards
 }
 
-func placeAttackPlacesBelow(out []rune, position int) {
+func placeAttackPlacesBelow(out []byte, position int) {
 	if position >= len(out) || position == defaultDimension || position%(defaultDimension+1) == defaultDimension {
 		return
 	}
@@ -59,7 +59,7 @@ func placeAttackPlacesBelow(out []rune, position int) {
 	}
 }
 
-func placeAttackPlacesAbove(out []rune, position int) {
+func placeAttackPlacesAbove(out []byte, position int) {
 	if position >= len(out) || position == defaultDimension || position%(defaultDimension+1) == defaultDimension {
 		return
 	}
@@ -93,7 +93,7 @@ func placeAttackPlacesAbove(out []rune, position int) {
 	}
 }
 
-func isAnotherFigurePresentBelow(out []rune, position int) bool {
+func isAnotherFigurePresentBelow(out []byte, position int) bool {
 	currentLine := position/(defaultDimension+1) + 1
 	var numbersToCheck []int
 
@@ -132,7 +132,7 @@ func isAnotherFigurePresentBelow(out []rune, position int) bool {
 	return false
 }
 
-func isAnotherFigurePresentAbove(out []rune, position int) bool {
+func isAnotherFigurePresentAbove(out []byte, position int) bool {
 
 	currentLine := position/(defaultDimension+1) + 1
 	var numbersToCheck []int
@@ -172,6 +172,6 @@ func isAnotherFigurePresentAbove(out []rune, position int) bool {
 	return false
 }
 
-func (*Knight) GetName() rune {
+func (*Knight) GetName() byte {
 	return 'n'
 }
