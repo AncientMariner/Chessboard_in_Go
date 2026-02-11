@@ -23,12 +23,13 @@ const attackPlace = 'x'
 func drawEmptyBoard() string {
 
 	var board strings.Builder
+	board.Grow(defaultDimension*defaultDimension + defaultDimension)
 
 	for x := 0; x < defaultDimension; x++ {
 		for y := 0; y < defaultDimension; y++ {
-			board.WriteString(string(emptyField))
+			board.WriteByte(emptyField)
 		}
-		board.WriteString("\n")
+		board.WriteByte('\n')
 	}
 	return board.String()
 }
