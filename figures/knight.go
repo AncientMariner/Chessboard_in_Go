@@ -6,20 +6,20 @@ type Knight struct {
 	Figure
 }
 
-func (knight *Knight) Handle(board string) map[string]string {
-	boards := make(map[string]string, getCountOfEmptyPlaces(board))
+func (knight *Knight) Handle(board []byte) map[string][]byte{
+	boards := make(map[string][]byte, getCountOfEmptyPlaces(board))
 
 	for i := 0; i < len(board) && len(board) == ((defaultDimension+1)*defaultDimension); i++ {
 		if board[i] == emptyField {
-			out := []byte(board)
+			out := make([]byte, len(board))
+            copy(out, board) 
 
 			if !isAnotherFigurePresentBelow(out, i) && !isAnotherFigurePresentAbove(out, i) {
 				placeAttackPlacesBelow(out, i)
 				placeAttackPlacesAbove(out, i)
 				out[i] = knight.GetName()
-				outAsString := string(out)
 
-				boards[GenerateHash(outAsString)] = outAsString
+				boards[GenerateHash(out)] = out
 			}
 		}
 	}

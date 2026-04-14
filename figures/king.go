@@ -6,12 +6,13 @@ type King struct {
 	Figure
 }
 
-func (king *King) Handle(board string) map[string]string {
-	boards := make(map[string]string, getCountOfEmptyPlaces(board))
+func (king *King) Handle(board []byte) map[string][]byte{
+	boards := make(map[string][]byte, getCountOfEmptyPlaces(board))
 
 	for i := 0; i < len(board) && len(board) == ((defaultDimension+1)*defaultDimension); i++ {
 		if board[i] == emptyField {
-			out := []byte(board)
+			out := make([]byte, len(board))
+            copy(out, board) 
 
 			if !isAnotherFigurePresent(out, i) {
 				king.placeAttackPlacesHorizontally(out, i)
@@ -19,9 +20,8 @@ func (king *King) Handle(board string) map[string]string {
 				king.placeDiagonallyAbove(out, i)
 				king.placeDiagonallyBelow(out, i)
 				out[i] = king.GetName()
-				outAsString := string(out)
 
-				boards[GenerateHash(outAsString)] = outAsString
+				boards[GenerateHash(out)] = out
 			}
 		}
 	}

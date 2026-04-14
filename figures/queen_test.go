@@ -5,8 +5,6 @@ import (
 )
 
 func TestQueen_GetName(t *testing.T) {
-	type fields struct {
-		Figure Figure
 	}
 	tests := []struct {
 		name   string

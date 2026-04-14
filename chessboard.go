@@ -15,12 +15,12 @@ func main() {
 	// 	fmt.Printf("\nboardsWithFigures.Size() %d", len(boardsWithFigures))
 }
 
-func (board *Chessboard) calculateBoards() map[string]string {
+func (board *Chessboard) calculateBoards() map[string][]byte {
 
-	return board.calculateBoard(board.currentFigureBehaviour, make(map[string]string))
+	return board.calculateBoard(board.currentFigureBehaviour, make(map[string][]byte))
 }
 
-func (board *Chessboard) calculateBoard(behaviour figures.FigureBehaviour, previousFigureBoards map[string]string) map[string]string {
+func (board *Chessboard) calculateBoard(behaviour figures.FigureBehaviour, previousFigureBoards map[string][]byte) map[string][]byte{
 	result := board.figurePlacement.PlaceFigures(board.figureQuantityMap[behaviour.GetName()], behaviour, previousFigureBoards)
 
 	if behaviour.GetNext() != nil {

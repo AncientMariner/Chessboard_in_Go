@@ -25,13 +25,13 @@ func TestPlacement_PlaceFigures(t *testing.T) {
 	type args struct {
 		numberOfFigures int
 		behaviour       FigureBehaviour
-		boards          map[string]string
+		boards          map[string][]byte
 	}
 
-	board := "________\n________\n________\n________\n________\n________\n________\n________\n"
+	board := []byte("________\n________\n________\n________\n________\n________\n________\n________\n")
 	hash := GenerateHash(board)
 
-	newMap := make(map[string]string)
+	newMap := make(map[string][]byte)
 	newMap[hash] = board
 
 	tests := []struct {
@@ -42,12 +42,12 @@ func TestPlacement_PlaceFigures(t *testing.T) {
 		{"Test place figures without figures", args{
 			0,
 			&King{},
-			make(map[string]string),
+			make(map[string][]byte),
 		}, 0},
 		{"Test place figures on empty board", args{
 			1,
 			&King{},
-			make(map[string]string),
+			make(map[string][]byte),
 		}, 64},
 		{"Test place figures on board", args{
 			1,
@@ -94,11 +94,11 @@ func TestPlacement_placeFigure(t *testing.T) {
 	type fields struct {
 	}
 	type args struct {
-		boards    map[string]string
+		boards    map[string][]byte
 		behaviour FigureBehaviour
 	}
 
-	board := "________\n________\n________\n________\n________\n________\n________\n________\n"
+	board := []byte("________\n________\n________\n________\n________\n________\n________\n________\n")
 	hash := GenerateHash(board)
 
 	newMap := make(map[string]string)

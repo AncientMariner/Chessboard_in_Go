@@ -1,18 +1,18 @@
 package figures
 
 import (
-	"crypto/sha512"
 	"fmt"
 	"strings"
+	"hash/fnv"
 )
 
 type Placement struct {
 }
 
-func GenerateHash(s string) string {
-	algorithm := sha512.New512_256()
-	algorithm.Write([]byte(s))
-	return fmt.Sprintf("%x", algorithm.Sum(nil))
+func GenerateHash(s []byte) string {
+	h := fnv.New64a()
+    h.Write(s)
+	return fmt.Sprintf("%x", h.Sum64())
 }
 
 var defaultDimension = 8
@@ -20,7 +20,7 @@ var defaultDimension = 8
 const emptyField = '_'
 const attackPlace = 'x'
 
-func drawEmptyBoard() string {
+func drawEmptyBoard() []byte {
 
 	var board strings.Builder
 	board.Grow(defaultDimension*defaultDimension + defaultDimension)
@@ -31,14 +31,14 @@ func drawEmptyBoard() string {
 		}
 		board.WriteByte('\n')
 	}
-	return board.String()
+	return []byte(board.String())
 }
 
 func (p *Placement) SetDimension(value int) {
 	defaultDimension = value
 }
 
-func (p *Placement) PlaceFigures(numberOfFigures int, behaviour FigureBehaviour, boards map[string]string) map[string]string {
+func (p *Placement) PlaceFigures(numberOfFigures int, behaviour FigureBehaviour, boards map[string][]byte) map[string][]byte {
 	for i := 0; i < numberOfFigures; i++ {
 		if len(boards) == 0 {
 			boards = p.placeFigureOnBoard(drawEmptyBoard(), behaviour)
@@ -49,8 +49,8 @@ func (p *Placement) PlaceFigures(numberOfFigures int, behaviour FigureBehaviour,
 	return boards
 }
 
-func (p *Placement) placeFigure(boards map[string]string, behaviour FigureBehaviour) map[string]string {
-	var resultingMap = make(map[string]string)
+func (p *Placement) placeFigure(boards map[string][]byte, behaviour FigureBehaviour) map[string][]byte{
+	var resultingMap = make(map[string][]byte)
 
 	for _, board := range boards {
 
@@ -63,6 +63,6 @@ func (p *Placement) placeFigure(boards map[string]string, behaviour FigureBehavi
 	return resultingMap
 }
 
-func (p *Placement) placeFigureOnBoard(board string, behaviour FigureBehaviour) map[string]string {
+func (p *Placement) placeFigureOnBoard(board []byte, behaviour FigureBehaviour) map[string][]byte{
 	return behaviour.Handle(board)
 }

@@ -6,12 +6,13 @@ type Queen struct {
 	Figure
 }
 
-func (queen *Queen) Handle(board string) map[string]string {
-	boards := make(map[string]string, getCountOfEmptyPlaces(board))
+func (queen *Queen) Handle(board []byte) map[string][]byte{
+	boards := make(map[string][]byte, getCountOfEmptyPlaces(board))
 
 	for i := 0; i < len(board) && len(board) == ((defaultDimension+1)*defaultDimension); i++ {
 		if board[i] == emptyField {
-			out := []byte(board)
+			out := make([]byte, len(board))
+            copy(out, board) 
 
 			if !isAnotherFigurePresentOnTheLine(out, i) && !isAnotherFigurePresentOnTheColumn(out, i) && !isAnotherFigurePresentDiag(out, i) {
 				placeAttackPlacesHorizontally(out, i)
@@ -20,9 +21,8 @@ func (queen *Queen) Handle(board string) map[string]string {
 				placeAttackPlacesDiagonallyBelow(out, i)
 
 				out[i] = queen.GetName()
-				outAsString := string(out)
 
-				boards[GenerateHash(outAsString)] = outAsString
+				boards[GenerateHash(out)] = out
 			}
 		}
 	}

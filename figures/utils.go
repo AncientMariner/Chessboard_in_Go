@@ -1,7 +1,11 @@
 package figures
 
-import "strings"
-
-func getCountOfEmptyPlaces(board string) int {
-	return strings.Count(board, string(emptyField))
+func getCountOfEmptyPlaces(board []byte) int {
+	counter := 0
+	for i := 0; i < len(board); i++ {
+		if board[i] == emptyField {
+			counter++
+		}
+	}
+	return counter
 }

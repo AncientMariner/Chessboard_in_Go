@@ -6,7 +6,7 @@ type Figure struct {
 
 type FigureBehaviour interface {
 	SetNext(FigureBehaviour) FigureBehaviour
-	Handle(string) map[string]string
+	Handle([]byte) map[string][]byte
 	GetName() byte
 	GetNext() FigureBehaviour
 }
