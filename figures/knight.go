@@ -13,7 +13,7 @@ func (knight *Knight) Handle(board string) map[string]string {
 		if board[i] == emptyField {
 			out := []byte(board)
 
-			if !isAnotherFigurePresentBelow(out, i) && !isAnotherFigurePresentBelow(out, i) {
+			if !isAnotherFigurePresentBelow(out, i) && !isAnotherFigurePresentAbove(out, i) {
 				placeAttackPlacesBelow(out, i)
 				placeAttackPlacesAbove(out, i)
 				out[i] = knight.GetName()
