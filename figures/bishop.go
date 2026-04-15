@@ -6,21 +6,29 @@ type Bishop struct {
 	Figure
 }
 
-func (bishop *Bishop) Handle(board []byte) map[string][]byte{
+func (bishop *Bishop) Handle(board []byte) map[string][]byte {
 	boards := make(map[string][]byte, getCountOfEmptyPlaces(board))
 
 	for i := 0; i < len(board) && len(board) == ((defaultDimension+1)*defaultDimension); i++ {
 		if board[i] == emptyField {
-			out := make([]byte, len(board))
-            copy(out, board) 
+			// Get from pool
+			outPtr := boardPool.Get().(*[]byte)
+			out := *outPtr
+			copy(out, board)
 
 			if !isAnotherFigurePresentDiag(out, i) {
 				placeAttackPlacesDiagonallyAbove(out, i)
 				placeAttackPlacesDiagonallyBelow(out, i)
 				out[i] = bishop.GetName()
 
-				boards[GenerateHash(out)] = out
+				// Make permanent copy for the map
+				permanent := make([]byte, len(out))
+				copy(permanent, out)
+				boards[GenerateHash(permanent)] = permanent
 			}
+
+			// Always return to pool
+			boardPool.Put(outPtr)
 		}
 	}
 	return boards

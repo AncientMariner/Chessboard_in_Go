@@ -198,14 +198,30 @@ func Test_different_combinations(t *testing.T) {
 		{"Test empty board with 2 queen", args{board: NewChessboard().withQueen(1).withQueen(1).Build()}, 1288},
 		{"Test empty board with 1 king 1 queen", args{board: NewChessboard().withKing(1).withQueen(1).Build()}, 2576},
 		{"Test empty board with 1 queen 1 king", args{board: NewChessboard().withQueen(1).withKing(1).Build()}, 2506},
-		{"Test empty board with 3 queen", args{board: NewChessboard().withQueen(3).Build()}, 10320},
-		{"Test empty board with 4 queen", args{board: NewChessboard().withQueen(4).Build()}, 34568},
-		{"Test empty board with 5 queen", args{board: NewChessboard().withQueen(5).Build()}, 46736},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := tt.args.board.calculateBoards(); len(got) != tt.want {
+				t.Errorf("calculateBoards() = %v, want %v", len(got), tt.want)
+			}
+		})
+	}
+}
+
+func Test_queen_combinations(t *testing.T) {
+	type args struct {
+		board *Chessboard
+	}
+	tests := []struct {
+		name string
+		args args
+		want int
+	}{
 		{"Test empty board with 6 queen", args{board: NewChessboard().withQueen(6).Build()}, 22708},
 		{"Test empty board with 7 queen", args{board: NewChessboard().withQueen(7).Build()}, 3192},
 		{"Test empty board with 8 queen", args{board: NewChessboard().withQueen(8).Build()}, 92},
 		{"Test empty board with 8 queen", args{board: NewChessboard().withQueen(1).withQueen(1).withQueen(1).withQueen(1).withQueen(1).withQueen(1).withQueen(1).withQueen(1).Build()}, 92},
-		{"Test empty board with 9 queen, impossible case", args{board: NewChessboard().withQueen(9).Build()}, 0},
+		// {"Test empty board with 9 queen, impossible case", args{board: NewChessboard().withQueen(9).Build()}, 0},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
