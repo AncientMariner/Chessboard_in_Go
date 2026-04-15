@@ -302,7 +302,7 @@ func Test_number_of_boards_with_different_figure_variations(t *testing.T) {
 	calculateBoards_R_R_K := NewChessboard().withRook(1).withRook(1).withKing(1).Build().calculateBoards()
 	calculateBoards_K_R_R := NewChessboard().withKing(1).withRook(1).withRook(1).Build().calculateBoards()
 
-	var unitedSet = make(map[string][]byte, len(calculateBoards_R_K_R)+len(calculateBoards_R_R_K)+len(calculateBoards_K_R_R))
+	var unitedSet = make(map[uint64][]byte, len(calculateBoards_R_K_R)+len(calculateBoards_R_R_K)+len(calculateBoards_K_R_R))
 
 	for u, s := range calculateBoards_R_K_R {
 		unitedSet[u] = s
@@ -362,7 +362,7 @@ func Test_board_with_1_figure(t *testing.T) {
 	}
 	type args struct {
 		behaviour            figures.FigureBehaviour
-		previousFigureBoards map[string][]byte
+		previousFigureBoards map[uint64][]byte
 	}
 	behaviour := &figures.King{}
 	behaviour.SetNext(&figures.Queen{})
@@ -376,9 +376,9 @@ func Test_board_with_1_figure(t *testing.T) {
 		args   args
 		want   int
 	}{
-		{"Test empty board with 1 king", fields{map[byte]int{(&figures.King{}).GetName(): 1}, &figures.King{}, figures.Placement{}}, args{&figures.King{}, make(map[string][]byte)}, 64},
-		{"Test empty board with 2 king", fields{map[byte]int{(&figures.King{}).GetName(): 2}, &figures.King{}, figures.Placement{}}, args{&figures.King{}, make(map[string][]byte)}, 1806},
-		{"Test empty board with 1 king 1 rook", fields{map[byte]int{(&figures.King{}).GetName(): 1, (&figures.Rook{}).GetName(): 1}, figureBehaviour, figures.Placement{}}, args{figureBehaviour, make(map[string][]byte)}, 2952},
+		{"Test empty board with 1 king", fields{map[byte]int{(&figures.King{}).GetName(): 1}, &figures.King{}, figures.Placement{}}, args{&figures.King{}, make(map[uint64][]byte)}, 64},
+		{"Test empty board with 2 king", fields{map[byte]int{(&figures.King{}).GetName(): 2}, &figures.King{}, figures.Placement{}}, args{&figures.King{}, make(map[uint64][]byte)}, 1806},
+		{"Test empty board with 1 king 1 rook", fields{map[byte]int{(&figures.King{}).GetName(): 1, (&figures.Rook{}).GetName(): 1}, figureBehaviour, figures.Placement{}}, args{figureBehaviour, make(map[uint64][]byte)}, 2952},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

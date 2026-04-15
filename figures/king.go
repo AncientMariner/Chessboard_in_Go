@@ -6,8 +6,8 @@ type King struct {
 	Figure
 }
 
-func (king *King) Handle(board []byte) map[string][]byte {
-	boards := make(map[string][]byte, getCountOfEmptyPlaces(board))
+func (king *King) Handle(board []byte) map[uint64][]byte {
+	boards := make(map[uint64][]byte, getCountOfEmptyPlaces(board))
 
 	for i := 0; i < len(board) && len(board) == ((defaultDimension+1)*defaultDimension); i++ {
 		if board[i] == emptyField {

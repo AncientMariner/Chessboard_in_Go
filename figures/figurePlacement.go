@@ -1,18 +1,18 @@
 package figures
 
 import (
-	"fmt"
-	"strings"
 	"hash/fnv"
+	"strings"
 )
 
 type Placement struct {
 }
 
-func GenerateHash(s []byte) string {
+// GenerateHash returns a uint64 hash for efficient map keys (no allocations)
+func GenerateHash(s []byte) uint64 {
 	h := fnv.New64a()
-    h.Write(s)
-	return fmt.Sprintf("%x", h.Sum64())
+	h.Write(s)
+	return h.Sum64()
 }
 
 var defaultDimension = 8
@@ -38,7 +38,7 @@ func (p *Placement) SetDimension(value int) {
 	defaultDimension = value
 }
 
-func (p *Placement) PlaceFigures(numberOfFigures int, behaviour FigureBehaviour, boards map[string][]byte) map[string][]byte {
+func (p *Placement) PlaceFigures(numberOfFigures int, behaviour FigureBehaviour, boards map[uint64][]byte) map[uint64][]byte {
 	for i := 0; i < numberOfFigures; i++ {
 		if len(boards) == 0 {
 			boards = p.placeFigureOnBoard(drawEmptyBoard(), behaviour)
@@ -49,8 +49,8 @@ func (p *Placement) PlaceFigures(numberOfFigures int, behaviour FigureBehaviour,
 	return boards
 }
 
-func (p *Placement) placeFigure(boards map[string][]byte, behaviour FigureBehaviour) map[string][]byte{
-	var resultingMap = make(map[string][]byte)
+func (p *Placement) placeFigure(boards map[uint64][]byte, behaviour FigureBehaviour) map[uint64][]byte {
+	var resultingMap = make(map[uint64][]byte)
 
 	for _, board := range boards {
 
@@ -63,6 +63,6 @@ func (p *Placement) placeFigure(boards map[string][]byte, behaviour FigureBehavi
 	return resultingMap
 }
 
-func (p *Placement) placeFigureOnBoard(board []byte, behaviour FigureBehaviour) map[string][]byte{
+func (p *Placement) placeFigureOnBoard(board []byte, behaviour FigureBehaviour) map[uint64][]byte {
 	return behaviour.Handle(board)
 }
