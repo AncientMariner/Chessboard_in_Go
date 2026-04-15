@@ -8,9 +8,9 @@ import (
 func Test_drawEmptyBoard(t *testing.T) {
 	tests := []struct {
 		name string
-		want string
+		want []byte
 	}{
-		{"Initial board test", "________\n________\n________\n________\n________\n________\n________\n________\n"},
+		{"Initial board test", []byte("________\n________\n________\n________\n________\n________\n________\n________\n")},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -69,7 +69,7 @@ func TestPlacement_placeFiguresOnBoard(t *testing.T) {
 	type fields struct {
 	}
 	type args struct {
-		board     string
+		board     []byte
 		behaviour FigureBehaviour
 	}
 	tests := []struct {
@@ -78,7 +78,7 @@ func TestPlacement_placeFiguresOnBoard(t *testing.T) {
 		args   args
 		want   int
 	}{
-		{"Test placement on empty board", fields{}, args{"________\n________\n________\n________\n________\n________\n________\n________\n", &King{}}, 64},
+		{"Test placement on empty board", fields{}, args{[]byte("________\n________\n________\n________\n________\n________\n________\n________\n"), &King{}}, 64},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -101,7 +101,7 @@ func TestPlacement_placeFigure(t *testing.T) {
 	board := []byte("________\n________\n________\n________\n________\n________\n________\n________\n")
 	hash := GenerateHash(board)
 
-	newMap := make(map[string]string)
+	newMap := make(map[string][]byte)
 	newMap[hash] = board
 
 	tests := []struct {

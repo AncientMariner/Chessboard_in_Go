@@ -33,7 +33,7 @@ func TestKing_Handle(t *testing.T) {
 		Figure Figure
 	}
 	type args struct {
-		board string
+		board []byte
 	}
 
 	tests := []struct {
@@ -42,12 +42,12 @@ func TestKing_Handle(t *testing.T) {
 		args   args
 		want   int
 	}{
-		{"Test handle board size 4", fields{Figure{next: nil}}, args{board: "____\n"}, 0},
-		{"Test handle board size 8", fields{Figure{next: nil}}, args{board: "________\n"}, 0},
-		{"Test handle board size 64", fields{Figure{next: nil}}, args{board: "________\n________\n________\n________\n________\n________\n________\n________\n"}, 64},
-		{"Test handle board size 55", fields{Figure{next: nil}}, args{board: "xxx_____\nxkx_____\nxxx_____\n________\n________\n________\n________\n________\n"}, 55},
-		{"Test handle board size 16", fields{Figure{next: nil}}, args{board: "xxx_xxx_\nxkx_xkx_\nxxx_xxx_\nxxx_xxx_\nxkx_xkx_\nxxx_xxx_\nxkx_xkx_\nxxx_xxx_\n"}, 16},
-		{"Test handle board size 8", fields{Figure{next: nil}}, args{board: "xxxkxxx_\nxkxxxkx_\nxxxkxxx_\nxxxxxxx_\nxkxkxkx_\nxxxxxxx_\nxkxkxkx_\nxxxxxxx_\n"}, 8},
+		{"Test handle board size 4", fields{Figure{next: nil}}, args{board: []byte("____\n")}, 0},
+		{"Test handle board size 8", fields{Figure{next: nil}}, args{board: []byte("________\n")}, 0},
+		{"Test handle board size 64", fields{Figure{next: nil}}, args{board: []byte("________\n________\n________\n________\n________\n________\n________\n________\n")}, 64},
+		{"Test handle board size 55", fields{Figure{next: nil}}, args{board: []byte("xxx_____\nxkx_____\nxxx_____\n________\n________\n________\n________\n________\n")}, 55},
+		{"Test handle board size 16", fields{Figure{next: nil}}, args{board: []byte("xxx_xxx_\nxkx_xkx_\nxxx_xxx_\nxxx_xxx_\nxkx_xkx_\nxxx_xxx_\nxkx_xkx_\nxxx_xxx_\n")}, 16},
+		{"Test handle board size 8", fields{Figure{next: nil}}, args{board: []byte("xxxkxxx_\nxkxxxkx_\nxxxkxxx_\nxxxxxxx_\nxkxkxkx_\nxxxxxxx_\nxkxkxkx_\nxxxxxxx_\n")}, 8},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

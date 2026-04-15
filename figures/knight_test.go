@@ -34,7 +34,7 @@ func TestKnight_Handle(t *testing.T) {
 		Figure Figure
 	}
 	type args struct {
-		board string
+		board []byte
 	}
 	tests := []struct {
 		name   string
@@ -42,13 +42,13 @@ func TestKnight_Handle(t *testing.T) {
 		args   args
 		want   int
 	}{
-		{"Test handle board size 8 is not possible", fields{Figure{next: nil}}, args{board: "________\n"}, 0},
-		{"Test handle empty board size 64", fields{Figure{next: nil}}, args{board: "________\n________\n________\n________\n________\n________\n________\n________\n"}, 64},
-		{"Test handle empty board size 64", fields{Figure{next: nil}}, args{board: "xxx_____\nxkx_____\nxxx_____\n________\n________\n________\n________\n________\n"}, 51},
-		{"Test handle empty board size 64", fields{Figure{next: nil}}, args{board: "xxx_____\nxkx_____\nxxx_____\n___xxx__\n___xkx__\n___xxx__\n________\n________\n"}, 36},
-		{"Test handle empty board size 64", fields{Figure{next: nil}}, args{board: "xxx_____\nxkx_____\nxxx_____\n___xxx__\n___xkx__\n___xxx__\nxxx__xxx\nxkx__xkx\n"}, 22},
-		{"Test handle empty board size 64", fields{Figure{next: nil}}, args{board: "xxx__xxx\nxkx__xkx\nxxx__xxx\nxxxxxx__\nxkxxkx__\nxxxxxx__\nxxx__xxx\nxkx__xkx\n"}, 6},
-		{"Test handle empty board size 64", fields{Figure{next: nil}}, args{board: "xxx__xxx\nxkx__xkx\nxxx__xxx\nxxxxxx__\nxkxxkxxx\nxxxxxxxk\nxxxxxxxx\nxkxkxxkx\n"}, 2},
+		{"Test handle board size 8 is not possible", fields{Figure{next: nil}}, args{board: []byte("________\n")}, 0},
+		{"Test handle empty board size 64", fields{Figure{next: nil}}, args{board: []byte("________\n________\n________\n________\n________\n________\n________\n________\n")}, 64},
+		{"Test handle empty board size 64", fields{Figure{next: nil}}, args{board: []byte("xxx_____\nxkx_____\nxxx_____\n________\n________\n________\n________\n________\n")}, 51},
+		{"Test handle empty board size 64", fields{Figure{next: nil}}, args{board: []byte("xxx_____\nxkx_____\nxxx_____\n___xxx__\n___xkx__\n___xxx__\n________\n________\n")}, 36},
+		{"Test handle empty board size 64", fields{Figure{next: nil}}, args{board: []byte("xxx_____\nxkx_____\nxxx_____\n___xxx__\n___xkx__\n___xxx__\nxxx__xxx\nxkx__xkx\n")}, 22},
+		{"Test handle empty board size 64", fields{Figure{next: nil}}, args{board: []byte("xxx__xxx\nxkx__xkx\nxxx__xxx\nxxxxxx__\nxkxxkx__\nxxxxxx__\nxxx__xxx\nxkx__xkx\n")}, 6},
+		{"Test handle empty board size 64", fields{Figure{next: nil}}, args{board: []byte("xxx__xxx\nxkx__xkx\nxxx__xxx\nxxxxxx__\nxkxxkxxx\nxxxxxxxk\nxxxxxxxx\nxkxkxxkx\n")}, 2},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

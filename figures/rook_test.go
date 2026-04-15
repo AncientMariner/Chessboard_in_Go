@@ -34,7 +34,7 @@ func TestRook_Handle(t *testing.T) {
 		Figure Figure
 	}
 	type args struct {
-		board string
+		board []byte
 	}
 	tests := []struct {
 		name   string
@@ -42,17 +42,17 @@ func TestRook_Handle(t *testing.T) {
 		args   args
 		want   int
 	}{
-		// {"Test handle board size 8", fields{Figure{next: nil}}, args{board: "____\n"}, 4},
-		{"Test handle board size 8 is not possible", fields{Figure{next: nil}}, args{board: "________\n"}, 0},
-		{"Test handle empty board size 64", fields{Figure{next: nil}}, args{board: "________\n________\n________\n________\n________\n________\n________\n________\n"}, 64},
-		{"Test handle board with 1 king size 45", fields{Figure{next: nil}}, args{board: "xxx_____\nxkx_____\nxxx_____\n________\n________\n________\n________\n________\n"}, 45},
-		{"Test handle board with kings size 27", fields{Figure{next: nil}}, args{board: "xxx_____\nxkx_____\nxxx_____\n________\n________\n_____xxx\n_____xkx\n_____xxx\n"}, 28},
-		{"Test handle board with kings size 13", fields{Figure{next: nil}}, args{board: "xxx_____\nxkx_____\nxxxxxx__\n___xkx__\n___xxx__\n_____xxx\n_____xkx\n_____xxx\n"}, 13},
-		{"Test handle board with kings size 8", fields{Figure{next: nil}}, args{board: "xxx_____\nxkx_____\nxxxxxx__\n___xkx__\n___xxx__\n__xxxxxx\n__xkxxkx\n__xxxxxx\n"}, 8},
-		{"Test handle board with kings size 7", fields{Figure{next: nil}}, args{board: "xxxxxx__\nxkxxkx__\nxxxxxx__\n___xkx__\n___xxx__\n__xxxxxx\n__xkxxkx\n__xxxxxx\n"}, 7},
-		{"Test handle board with kings size 4", fields{Figure{next: nil}}, args{board: "xxxxxx__\nxkxxkx__\nxxxxxx__\nxkxxkx__\nxkxxxx__\n__xxxxxx\n__xkxxkx\n__xxxxxx\n"}, 4},
-		{"Test handle board with kings size 2", fields{Figure{next: nil}}, args{board: "xxxxxxxk\nxkxxkxxx\nxxxxxx__\nxkxxkx__\nxkxxxx__\n__xxxxxx\n__xkxxkx\n__xxxxxx\n"}, 2},
-		{"Test handle board with kings size 0", fields{Figure{next: nil}}, args{board: "xxxxxxxk\nxkxxkxxx\nxxxxxx__\nxkxxkx__\nxkxxxx__\n__xxxxxx\nxxxkxxkx\nkxxxxxxx\n"}, 0},
+		// {"Test handle board size 8", fields{Figure{next: nil}}, args{board: []byte("____\n")}, 4},
+		{"Test handle board size 8 is not possible", fields{Figure{next: nil}}, args{board: []byte("________\n")}, 0},
+		{"Test handle empty board size 64", fields{Figure{next: nil}}, args{board: []byte("________\n________\n________\n________\n________\n________\n________\n________\n")}, 64},
+		{"Test handle board with 1 king size 45", fields{Figure{next: nil}}, args{board: []byte("xxx_____\nxkx_____\nxxx_____\n________\n________\n________\n________\n________\n")}, 45},
+		{"Test handle board with kings size 27", fields{Figure{next: nil}}, args{board: []byte("xxx_____\nxkx_____\nxxx_____\n________\n________\n_____xxx\n_____xkx\n_____xxx\n")}, 28},
+		{"Test handle board with kings size 13", fields{Figure{next: nil}}, args{board: []byte("xxx_____\nxkx_____\nxxxxxx__\n___xkx__\n___xxx__\n_____xxx\n_____xkx\n_____xxx\n")}, 13},
+		{"Test handle board with kings size 8", fields{Figure{next: nil}}, args{board: []byte("xxx_____\nxkx_____\nxxxxxx__\n___xkx__\n___xxx__\n__xxxxxx\n__xkxxkx\n__xxxxxx\n")}, 8},
+		{"Test handle board with kings size 7", fields{Figure{next: nil}}, args{board: []byte("xxxxxx__\nxkxxkx__\nxxxxxx__\n___xkx__\n___xxx__\n__xxxxxx\n__xkxxkx\n__xxxxxx\n")}, 7},
+		{"Test handle board with kings size 4", fields{Figure{next: nil}}, args{board: []byte("xxxxxx__\nxkxxkx__\nxxxxxx__\nxkxxkx__\nxkxxxx__\n__xxxxxx\n__xkxxkx\n__xxxxxx\n")}, 4},
+		{"Test handle board with kings size 2", fields{Figure{next: nil}}, args{board: []byte("xxxxxxxk\nxkxxkxxx\nxxxxxx__\nxkxxkx__\nxkxxxx__\n__xxxxxx\n__xkxxkx\n__xxxxxx\n")}, 2},
+		{"Test handle board with kings size 0", fields{Figure{next: nil}}, args{board: []byte("xxxxxxxk\nxkxxkxxx\nxxxxxx__\nxkxxkx__\nxkxxxx__\n__xxxxxx\nxxxkxxkx\nkxxxxxxx\n")}, 0},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

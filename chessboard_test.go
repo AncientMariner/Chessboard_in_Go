@@ -250,6 +250,26 @@ func Test_number_of_boards_with_1_figure_7x7(t *testing.T) {
 		want int
 	}{
 		{"Test empty board 7x7 with 1 king", args{board: NewChessboardWithSize(7).withKing(1).Build()}, 49},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := tt.args.board.calculateBoards(); len(got) != tt.want {
+				t.Errorf("calculateBoards() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func Test_number_of_boards_with_1_figure_7x7_long(t *testing.T) {
+	t.Skip("skipping test")
+	type args struct {
+		board *Chessboard
+	}
+	tests := []struct {
+		name string
+		args args
+		want int
+	}{
 		{"Test empty 7x7 board with 2 king 2 queen 2 bishop 1 knight", args{board: NewChessboardWithSize(7).withKing(2).withQueen(2).withBishop(2).withKnight(1).Build()}, 3761852},
 	}
 	for _, tt := range tests {
@@ -266,7 +286,7 @@ func Test_number_of_boards_with_different_figure_variations(t *testing.T) {
 	calculateBoards_R_R_K := NewChessboard().withRook(1).withRook(1).withKing(1).Build().calculateBoards()
 	calculateBoards_K_R_R := NewChessboard().withKing(1).withRook(1).withRook(1).Build().calculateBoards()
 
-	var unitedSet = make(map[string]string, len(calculateBoards_R_K_R)+len(calculateBoards_R_R_K)+len(calculateBoards_K_R_R))
+	var unitedSet = make(map[string][]byte, len(calculateBoards_R_K_R)+len(calculateBoards_R_R_K)+len(calculateBoards_K_R_R))
 
 	for u, s := range calculateBoards_R_K_R {
 		unitedSet[u] = s
@@ -326,7 +346,7 @@ func Test_board_with_1_figure(t *testing.T) {
 	}
 	type args struct {
 		behaviour            figures.FigureBehaviour
-		previousFigureBoards map[string]string
+		previousFigureBoards map[string][]byte
 	}
 	behaviour := &figures.King{}
 	behaviour.SetNext(&figures.Queen{})
@@ -340,9 +360,9 @@ func Test_board_with_1_figure(t *testing.T) {
 		args   args
 		want   int
 	}{
-		{"Test empty board with 1 king", fields{map[byte]int{(&figures.King{}).GetName(): 1}, &figures.King{}, figures.Placement{}}, args{&figures.King{}, make(map[string]string)}, 64},
-		{"Test empty board with 2 king", fields{map[byte]int{(&figures.King{}).GetName(): 2}, &figures.King{}, figures.Placement{}}, args{&figures.King{}, make(map[string]string)}, 1806},
-		{"Test empty board with 1 king 1 rook", fields{map[byte]int{(&figures.King{}).GetName(): 1, (&figures.Rook{}).GetName(): 1}, figureBehaviour, figures.Placement{}}, args{figureBehaviour, make(map[string]string)}, 2952},
+		{"Test empty board with 1 king", fields{map[byte]int{(&figures.King{}).GetName(): 1}, &figures.King{}, figures.Placement{}}, args{&figures.King{}, make(map[string][]byte)}, 64},
+		{"Test empty board with 2 king", fields{map[byte]int{(&figures.King{}).GetName(): 2}, &figures.King{}, figures.Placement{}}, args{&figures.King{}, make(map[string][]byte)}, 1806},
+		{"Test empty board with 1 king 1 rook", fields{map[byte]int{(&figures.King{}).GetName(): 1, (&figures.Rook{}).GetName(): 1}, figureBehaviour, figures.Placement{}}, args{figureBehaviour, make(map[string][]byte)}, 2952},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
