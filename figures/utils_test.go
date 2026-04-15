@@ -8,6 +8,8 @@ func Test_getCountOfEmptyPlaces(t *testing.T) {
 		board []byte
 		want  int
 	}{
+		{name: "empty string", board: make([]byte, 0), want: 0}, 
+		{name: "empty string", board: make([]byte, 1), want: 0}, 
 		{name: "empty string", board: []byte(""), want: 0},
 		{name: "no empty places", board: []byte("rnbqkbnr\n"), want: 0},
 		{name: "one empty place", board:[]byte("rnbqkbn_\n"), want: 1},
@@ -24,3 +26,22 @@ func Test_getCountOfEmptyPlaces(t *testing.T) {
 		})
 	}
 }
+
+func Test_boardPool(t *testing.T) {
+	board := boardPool.Get().(*[]byte)
+	if board == nil {
+		t.Error("Expected a board from the pool, got nil")
+	}
+
+	boardPool.Put(board)
+
+	board2 := boardPool.Get().(*[]byte)
+	if board2 == nil {
+		t.Error("Expected a board from the pool, got nil")
+	}
+
+	if board != board2 {
+		t.Error("Expected to get the same board from the pool, got a different one")
+	}
+}
+
