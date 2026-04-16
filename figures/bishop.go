@@ -12,24 +12,25 @@ func (bishop *Bishop) Handle(board []byte) map[uint64][]byte {
 
 	for i := 0; i < len(board) && len(board) == ((dimension+1)*dimension); i++ {
 		if board[i] == emptyField {
-			// Get from pool
-			outPtr := getBoardFromPool(dimension)
-			out := *outPtr
-			copy(out, board)
+			// Check validity first before doing any allocation
+			if !isAnotherFigurePresentDiag(board, i, dimension) {
+				// Get working buffer from pool
+				outPtr := getBoardFromPool(dimension)
+				out := *outPtr
+				copy(out, board)
 
-			if !isAnotherFigurePresentDiag(out, i, dimension) {
 				placeAttackPlacesDiagonallyAbove(out, i, dimension)
 				placeAttackPlacesDiagonallyBelow(out, i, dimension)
 				out[i] = bishop.GetName()
 
-				// Make permanent copy for the map
+				// Make permanent copy for storage
 				permanent := make([]byte, len(out))
 				copy(permanent, out)
 				boards[GenerateHash(permanent)] = permanent
-			}
 
-			// Always return to pool
-			boardPool.Put(outPtr)
+				// Return working buffer to pool
+				boardPool.Put(outPtr)
+			}
 		}
 	}
 	return boards

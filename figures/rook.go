@@ -12,24 +12,25 @@ func (rook *Rook) Handle(board []byte) map[uint64][]byte {
 
 	for i := 0; i < len(board) && len(board) == ((dimension+1)*dimension); i++ {
 		if board[i] == emptyField {
-			// Get from pool
-			outPtr := getBoardFromPool(dimension)
-			out := *outPtr
-			copy(out, board)
+			// Check validity first before doing any allocation
+			if !isAnotherFigurePresentOnTheLine(board, i, dimension) && !isAnotherFigurePresentOnTheColumn(board, i, dimension) {
+				// Get working buffer from pool
+				outPtr := getBoardFromPool(dimension)
+				out := *outPtr
+				copy(out, board)
 
-			if !isAnotherFigurePresentOnTheLine(out, i, dimension) && !isAnotherFigurePresentOnTheColumn(out, i, dimension) {
 				placeAttackPlacesHorizontally(out, i, dimension)
 				placeAttackPlacesVertically(out, i, dimension)
 				out[i] = rook.GetName()
 
-				// Make permanent copy for the map
+				// Make permanent copy for storage
 				permanent := make([]byte, len(out))
 				copy(permanent, out)
 				boards[GenerateHash(permanent)] = permanent
-			}
 
-			// Always return to pool
-			boardPool.Put(outPtr)
+				// Return working buffer to pool
+				boardPool.Put(outPtr)
+			}
 		}
 	}
 	return boards

@@ -12,26 +12,27 @@ func (king *King) Handle(board []byte) map[uint64][]byte {
 
 	for i := 0; i < len(board) && len(board) == ((dimension+1)*dimension); i++ {
 		if board[i] == emptyField {
-			// Get from pool
-			outPtr := getBoardFromPool(dimension)
-			out := *outPtr
-			copy(out, board)
+			// Check validity first before doing any allocation
+			if !isAnotherFigurePresent(board, i, dimension) {
+				// Get working buffer from pool
+				outPtr := getBoardFromPool(dimension)
+				out := *outPtr
+				copy(out, board)
 
-			if !isAnotherFigurePresent(out, i, dimension) {
 				king.placeAttackPlacesHorizontally(out, i, dimension)
 				king.placeAttackPlacesVertically(out, i, dimension)
 				king.placeDiagonallyAbove(out, i, dimension)
 				king.placeDiagonallyBelow(out, i, dimension)
 				out[i] = king.GetName()
 
-				// Make permanent copy for the map
+				// Make permanent copy for storage
 				permanent := make([]byte, len(out))
 				copy(permanent, out)
 				boards[GenerateHash(permanent)] = permanent
-			}
 
-			// Always return to pool
-			boardPool.Put(outPtr)
+				// Return working buffer to pool
+				boardPool.Put(outPtr)
+			}
 		}
 	}
 	return boards
