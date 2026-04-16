@@ -3,6 +3,7 @@ package figures
 import (
 	"hash"
 	"hash/fnv"
+	"runtime"
 	"strings"
 	"sync"
 )
@@ -29,6 +30,14 @@ func GenerateHash(s []byte) uint64 {
 }
 
 var defaultDimension = 8
+
+// parallelThreshold defines minimum number of boards to process in parallel
+// Below this threshold, sequential processing is more efficient due to goroutine overhead
+const parallelThreshold = 10
+
+// numWorkers determines the worker pool size for parallel processing
+// Defaults to number of CPU cores for optimal performance
+var numWorkers = runtime.GOMAXPROCS(0)
 
 const emptyField = '_'
 const attackPlace = 'x'
@@ -63,6 +72,17 @@ func (p *Placement) PlaceFigures(numberOfFigures int, behaviour FigureBehaviour,
 }
 
 func (p *Placement) placeFigure(boards map[uint64][]byte, behaviour FigureBehaviour) map[uint64][]byte {
+	// Use parallel processing if we have enough boards to justify the overhead
+	if len(boards) >= parallelThreshold {
+		return p.placeFigureParallel(boards, behaviour)
+	}
+
+	// Sequential processing for small workloads
+	return p.placeFigureSequential(boards, behaviour)
+}
+
+// placeFigureSequential processes boards sequentially (original implementation)
+func (p *Placement) placeFigureSequential(boards map[uint64][]byte, behaviour FigureBehaviour) map[uint64][]byte {
 	resultingMap := getMapFromPool(len(boards) * 10) // Rough estimate of result size
 
 	for _, board := range boards {
@@ -76,6 +96,64 @@ func (p *Placement) placeFigure(boards map[uint64][]byte, behaviour FigureBehavi
 		// Return the temporary map from Handle() to the pool
 		putMapToPool(boardsWithPlacement)
 	}
+	return resultingMap
+}
+
+// placeFigureParallel processes boards in parallel using a worker pool pattern
+func (p *Placement) placeFigureParallel(boards map[uint64][]byte, behaviour FigureBehaviour) map[uint64][]byte {
+	// Create channels for work distribution
+	type job struct {
+		board []byte
+	}
+
+	type result struct {
+		boards map[uint64][]byte
+	}
+
+	jobs := make(chan job, len(boards))
+	results := make(chan result, len(boards))
+
+	// Start worker pool
+	var wg sync.WaitGroup
+	for i := 0; i < numWorkers; i++ {
+		wg.Add(1)
+		go func() {
+			defer wg.Done()
+			for j := range jobs {
+				// Process the board
+				boardsWithPlacement := p.placeFigureOnBoard(j.board, behaviour)
+				results <- result{boards: boardsWithPlacement}
+			}
+		}()
+	}
+
+	// Send jobs to workers
+	for _, board := range boards {
+		jobs <- job{board: board}
+	}
+	close(jobs)
+
+	// Close results channel when all workers are done
+	go func() {
+		wg.Wait()
+		close(results)
+	}()
+
+	// Collect results - use mutex to protect the shared map
+	resultingMap := getMapFromPool(len(boards) * 10)
+	var mu sync.Mutex
+
+	for res := range results {
+		mu.Lock()
+		for hash, element := range res.boards {
+			resultingMap[hash] = element
+		}
+		mu.Unlock()
+
+		// Return the temporary map from Handle() to the pool
+		putMapToPool(res.boards)
+	}
+
 	return resultingMap
 }
 
