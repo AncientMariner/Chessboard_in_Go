@@ -250,25 +250,26 @@ func Test_different_combinations_long_running(t *testing.T) {
 	}
 }
 
-// func Test_number_of_boards_with_1_figure_7x7(t *testing.T) {
-// 	type args struct {
-// 		board *Chessboard
-// 	}
-// 	tests := []struct {
-// 		name string
-// 		args args
-// 		want int
-// 	}{
-// 		{"Test empty board 7x7 with 1 king", args{board: NewChessboardWithSize(7).withKing(1).Build()}, 49},
-// 	}
-// 	for _, tt := range tests {
-// 		t.Run(tt.name, func(t *testing.T) {
-// 			if got := tt.args.board.calculateBoards(); len(got) != tt.want {
-// 				t.Errorf("calculateBoards() = %v, want %v", got, tt.want)
-// 			}
-// 		})
-// 	}
-// }
+// When all the tests are run in parallel, and there are different board sizes, a race condition happens
+func Test_number_of_boards_with_1_figure_7x7(t *testing.T) {
+	type args struct {
+		board *Chessboard
+	}
+	tests := []struct {
+		name string
+		args args
+		want int
+	}{
+		{"Test empty board 7x7 with 1 king", args{board: NewChessboardWithSize(7).withKing(1).Build()}, 49},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := tt.args.board.calculateBoards(); len(got) != tt.want {
+				t.Errorf("calculateBoards() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
 
 func Test_number_of_boards_with_1_figure_7x7_long(t *testing.T) {
 	t.Skip("skipping test")

@@ -122,7 +122,7 @@ func Test_placeAttackPlacesHorizontally(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			(&King{}).placeAttackPlacesHorizontally(tt.args.out, tt.args.position)
+			(&King{}).placeAttackPlacesHorizontally(tt.args.out, tt.args.position, 8)
 			if !reflect.DeepEqual(tt.args.out, tt.want) {
 				t.Errorf("placeAttackPlacesDiagonallyBelow() = %v, want %v", tt.args.out, tt.want)
 			}
@@ -175,7 +175,7 @@ func Test_placeAttackPlacesVertically(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			(&King{}).placeAttackPlacesVertically(tt.args.out, tt.args.position)
+			(&King{}).placeAttackPlacesVertically(tt.args.out, tt.args.position, 8)
 			if !reflect.DeepEqual(tt.args.out, tt.want) {
 				t.Errorf("placeAttackPlacesVertically() = %v, want %v", tt.args.out, tt.want)
 			}
@@ -236,7 +236,7 @@ func Test_placeDiagonallyAbove(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			(&King{}).placeDiagonallyAbove(tt.args.out, tt.args.position)
+			(&King{}).placeDiagonallyAbove(tt.args.out, tt.args.position, 8)
 			if !reflect.DeepEqual(tt.args.out, tt.want) {
 				t.Errorf("placeDiagonallyAbove() = %v, want %v", tt.args.out, tt.want)
 			}
@@ -293,7 +293,7 @@ func Test_placeDiagonallyBelow(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			(&King{}).placeDiagonallyBelow(tt.args.out, tt.args.position)
+			(&King{}).placeDiagonallyBelow(tt.args.out, tt.args.position, 8)
 			if !reflect.DeepEqual(tt.args.out, tt.want) {
 				t.Errorf("placeDiagonallyBelow() = %v, want %v", tt.args.out, tt.want)
 			}
@@ -338,7 +338,7 @@ func Test_isAnotherFigurePresent(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := isAnotherFigurePresent(tt.args.out, tt.args.position); got != tt.want {
+			if got := isAnotherFigurePresent(tt.args.out, tt.args.position, 8); got != tt.want {
 				t.Errorf("isAnotherFigurePresent() = %v, want %v", got, tt.want)
 			}
 		})

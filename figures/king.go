@@ -8,19 +8,20 @@ type King struct {
 
 func (king *King) Handle(board []byte) map[uint64][]byte {
 	boards := getMapFromPool(getCountOfEmptyPlaces(board))
+	dimension := getDimensionFromBoard(board)
 
-	for i := 0; i < len(board) && len(board) == ((defaultDimension+1)*defaultDimension); i++ {
+	for i := 0; i < len(board) && len(board) == ((dimension+1)*dimension); i++ {
 		if board[i] == emptyField {
 			// Get from pool
-			outPtr := boardPool.Get().(*[]byte)
+			outPtr := getBoardFromPool(dimension)
 			out := *outPtr
 			copy(out, board)
 
-			if !isAnotherFigurePresent(out, i) {
-				king.placeAttackPlacesHorizontally(out, i)
-				king.placeAttackPlacesVertically(out, i)
-				king.placeDiagonallyAbove(out, i)
-				king.placeDiagonallyBelow(out, i)
+			if !isAnotherFigurePresent(out, i, dimension) {
+				king.placeAttackPlacesHorizontally(out, i, dimension)
+				king.placeAttackPlacesVertically(out, i, dimension)
+				king.placeDiagonallyAbove(out, i, dimension)
+				king.placeDiagonallyBelow(out, i, dimension)
 				out[i] = king.GetName()
 
 				// Make permanent copy for the map
@@ -36,30 +37,30 @@ func (king *King) Handle(board []byte) map[uint64][]byte {
 	return boards
 }
 
-func isAnotherFigurePresent(out []byte, position int) bool {
+func isAnotherFigurePresent(out []byte, position int, dimension int) bool {
 
-	positionOneLineAbove := position - defaultDimension - 1
+	positionOneLineAbove := position - dimension - 1
 	var positionsAround []int
 
 	diagAboveRight := positionOneLineAbove + 1
-	previousLineExists := position >= defaultDimension+1
+	previousLineExists := position >= dimension+1
 
 	if previousLineExists && out[diagAboveRight] != '\n' {
 		positionsAround = append(positionsAround, diagAboveRight)
 	}
 	diagAboveLeft := positionOneLineAbove - 1
-	if previousLineExists && (position-1)%defaultDimension != 0 && diagAboveLeft >= 0 && out[diagAboveLeft] != '\n' {
+	if previousLineExists && (position-1)%dimension != 0 && diagAboveLeft >= 0 && out[diagAboveLeft] != '\n' {
 		positionsAround = append(positionsAround, diagAboveLeft)
 	}
 
-	diagBelowRight := position + defaultDimension + 1 + 1
-	diagBelowLeft := position + defaultDimension + 1 - 1
-	isNotLastLine := position < len(out)-defaultDimension-1
+	diagBelowRight := position + dimension + 1 + 1
+	diagBelowLeft := position + dimension + 1 - 1
+	isNotLastLine := position < len(out)-dimension-1
 
 	if isNotLastLine && diagBelowRight < len(out) && out[diagBelowRight] != '\n' {
 		positionsAround = append(positionsAround, diagBelowRight)
 	}
-	if isNotLastLine && position%defaultDimension != 0 && diagBelowLeft < len(out) && out[diagBelowLeft] != '\n' {
+	if isNotLastLine && position%dimension != 0 && diagBelowLeft < len(out) && out[diagBelowLeft] != '\n' {
 		positionsAround = append(positionsAround, diagBelowLeft)
 	}
 
@@ -72,12 +73,12 @@ func isAnotherFigurePresent(out []byte, position int) bool {
 		positionsAround = append(positionsAround, nextPosition)
 	}
 
-	positionAbove := position - defaultDimension - 1
+	positionAbove := position - dimension - 1
 	if previousLineExists && out[positionAbove] != '\n' {
 		positionsAround = append(positionsAround, positionAbove)
 	}
-	positionBelow := position + defaultDimension + 1
-	if position < len(out)-defaultDimension-1 && out[positionBelow] != '\n' {
+	positionBelow := position + dimension + 1
+	if position < len(out)-dimension-1 && out[positionBelow] != '\n' {
 		positionsAround = append(positionsAround, positionBelow)
 	}
 
@@ -89,53 +90,53 @@ func isAnotherFigurePresent(out []byte, position int) bool {
 	return false
 }
 
-func (king *King) placeDiagonallyAbove(out []byte, position int) {
-	if position == defaultDimension || position%(defaultDimension+1) == defaultDimension {
+func (king *King) placeDiagonallyAbove(out []byte, position int, dimension int) {
+	if position == dimension || position%(dimension+1) == dimension {
 		return
 	}
-	positionOneLineAbove := position - defaultDimension - 1
+	positionOneLineAbove := position - dimension - 1
 
 	diagAboveRight := positionOneLineAbove + 1
-	previousLineExists := position >= defaultDimension+1
+	previousLineExists := position >= dimension+1
 
 	if previousLineExists && out[diagAboveRight] == emptyField {
 		out[diagAboveRight] = attackPlace
 	}
 	diagAboveLeft := positionOneLineAbove - 1
-	if previousLineExists && (position-1)%defaultDimension != 0 && diagAboveLeft >= 0 && out[diagAboveLeft] == emptyField {
+	if previousLineExists && (position-1)%dimension != 0 && diagAboveLeft >= 0 && out[diagAboveLeft] == emptyField {
 		out[diagAboveLeft] = attackPlace
 	}
 }
 
-func (king *King) placeDiagonallyBelow(out []byte, position int) {
-	if position == defaultDimension || position%(defaultDimension+1) == defaultDimension {
+func (king *King) placeDiagonallyBelow(out []byte, position int, dimension int) {
+	if position == dimension || position%(dimension+1) == dimension {
 		return
 	}
-	diagBelowRight := position + defaultDimension + 1 + 1
-	diagBelowLeft := position + defaultDimension + 1 - 1
-	isNotLastLine := position < len(out)-defaultDimension-1
+	diagBelowRight := position + dimension + 1 + 1
+	diagBelowLeft := position + dimension + 1 - 1
+	isNotLastLine := position < len(out)-dimension-1
 
 	if isNotLastLine && diagBelowRight < len(out) && out[diagBelowRight] == emptyField {
 		out[diagBelowRight] = attackPlace
 	}
-	if isNotLastLine && position%defaultDimension != 0 && diagBelowLeft < len(out) && out[diagBelowLeft] == emptyField {
+	if isNotLastLine && position%dimension != 0 && diagBelowLeft < len(out) && out[diagBelowLeft] == emptyField {
 		out[diagBelowLeft] = attackPlace
 	}
 }
 
-func (king *King) placeAttackPlacesVertically(out []byte, position int) {
-	positionAbove := position - defaultDimension - 1
-	if position >= defaultDimension+1 && out[positionAbove] == emptyField {
+func (king *King) placeAttackPlacesVertically(out []byte, position int, dimension int) {
+	positionAbove := position - dimension - 1
+	if position >= dimension+1 && out[positionAbove] == emptyField {
 		out[positionAbove] = attackPlace
 	}
-	positionBelow := position + defaultDimension + 1
-	if position < len(out)-defaultDimension-1 && out[positionBelow] == emptyField {
+	positionBelow := position + dimension + 1
+	if position < len(out)-dimension-1 && out[positionBelow] == emptyField {
 		out[positionBelow] = attackPlace
 	}
 }
 
-func (king *King) placeAttackPlacesHorizontally(out []byte, position int) {
-	if position == defaultDimension || position%(defaultDimension+1) == defaultDimension {
+func (king *King) placeAttackPlacesHorizontally(out []byte, position int, dimension int) {
+	if position == dimension || position%(dimension+1) == dimension {
 		return
 	}
 	previousPosition := position - 1

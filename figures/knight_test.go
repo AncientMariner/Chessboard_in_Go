@@ -103,7 +103,7 @@ func Test_isAnotherFigurePresentAbove(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := isAnotherFigurePresentAbove(tt.args.out, tt.args.position); got != tt.want {
+			if got := isAnotherFigurePresentAbove(tt.args.out, tt.args.position, 8); got != tt.want {
 				t.Errorf("isAnotherFigurePresentAbove() = %v, want %v", tt.args.out, tt.want)
 			}
 		})
@@ -171,7 +171,7 @@ func Test_isAnotherFigurePresentBelow(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := isAnotherFigurePresentBelow(tt.args.out, tt.args.position); got != tt.want {
+			if got := isAnotherFigurePresentBelow(tt.args.out, tt.args.position, 8); got != tt.want {
 				t.Errorf("isAnotherFigurePresentBelow() = %v, want %v", tt.args.out, tt.want)
 			}
 		})
@@ -195,7 +195,7 @@ func Test_placeAttackPlacesBelow(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			placeAttackPlacesBelow(tt.args.out, tt.args.position)
+			placeAttackPlacesBelow(tt.args.out, tt.args.position, 8)
 			if !reflect.DeepEqual(tt.args.out, tt.want) {
 				t.Errorf("placeAttackPlacesBelow() = %v, want %v", tt.args.out, tt.want)
 			}
@@ -225,7 +225,7 @@ func Test_placeAttackPlacesAbove(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			placeAttackPlacesAbove(tt.args.out, tt.args.position)
+			placeAttackPlacesAbove(tt.args.out, tt.args.position, 8)
 			if !reflect.DeepEqual(tt.args.out, tt.want) {
 				t.Errorf("placeAttackPlacesAbove() = %v, want %v", tt.args.out, tt.want)
 			}

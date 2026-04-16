@@ -8,17 +8,18 @@ type Rook struct {
 
 func (rook *Rook) Handle(board []byte) map[uint64][]byte {
 	boards := getMapFromPool(getCountOfEmptyPlaces(board))
+	dimension := getDimensionFromBoard(board)
 
-	for i := 0; i < len(board) && len(board) == ((defaultDimension+1)*defaultDimension); i++ {
+	for i := 0; i < len(board) && len(board) == ((dimension+1)*dimension); i++ {
 		if board[i] == emptyField {
 			// Get from pool
-			outPtr := boardPool.Get().(*[]byte)
+			outPtr := getBoardFromPool(dimension)
 			out := *outPtr
 			copy(out, board)
 
-			if !isAnotherFigurePresentOnTheLine(out, i) && !isAnotherFigurePresentOnTheColumn(out, i) {
-				placeAttackPlacesHorizontally(out, i)
-				placeAttackPlacesVertically(out, i)
+			if !isAnotherFigurePresentOnTheLine(out, i, dimension) && !isAnotherFigurePresentOnTheColumn(out, i, dimension) {
+				placeAttackPlacesHorizontally(out, i, dimension)
+				placeAttackPlacesVertically(out, i, dimension)
 				out[i] = rook.GetName()
 
 				// Make permanent copy for the map
@@ -34,13 +35,13 @@ func (rook *Rook) Handle(board []byte) map[uint64][]byte {
 	return boards
 }
 
-func placeAttackPlacesHorizontally(out []byte, position int) {
-	if position >= len(out) || position == defaultDimension || position%(defaultDimension+1) == defaultDimension {
+func placeAttackPlacesHorizontally(out []byte, position int, dimension int) {
+	if position >= len(out) || position == dimension || position%(dimension+1) == dimension {
 		return
 	}
 
-	var counterOfLeftPositions = (position) % (defaultDimension + 1)
-	var counterOfRightPositions = defaultDimension - ((position) % (defaultDimension + 1)) - 1
+	var counterOfLeftPositions = (position) % (dimension + 1)
+	var counterOfRightPositions = dimension - ((position) % (dimension + 1)) - 1
 
 	for previousPosition := position - 1; counterOfLeftPositions >= 0 && previousPosition >= 0; counterOfLeftPositions-- {
 		if out[previousPosition] == emptyField {
@@ -57,9 +58,9 @@ func placeAttackPlacesHorizontally(out []byte, position int) {
 	}
 }
 
-func isAnotherFigurePresentOnTheLine(out []byte, position int) bool {
-	var counterOfLeftPositions = (position) % (defaultDimension + 1)
-	var counterOfRightPositions = defaultDimension - ((position) % (defaultDimension + 1)) - 1
+func isAnotherFigurePresentOnTheLine(out []byte, position int, dimension int) bool {
+	var counterOfLeftPositions = (position) % (dimension + 1)
+	var counterOfRightPositions = dimension - ((position) % (dimension + 1)) - 1
 
 	var previousPositionNumbers []int
 	var nextPositionNumbers []int
@@ -77,62 +78,62 @@ func isAnotherFigurePresentOnTheLine(out []byte, position int) bool {
 		}
 		nextPosition++
 	}
-	return len(previousPositionNumbers)+len(nextPositionNumbers) < defaultDimension-1
+	return len(previousPositionNumbers)+len(nextPositionNumbers) < dimension-1
 }
 
-func placeAttackPlacesVertically(out []byte, position int) {
-	if position >= len(out) || position == defaultDimension || position%(defaultDimension+1) == defaultDimension {
+func placeAttackPlacesVertically(out []byte, position int, dimension int) {
+	if position >= len(out) || position == dimension || position%(dimension+1) == dimension {
 		return
 	}
 
-	abovePosition := position - defaultDimension - 1
-	currentLine := position/(defaultDimension+1) + 1
+	abovePosition := position - dimension - 1
+	currentLine := position/(dimension+1) + 1
 	for lineAbove := currentLine - 1; lineAbove > 0; lineAbove-- {
-		lineOfTheAbovePosition := abovePosition/(defaultDimension+1) + 1
+		lineOfTheAbovePosition := abovePosition/(dimension+1) + 1
 		if lineOfTheAbovePosition == lineAbove && out[abovePosition] == emptyField {
 			out[abovePosition] = attackPlace
 		}
-		abovePosition = abovePosition - defaultDimension - 1
+		abovePosition = abovePosition - dimension - 1
 	}
 
-	belowPosition := position + defaultDimension + 1
-	for lineBelow := currentLine + 1; lineBelow <= defaultDimension; lineBelow++ {
-		lineOfTheBelowPosition := belowPosition/(defaultDimension+1) + 1
+	belowPosition := position + dimension + 1
+	for lineBelow := currentLine + 1; lineBelow <= dimension; lineBelow++ {
+		lineOfTheBelowPosition := belowPosition/(dimension+1) + 1
 
 		if lineOfTheBelowPosition == lineBelow && out[belowPosition] == emptyField {
 			out[belowPosition] = attackPlace
 		}
-		belowPosition = belowPosition + defaultDimension + 1
+		belowPosition = belowPosition + dimension + 1
 	}
 }
 
-func isAnotherFigurePresentOnTheColumn(out []byte, position int) bool {
-	currentLine := position/(defaultDimension+1) + 1
+func isAnotherFigurePresentOnTheColumn(out []byte, position int, dimension int) bool {
+	currentLine := position/(dimension+1) + 1
 
 	var aboveLineNumbers []int
-	abovePosition := position - defaultDimension - 1
+	abovePosition := position - dimension - 1
 
 	for lineAbove := currentLine - 1; lineAbove > 0; lineAbove-- {
-		lineOfTheAbovePosition := abovePosition/(defaultDimension+1) + 1
+		lineOfTheAbovePosition := abovePosition/(dimension+1) + 1
 
-		if lineOfTheAbovePosition == lineAbove && position >= defaultDimension+1 && out[abovePosition] == emptyField || out[abovePosition] == attackPlace {
+		if lineOfTheAbovePosition == lineAbove && position >= dimension+1 && out[abovePosition] == emptyField || out[abovePosition] == attackPlace {
 			aboveLineNumbers = append(aboveLineNumbers, abovePosition)
 		}
-		abovePosition = abovePosition - defaultDimension - 1
+		abovePosition = abovePosition - dimension - 1
 	}
 
 	var belowLineNumbers []int
-	belowPosition := position + defaultDimension + 1
+	belowPosition := position + dimension + 1
 
-	for lineBelow := currentLine + 1; lineBelow <= defaultDimension; lineBelow++ {
-		lineOfTheBelowPosition := belowPosition/(defaultDimension+1) + 1
+	for lineBelow := currentLine + 1; lineBelow <= dimension; lineBelow++ {
+		lineOfTheBelowPosition := belowPosition/(dimension+1) + 1
 
 		if lineBelow == lineOfTheBelowPosition && out[belowPosition] == emptyField || out[belowPosition] == attackPlace {
 			belowLineNumbers = append(belowLineNumbers, belowPosition)
 		}
-		belowPosition = belowPosition + defaultDimension + 1
+		belowPosition = belowPosition + dimension + 1
 	}
-	return len(aboveLineNumbers)+len(belowLineNumbers) < defaultDimension-1
+	return len(aboveLineNumbers)+len(belowLineNumbers) < dimension-1
 }
 
 func (*Rook) GetName() byte {

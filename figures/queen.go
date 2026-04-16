@@ -8,19 +8,20 @@ type Queen struct {
 
 func (queen *Queen) Handle(board []byte) map[uint64][]byte {
 	boards := getMapFromPool(getCountOfEmptyPlaces(board))
+	dimension := getDimensionFromBoard(board)
 
-	for i := 0; i < len(board) && len(board) == ((defaultDimension+1)*defaultDimension); i++ {
+	for i := 0; i < len(board) && len(board) == ((dimension+1)*dimension); i++ {
 		if board[i] == emptyField {
 			// Get from pool
-			outPtr := boardPool.Get().(*[]byte)
+			outPtr := getBoardFromPool(dimension)
 			out := *outPtr
 			copy(out, board)
 
-			if !isAnotherFigurePresentOnTheLine(out, i) && !isAnotherFigurePresentOnTheColumn(out, i) && !isAnotherFigurePresentDiag(out, i) {
-				placeAttackPlacesHorizontally(out, i)
-				placeAttackPlacesVertically(out, i)
-				placeAttackPlacesDiagonallyAbove(out, i)
-				placeAttackPlacesDiagonallyBelow(out, i)
+			if !isAnotherFigurePresentOnTheLine(out, i, dimension) && !isAnotherFigurePresentOnTheColumn(out, i, dimension) && !isAnotherFigurePresentDiag(out, i, dimension) {
+				placeAttackPlacesHorizontally(out, i, dimension)
+				placeAttackPlacesVertically(out, i, dimension)
+				placeAttackPlacesDiagonallyAbove(out, i, dimension)
+				placeAttackPlacesDiagonallyBelow(out, i, dimension)
 
 				out[i] = queen.GetName()
 

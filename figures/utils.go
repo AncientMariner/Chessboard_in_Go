@@ -11,6 +11,21 @@ var boardPool = sync.Pool{
 	},
 }
 
+// getBoardFromPool retrieves a board slice from the pool, resizing if necessary
+func getBoardFromPool(dimension int) *[]byte {
+	ptr := boardPool.Get().(*[]byte)
+	board := *ptr
+	requiredSize := (dimension + 1) * dimension
+
+	// If the pooled board is the wrong size, resize it
+	if len(board) != requiredSize {
+		board = make([]byte, requiredSize)
+		*ptr = board
+	}
+
+	return ptr
+}
+
 // mapPool is a shared pool for reusing maps to reduce allocations
 // Maps are cleared before being returned to the pool
 var mapPool = sync.Pool{
