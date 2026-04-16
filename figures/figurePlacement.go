@@ -63,7 +63,7 @@ func (p *Placement) PlaceFigures(numberOfFigures int, behaviour FigureBehaviour,
 }
 
 func (p *Placement) placeFigure(boards map[uint64][]byte, behaviour FigureBehaviour) map[uint64][]byte {
-	var resultingMap = make(map[uint64][]byte)
+	resultingMap := getMapFromPool(len(boards) * 10) // Rough estimate of result size
 
 	for _, board := range boards {
 
@@ -72,6 +72,9 @@ func (p *Placement) placeFigure(boards map[uint64][]byte, behaviour FigureBehavi
 		for hash, element := range boardsWithPlacement {
 			resultingMap[hash] = element
 		}
+
+		// Return the temporary map from Handle() to the pool
+		putMapToPool(boardsWithPlacement)
 	}
 	return resultingMap
 }

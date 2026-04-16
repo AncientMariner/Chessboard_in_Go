@@ -7,7 +7,7 @@ type King struct {
 }
 
 func (king *King) Handle(board []byte) map[uint64][]byte {
-	boards := make(map[uint64][]byte, getCountOfEmptyPlaces(board))
+	boards := getMapFromPool(getCountOfEmptyPlaces(board))
 
 	for i := 0; i < len(board) && len(board) == ((defaultDimension+1)*defaultDimension); i++ {
 		if board[i] == emptyField {

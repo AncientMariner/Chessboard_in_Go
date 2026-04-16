@@ -23,6 +23,11 @@ func (board *Chessboard) calculateBoards() map[uint64][]byte {
 func (board *Chessboard) calculateBoard(behaviour figures.FigureBehaviour, previousFigureBoards map[uint64][]byte) map[uint64][]byte {
 	result := board.figurePlacement.PlaceFigures(board.figureQuantityMap[behaviour.GetName()], behaviour, previousFigureBoards)
 
+	// Return the previous map to pool if it's not the initial empty map
+	if len(previousFigureBoards) > 0 {
+		figures.PutMapToPool(previousFigureBoards)
+	}
+
 	if behaviour.GetNext() != nil {
 		result = board.calculateBoard(behaviour.GetNext(), result)
 	}
