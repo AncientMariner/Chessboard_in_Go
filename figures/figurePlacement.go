@@ -1,18 +1,31 @@
 package figures
 
 import (
+	"hash"
 	"hash/fnv"
 	"strings"
+	"sync"
 )
 
 type Placement struct {
 }
 
+// hashPool reuses FNV hash functions to avoid repeated allocations
+var hashPool = sync.Pool{
+	New: func() interface{} {
+		return fnv.New64a()
+	},
+}
+
 // GenerateHash returns a uint64 hash for efficient map keys (no allocations)
+// Uses pooled hash functions to avoid creating new hashers on each call
 func GenerateHash(s []byte) uint64 {
-	h := fnv.New64a()
+	h := hashPool.Get().(hash.Hash64)
+	h.Reset() // Reset the hasher state before reuse
 	h.Write(s)
-	return h.Sum64()
+	sum := h.Sum64()
+	hashPool.Put(h) // Return hasher to pool
+	return sum
 }
 
 var defaultDimension = 8
