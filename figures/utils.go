@@ -1,21 +1,24 @@
 package figures
 
-import "sync"
+import (
+	"math"
+	"sync"
+)
 
 // getDimensionFromBoard calculates the board dimension from the board byte slice
 // Board format: each row is dimension bytes + 1 newline, total dimension rows
 // So total length = dimension * (dimension + 1)
+// Solving: d^2 + d - len = 0 using quadratic formula
 func getDimensionFromBoard(board []byte) int {
-	// Solve: len = d * (d + 1)
-	// This gives us d^2 + d - len = 0
-	// Using quadratic formula: d = (-1 + sqrt(1 + 4*len)) / 2
-	length := len(board)
-	// Simple approach: try values until we find the right one
-	for d := 1; d <= 100; d++ {
-		if d*(d+1) == length {
-			return d
-		}
+	length := float64(len(board))
+	// Quadratic formula: d = (-1 + sqrt(1 + 4*len)) / 2
+	d := int((-1.0 + math.Sqrt(1.0+4.0*length)) / 2.0)
+
+	// Verify the result is correct
+	if d > 0 && d*(d+1) == len(board) {
+		return d
 	}
+
 	return 8 // Default fallback
 }
 

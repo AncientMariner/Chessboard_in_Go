@@ -1,8 +1,6 @@
 package figures
 
 import (
-	"hash"
-	"hash/fnv"
 	"runtime"
 	"strings"
 	"sync"
@@ -11,33 +9,39 @@ import (
 type Placement struct {
 }
 
-// hashPool reuses FNV hash functions to avoid repeated allocations
-var hashPool = sync.Pool{
-	New: func() interface{} {
-		return fnv.New64a()
-	},
-}
-
 // GenerateHash returns a uint64 hash for efficient map keys (no allocations)
-// Uses pooled hash functions to avoid creating new hashers on each call
+// Uses direct FNV-1a implementation for maximum performance
 func GenerateHash(s []byte) uint64 {
-	h := hashPool.Get().(hash.Hash64)
-	h.Reset() // Reset the hasher state before reuse
-	h.Write(s)
-	sum := h.Sum64()
-	hashPool.Put(h) // Return hasher to pool
-	return sum
+	// FNV-1a hash algorithm constants
+	const offset64 uint64 = 14695981039346656037
+	const prime64 uint64 = 1099511628211
+
+	h := offset64
+	for _, b := range s {
+		h ^= uint64(b)
+		h *= prime64
+	}
+	return h
 }
 
 var defaultDimension = 8
 
-// parallelThreshold defines minimum number of boards to process in parallel
-// Below this threshold, sequential processing is more efficient due to goroutine overhead
-const parallelThreshold = 10
-
 // numWorkers determines the worker pool size for parallel processing
 // Defaults to number of CPU cores for optimal performance
 var numWorkers = runtime.GOMAXPROCS(0)
+
+// getParallelThreshold calculates optimal threshold for parallel vs sequential processing
+// Returns minimum number of boards needed to justify parallel processing overhead
+func getParallelThreshold() int {
+	// Dynamic threshold: at least 10 boards per worker to justify overhead
+	// But never less than 10 total to avoid goroutine overhead for tiny workloads
+	minPerWorker := 10
+	threshold := numWorkers * minPerWorker
+	if threshold < 10 {
+		threshold = 10
+	}
+	return threshold
+}
 
 const emptyField = '_'
 const attackPlace = 'x'
@@ -73,7 +77,8 @@ func (p *Placement) PlaceFigures(numberOfFigures int, behaviour FigureBehaviour,
 
 func (p *Placement) placeFigure(boards map[uint64][]byte, behaviour FigureBehaviour) map[uint64][]byte {
 	// Use parallel processing if we have enough boards to justify the overhead
-	if len(boards) >= parallelThreshold {
+	threshold := getParallelThreshold()
+	if len(boards) >= threshold {
 		return p.placeFigureParallel(boards, behaviour)
 	}
 
