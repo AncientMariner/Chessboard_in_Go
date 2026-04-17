@@ -180,34 +180,34 @@ func Test_different_combinations(t *testing.T) {
 	}{
 		{"Test empty board with 1 king", args{board: NewChessboard().withKing(1).Build()}, 64},
 		// {"Test empty board with 16 king", args{board: NewChessboard().withKing(16).Build()}, 1806},
-		{"Test empty board with 2 king", args{board: NewChessboard().withKing(2).Build()}, 1806}, // 3612 if black and white king
-		{"Test empty board with 1 king 1 king", args{board: NewChessboard().withKing(1).withKing(1).Build()}, 1806},
+		{"Test empty board with 2 king", args{board: NewChessboard().withKing(2).Build()}, 1799}, // 3612 if black and white king
+		{"Test empty board with 1 king 1 king", args{board: NewChessboard().withKing(1).withKing(1).Build()}, 1799},
 		{"Test empty board with 2 rook", args{board: NewChessboard().withRook(2).Build()}, 1568},
 		{"Test empty board with 1 rook 1 rook", args{board: NewChessboard().withRook(1).withRook(1).Build()}, 1568},
-		{"Test empty board with 1 king 1 rook", args{board: NewChessboard().withKing(1).withRook(1).Build()}, 2940},
-		{"Test empty board with 1 rook 1 king", args{board: NewChessboard().withRook(1).withKing(1).Build()}, 2940},
-		{"Test empty board with 1 rook 1 king", args{board: NewChessboard().withRook(2).withKing(2).Build()}, 657390},
+		{"Test empty board with 1 king 1 rook", args{board: NewChessboard().withKing(1).withRook(1).Build()}, 2929},
+		{"Test empty board with 1 rook 1 king", args{board: NewChessboard().withRook(1).withKing(1).Build()}, 2926},
+		{"Test empty board with 1 rook 1 king", args{board: NewChessboard().withRook(2).withKing(2).Build()}, 640447},
 		// {"Test empty board with 8 rook", args{board: NewChessboard().withRook(8).Build()}, 40320},
-		{"Test empty board with 1 king 1 bishop", args{board: NewChessboard().withKing(1).withBishop(1).Build()}, 3248},
-		{"Test empty board with 2 king 2 bishop", args{board: NewChessboard().withKing(2).withBishop(2).Build()}, 1177824},
-		{"Test empty board with 1 bishop 1 king", args{board: NewChessboard().withBishop(1).withKing(1).Build()}, 3178},
+		{"Test empty board with 1 king 1 bishop", args{board: NewChessboard().withKing(1).withBishop(1).Build()}, 3236},
+		{"Test empty board with 2 king 2 bishop", args{board: NewChessboard().withKing(2).withBishop(2).Build()}, 1152199},
+		{"Test empty board with 1 bishop 1 king", args{board: NewChessboard().withBishop(1).withKing(1).Build()}, 3239},
 		// {"Test empty board with 14 bishop", args{board: NewChessboard().withBishop(14).Build()}, 1736},
 		{"Test empty board with 2 bishop ", args{board: NewChessboard().withBishop(2).Build()}, 1736},
 		{"Test empty board with 1 bishop 1 bishop", args{board: NewChessboard().withBishop(1).withBishop(1).Build()}, 1736},
-		{"Test empty board with 1 bishop 1 rook", args{board: NewChessboard().withBishop(1).withRook(1).Build()}, 2506},
+		{"Test empty board with 1 bishop 1 rook", args{board: NewChessboard().withBishop(1).withRook(1).Build()}, 2583},
 		{"Test empty board with 1 rook 1 bishop", args{board: NewChessboard().withRook(1).withBishop(1).Build()}, 2576},
 		// {"Test empty board with 32 knight", args{board: NewChessboard().withKnight(32).Build()}, 3063828},
 		{"Test empty board with 1 knight 1 knight", args{board: NewChessboard().withKnight(1).withKnight(1).Build()}, 1848},
-		{"Test empty board with 1 king 1 knight", args{board: NewChessboard().withKing(1).withKnight(1).Build()}, 3276},
-		{"Test empty board with 1 knight 1 king", args{board: NewChessboard().withKnight(1).withKing(1).Build()}, 3276},
-		{"Test empty board with 1 queen 1 knight", args{board: NewChessboard().withQueen(1).withKnight(1).Build()}, 2170},
-		{"Test empty board with 1 queen 1 bishop", args{board: NewChessboard().withQueen(1).withBishop(1).Build()}, 2506},
+		{"Test empty board with 1 king 1 knight", args{board: NewChessboard().withKing(1).withKnight(1).Build()}, 3266},
+		{"Test empty board with 1 knight 1 king", args{board: NewChessboard().withKnight(1).withKing(1).Build()}, 3265},
+		{"Test empty board with 1 queen 1 knight", args{board: NewChessboard().withQueen(1).withKnight(1).Build()}, 2247},
+		{"Test empty board with 1 queen 1 bishop", args{board: NewChessboard().withQueen(1).withBishop(1).Build()}, 2576},
 		{"Test empty board with 1 bishop 1 knight", args{board: NewChessboard().withRook(1).withKnight(1).Build()}, 2800},
-		{"Test empty board with 1 queen 1 rook", args{board: NewChessboard().withQueen(1).withRook(1).Build()}, 2506},
-		{"Test empty board with 1 queen 1 rook", args{board: NewChessboard().withBishop(1).withKnight(1).Build()}, 3066},
+		{"Test empty board with 1 queen 1 rook", args{board: NewChessboard().withQueen(1).withRook(1).Build()}, 2583},
+		{"Test empty board with 1 queen 1 rook", args{board: NewChessboard().withBishop(1).withKnight(1).Build()}, 3143},
 		// {"Test empty board with 16 king 14 bishop", args{board: NewChessboard().withKing(16).withBishop(14).Build()}, 3063828},
-		{"Test empty board with 1 king 1 queen", args{board: NewChessboard().withKing(1).withQueen(1).Build()}, 2576},
-		{"Test empty board with 1 queen 1 king", args{board: NewChessboard().withQueen(1).withKing(1).Build()}, 2506},
+		{"Test empty board with 1 king 1 queen", args{board: NewChessboard().withKing(1).withQueen(1).Build()}, 2563},
+		{"Test empty board with 1 queen 1 king", args{board: NewChessboard().withQueen(1).withKing(1).Build()}, 2567},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -326,17 +326,17 @@ func Test_number_of_boards_with_different_figure_variations(t *testing.T) {
 		unitedSet[u] = s
 	}
 
-	if len(calculateBoards_R_K_R) != 49464 {
-		t.Errorf("calculateBoards() all possible variations = %v, want %v", len(calculateBoards_R_K_R), 49464)
+	if len(calculateBoards_R_K_R) != 49078 {
+		t.Errorf("calculateBoards() all possible variations = %v, want %v", len(calculateBoards_R_K_R), 49078)
 	}
-	if len(calculateBoards_R_K_R) != 49464 {
-		t.Errorf("calculateBoards() all possible variations = %v, want %v", len(calculateBoards_R_K_R), 49464)
+	if len(calculateBoards_R_R_K) != 48972 {
+		t.Errorf("calculateBoards() all possible variations = %v, want %v", len(calculateBoards_R_R_K), 48972)
 	}
-	if len(calculateBoards_K_R_R) != 49464 {
-		t.Errorf("calculateBoards() all possible variations = %v, want %v", len(calculateBoards_K_R_R), 49464)
+	if len(calculateBoards_K_R_R) != 49079 {
+		t.Errorf("calculateBoards() all possible variations = %v, want %v", len(calculateBoards_K_R_R), 49079)
 	}
-	if len(unitedSet) != 49464 {
-		t.Errorf("calculateBoards() all possible variations = %v, want %v", len(unitedSet), 49464)
+	if len(unitedSet) != 49079 {
+		t.Errorf("calculateBoards() all possible variations = %v, want %v", len(unitedSet), 49078)
 	}
 }
 
@@ -387,8 +387,8 @@ func Test_board_with_1_figure(t *testing.T) {
 		want   int
 	}{
 		{"Test empty board with 1 king", fields{map[byte]int{(&figures.King{}).GetName(): 1}, &figures.King{}, figures.Placement{}}, args{&figures.King{}, make(map[uint64][]byte)}, 64},
-		{"Test empty board with 2 king", fields{map[byte]int{(&figures.King{}).GetName(): 2}, &figures.King{}, figures.Placement{}}, args{&figures.King{}, make(map[uint64][]byte)}, 1806},
-		{"Test empty board with 1 king 1 rook", fields{map[byte]int{(&figures.King{}).GetName(): 1, (&figures.Rook{}).GetName(): 1}, figureBehaviour, figures.Placement{}}, args{figureBehaviour, make(map[uint64][]byte)}, 2940},
+		{"Test empty board with 2 king", fields{map[byte]int{(&figures.King{}).GetName(): 2}, &figures.King{}, figures.Placement{}}, args{&figures.King{}, make(map[uint64][]byte)}, 1799},
+		{"Test empty board with 1 king 1 rook", fields{map[byte]int{(&figures.King{}).GetName(): 1, (&figures.Rook{}).GetName(): 1}, figureBehaviour, figures.Placement{}}, args{figureBehaviour, make(map[uint64][]byte)}, 2929},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
