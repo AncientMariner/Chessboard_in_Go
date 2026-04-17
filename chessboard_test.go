@@ -23,6 +23,23 @@ func TestNewChessBoard(t *testing.T) {
 	}
 }
 
+
+func TestNewChessBoardWithSize(t *testing.T) {
+	tests := []struct {
+		name string
+		want ChessboardBuilder
+	}{
+		{"Test empty chessboard size 10", &boardBuilder{chessboard: &Chessboard{}, figureQuantityMap: make(map[byte]int)}},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := NewChessboardWithSize(10); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("NewChessboard() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
 func Test_boardBuilder_Build(t *testing.T) {
 	type fields struct {
 		chessboard             *Chessboard

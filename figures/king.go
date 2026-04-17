@@ -46,11 +46,14 @@ func isAnotherFigurePresent(out []byte, position int, dimension int) bool {
 	diagAboveRight := positionOneLineAbove + 1
 	previousLineExists := position >= dimension+1
 
-	if previousLineExists && out[diagAboveRight] != '\n' {
+rightColumnExists := position%(dimension+1) != dimension-1
+	if previousLineExists && rightColumnExists && out[diagAboveRight] != '\n' {
 		positionsAround = append(positionsAround, diagAboveRight)
 	}
 	diagAboveLeft := positionOneLineAbove - 1
-	if previousLineExists && (position-1)%dimension != 0 && diagAboveLeft >= 0 && out[diagAboveLeft] != '\n' {
+		leftColumnExists := (position-1)%(dimension) != 0
+
+	if previousLineExists && leftColumnExists && diagAboveLeft >= 0 && out[diagAboveLeft] != '\n' {
 		positionsAround = append(positionsAround, diagAboveLeft)
 	}
 
@@ -99,12 +102,13 @@ func (king *King) placeDiagonallyAbove(out []byte, position int, dimension int) 
 
 	diagAboveRight := positionOneLineAbove + 1
 	previousLineExists := position >= dimension+1
-
-	if previousLineExists && out[diagAboveRight] == emptyField {
+rightColumnExists := position%(dimension+1) != dimension-1
+	if previousLineExists && rightColumnExists && out[diagAboveRight] == emptyField {
 		out[diagAboveRight] = attackPlace
 	}
 	diagAboveLeft := positionOneLineAbove - 1
-	if previousLineExists && (position-1)%dimension != 0 && diagAboveLeft >= 0 && out[diagAboveLeft] == emptyField {
+	leftColumnExists := (position-1)%(dimension+1) != 0
+	if previousLineExists && leftColumnExists && diagAboveLeft >= 0 && out[diagAboveLeft] == emptyField {
 		out[diagAboveLeft] = attackPlace
 	}
 }

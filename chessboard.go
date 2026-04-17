@@ -4,17 +4,6 @@ import (
 	"Chessboard_in_Go/figures"
 )
 
-func main() {
-	// test example
-	// board := NewChessboard().withKing(1).withQueen(2).Build()
-	// 	board := NewChessboard().withKing(1).Build()
-	// board := NewChessboard().withKing(1).withQueen(1).withKnight(2).withRook(2).withBishop(2).Build()
-	// 	boardsWithFigures := board.calculateBoards()
-	//
-	// 	fmt.Printf("\nfigures %v", board)
-	// 	fmt.Printf("\nboardsWithFigures.Size() %d", len(boardsWithFigures))
-}
-
 func (board *Chessboard) calculateBoards() map[uint64][]byte {
 
 	return board.calculateBoard(board.currentFigureBehaviour, make(map[uint64][]byte))

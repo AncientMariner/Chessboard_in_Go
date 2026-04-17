@@ -121,3 +121,80 @@ func TestPlacement_placeFigure(t *testing.T) {
 		})
 	}
 }
+
+func TestPlacement_placeFigureSequential(t *testing.T) {
+	tests := []struct {
+		name      string
+		boards    map[uint64][]byte
+		behaviour FigureBehaviour
+	}{
+		{
+			"Test sequential placement on board",
+			map[uint64][]byte{
+				GenerateHash([]byte("________\n________\n________\n________\n________\n________\n________\n________\n")): []byte("________\n________\n________\n________\n________\n________\n________\n________\n"),
+			},
+			&King{},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			var p Placement
+			got := p.placeFigureSequential(tt.boards, tt.behaviour)
+			if len(got) != 64 {
+				t.Errorf("placeFigureSequential() = %v, want %v", got, 64)
+			}
+			// check contains certain board
+			expectedBoard := []byte("________\n________\n________\n____xxx_\n____xkx_\n____xxx_\n________\n________\n")
+			expectedHash := GenerateHash(expectedBoard)
+			if _, exists := got[expectedHash]; !exists {
+				t.Errorf("placeFigureSequential() did not contain expected board with hash %v", expectedHash)
+			}
+		})
+	}
+}
+
+func TestPlacement_placeFigureParallel(t *testing.T) {
+	tests := []struct {
+		name string // description of this test case
+		// Named input parameters for target function.
+		boards    map[uint64][]byte
+		behaviour FigureBehaviour
+		want      map[uint64][]byte
+	}{
+		{"Test parallel placement on board", map[uint64][]byte{
+			GenerateHash([]byte("________\n________\n________\n________\n________\n________\n________\n________\n")): []byte("________\n________\n________\n________\n________\n________\n________\n________\n"),
+		}, &King{}, nil},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			var p Placement
+			got := p.placeFigureParallel(tt.boards, tt.behaviour)
+			if len(got) != 64 {
+				t.Errorf("placeFigureParallel() = %v, want %v", got, 64)
+			}
+				// check contains certain board
+			expectedBoard := []byte("________\n________\n________\n____xxx_\n____xkx_\n____xxx_\n________\n________\n")
+			expectedHash := GenerateHash(expectedBoard)
+			if _, exists := got[expectedHash]; !exists {
+				t.Errorf("placeFigureParallel() did not contain expected board with hash %v", expectedHash)
+			}
+		})
+	}
+}
+func TestPlacement_SetDimension(t *testing.T) {
+	tests := []struct {
+		name  string
+		value int
+	}{
+		{"Test set dimension to 9", 9},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			p := &Placement{}
+			p.SetDimension(tt.value)
+			if defaultDimension != tt.value {
+				t.Errorf("SetDimension() did not set the dimension correctly, got %v, want %v", defaultDimension, tt.value)
+			}
+		})
+	}
+}
