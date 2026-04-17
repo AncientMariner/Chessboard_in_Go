@@ -69,12 +69,10 @@ func isAnotherFigurePresent(out []byte, position int, dimension int) bool {
 	}
 
 	previousPosition := position - 1
-	// leftColumnExists already defined at line 54
 	if previousPosition >= 0 && leftColumnExists {
 		positionsAround = append(positionsAround, previousPosition)
 	}
 	nextPosition := position + 1
-	// rightColumnExists already defined at line 49
 	if nextPosition < len(out) && rightColumnExists {
 		positionsAround = append(positionsAround, nextPosition)
 	}
