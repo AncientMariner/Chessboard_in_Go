@@ -69,11 +69,13 @@ func isAnotherFigurePresent(out []byte, position int, dimension int) bool {
 	}
 
 	previousPosition := position - 1
-	if previousPosition >= 0 {
+	// leftColumnExists already defined at line 54
+	if previousPosition >= 0 && leftColumnExists {
 		positionsAround = append(positionsAround, previousPosition)
 	}
 	nextPosition := position + 1
-	if nextPosition < len(out) {
+	// rightColumnExists already defined at line 49
+	if nextPosition < len(out) && rightColumnExists {
 		positionsAround = append(positionsAround, nextPosition)
 	}
 
@@ -95,9 +97,6 @@ func isAnotherFigurePresent(out []byte, position int, dimension int) bool {
 }
 
 func (king *King) placeDiagonallyAbove(out []byte, position int, dimension int) {
-	if position == dimension || position%dimension == dimension {
-		return
-	}
 	positionOneLineAbove := position - dimension
 
 	diagAboveRight := positionOneLineAbove + 1
@@ -114,9 +113,6 @@ func (king *King) placeDiagonallyAbove(out []byte, position int, dimension int) 
 }
 
 func (king *King) placeDiagonallyBelow(out []byte, position int, dimension int) {
-	if position == dimension || position%dimension == dimension {
-		return
-	}
 	diagBelowRight := position + dimension + 1
 	diagBelowLeft := position + dimension - 1
 	isNotLastLine := position < len(out)-dimension
@@ -142,15 +138,14 @@ func (king *King) placeAttackPlacesVertically(out []byte, position int, dimensio
 }
 
 func (king *King) placeAttackPlacesHorizontally(out []byte, position int, dimension int) {
-	if position == dimension || position%dimension == dimension {
-		return
-	}
 	previousPosition := position - 1
-	if previousPosition >= 0 && out[previousPosition] == emptyField {
+	leftColumnExists := position%dimension != 0
+	if previousPosition >= 0 && leftColumnExists && out[previousPosition] == emptyField {
 		out[previousPosition] = attackPlace
 	}
 	nextPosition := position + 1
-	if nextPosition < len(out) && out[nextPosition] == emptyField {
+	rightColumnExists := position%dimension != dimension-1
+	if nextPosition < len(out) && rightColumnExists && out[nextPosition] == emptyField {
 		out[nextPosition] = attackPlace
 	}
 }

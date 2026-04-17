@@ -37,7 +37,7 @@ func (bishop *Bishop) Handle(board []byte) map[uint64][]byte {
 }
 
 func placeAttackPlacesDiagonallyBelow(out []byte, position int, dimension int) {
-	if position >= len(out) || position == dimension || position%dimension == dimension {
+	if position >= len(out) {
 		return
 	}
 	diagBelowRight := position + dimension + 1
@@ -61,7 +61,7 @@ func placeAttackPlacesDiagonallyBelow(out []byte, position int, dimension int) {
 }
 
 func placeAttackPlacesDiagonallyAbove(out []byte, position int, dimension int) {
-	if position >= len(out) || position == dimension || position%dimension == dimension {
+	if position >= len(out) {
 		return
 	}
 	diagAboveLeft := position - dimension - 1

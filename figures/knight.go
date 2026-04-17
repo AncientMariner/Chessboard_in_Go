@@ -37,7 +37,7 @@ func (knight *Knight) Handle(board []byte) map[uint64][]byte {
 }
 
 func placeAttackPlacesBelow(out []byte, position int, dimension int) {
-	if position >= len(out) || position == dimension || position%dimension == dimension {
+	if position >= len(out) {
 		return
 	}
 	currentLine := position/dimension + 1
@@ -70,7 +70,7 @@ func placeAttackPlacesBelow(out []byte, position int, dimension int) {
 }
 
 func placeAttackPlacesAbove(out []byte, position int, dimension int) {
-	if position >= len(out) || position == dimension || position%dimension == dimension {
+	if position >= len(out) {
 		return
 	}
 	currentLine := position/dimension + 1

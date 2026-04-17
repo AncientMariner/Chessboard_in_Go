@@ -37,7 +37,7 @@ func (rook *Rook) Handle(board []byte) map[uint64][]byte {
 }
 
 func placeAttackPlacesHorizontally(out []byte, position int, dimension int) {
-	if position >= len(out) || position%dimension == dimension {
+	if position >= len(out) {
 		return
 	}
 
@@ -83,7 +83,7 @@ func isAnotherFigurePresentOnTheLine(out []byte, position int, dimension int) bo
 }
 
 func placeAttackPlacesVertically(out []byte, position int, dimension int) {
-	if position >= len(out) || position%dimension == dimension {
+	if position >= len(out) {
 		return
 	}
 
@@ -117,7 +117,7 @@ func isAnotherFigurePresentOnTheColumn(out []byte, position int, dimension int) 
 	for lineAbove := currentLine - 1; lineAbove > 0; lineAbove-- {
 		lineOfTheAbovePosition := abovePosition/dimension + 1
 
-		if lineOfTheAbovePosition == lineAbove && position >= dimension && out[abovePosition] == emptyField || out[abovePosition] == attackPlace {
+		if lineOfTheAbovePosition == lineAbove && (out[abovePosition] == emptyField || out[abovePosition] == attackPlace) {
 			aboveLineNumbers = append(aboveLineNumbers, abovePosition)
 		}
 		abovePosition = abovePosition - dimension
@@ -129,7 +129,7 @@ func isAnotherFigurePresentOnTheColumn(out []byte, position int, dimension int) 
 	for lineBelow := currentLine + 1; lineBelow <= dimension; lineBelow++ {
 		lineOfTheBelowPosition := belowPosition/dimension + 1
 
-		if lineBelow == lineOfTheBelowPosition && out[belowPosition] == emptyField || out[belowPosition] == attackPlace {
+		if lineBelow == lineOfTheBelowPosition && belowPosition < len(out) && (out[belowPosition] == emptyField || out[belowPosition] == attackPlace) {
 			belowLineNumbers = append(belowLineNumbers, belowPosition)
 		}
 		belowPosition = belowPosition + dimension

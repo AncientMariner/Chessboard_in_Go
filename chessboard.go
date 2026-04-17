@@ -66,7 +66,7 @@ func (b *boardBuilder) withRook(quantity int) ChessboardBuilder {
 }
 
 func (b *boardBuilder) addFigure(figure figures.FigureBehaviour, quantity int) ChessboardBuilder {
-	b.figureQuantityMap[figure.GetName()] = quantity
+	b.figureQuantityMap[figure.GetName()] += quantity
 	return b.addToChain(figure)
 }
 
@@ -87,11 +87,25 @@ func NewChessboardWithSize(size int) ChessboardBuilder {
 func (b *boardBuilder) addToChain(figure figures.FigureBehaviour) ChessboardBuilder {
 	if b.chessboard.currentFigureBehaviour == nil {
 		b.chessboard = &Chessboard{b.figureQuantityMap, figure, b.chessboard.figurePlacement}
+		b.currentFigureBehaviour = figure
 	} else {
-		b.currentFigureBehaviour.SetNext(figure)
+		// Check if this figure type already exists in the chain
+		figureAlreadyInChain := false
+		current := b.chessboard.currentFigureBehaviour
+		for current != nil {
+			if current.GetName() == figure.GetName() {
+				figureAlreadyInChain = true
+				break
+			}
+			current = current.GetNext()
+		}
+
+		// Only add to chain if this figure type is not already present
+		if !figureAlreadyInChain {
+			b.currentFigureBehaviour.SetNext(figure)
+			b.currentFigureBehaviour = figure
+		}
 	}
-	// is needed in order to have the recent added figure and add a link to it
-	b.currentFigureBehaviour = figure
 	return b
 }
 

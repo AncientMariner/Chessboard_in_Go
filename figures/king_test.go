@@ -120,7 +120,7 @@ func Test_placeAttackPlacesHorizontally(t *testing.T) {
 			position: 2,
 		}, []byte{'_', 'x', '_', 'x'}},
 		{"Test horizontally left and right another field", args{
-			out:      []byte{
+			out: []byte{
 				'_', '_', '_', '_', '_', '_', '_', '_',
 			},
 			position: 7,
@@ -132,7 +132,7 @@ func Test_placeAttackPlacesHorizontally(t *testing.T) {
 		// 	position: 8,
 		// }, []byte{'_', '_', '_', '_', '_', '_', '_', '_'}},
 		{"Test horizontally left and right another field", args{
-			out:      []byte{
+			out: []byte{
 				'_', '_', '_', '_', '_', '_', '_', '_',
 				'_', '_', '_', '_', '_', '_', '_', '_',
 			},
@@ -142,7 +142,7 @@ func Test_placeAttackPlacesHorizontally(t *testing.T) {
 			'x', '_', 'x', '_', '_', '_', '_', '_',
 		}},
 		{"Test horizontally", args{
-			out:      []byte{
+			out: []byte{
 				'_', '_', '_', '_', '_', '_', '_', '_',
 				'_', '_', '_', '_', '_', '_', '_', '_',
 			},
@@ -189,7 +189,7 @@ func Test_placeAttackPlacesVertically(t *testing.T) {
 		want []byte
 	}{
 		{"Test vertically 1 below", args{
-			out:      []byte{
+			out: []byte{
 				'_', '_', '_', '_', '_', '_', '_', '_',
 				'_', '_', '_', '_', '_', '_', '_', '_',
 			},
@@ -199,7 +199,7 @@ func Test_placeAttackPlacesVertically(t *testing.T) {
 			'x', '_', '_', '_', '_', '_', '_', '_',
 		}},
 		{"Test vertically 1 below another one", args{
-			out:      []byte{
+			out: []byte{
 				'_', '_', '_', '_', '_', '_', '_', '_',
 				'_', '_', '_', '_', '_', '_', '_', '_',
 			},
@@ -209,7 +209,7 @@ func Test_placeAttackPlacesVertically(t *testing.T) {
 			'_', 'x', '_', '_', '_', '_', '_', '_',
 		}},
 		{"Test vertically 1 below another one", args{
-			out:      []byte{
+			out: []byte{
 				'_', '_', '_', '_', '_', '_', '_', '_',
 				'_', '_', '_', '_', '_', '_', '_', '_',
 			},
@@ -223,7 +223,7 @@ func Test_placeAttackPlacesVertically(t *testing.T) {
 		// 	position: 8,
 		// }, []byte{'_', '_', '_', '_', '_', '_', '_', '_', '_', '_', '_', '_', '_', '_', '_', '_'}},
 		{"Test vertically one above and below", args{
-			out:      []byte{
+			out: []byte{
 				'_', '_', '_', '_', '_', '_', '_', '_',
 				'_', '_', '_', '_', '_', '_', '_', '_',
 				'_', '_', '_', '_', '_', '_', '_', '_',
@@ -235,7 +235,7 @@ func Test_placeAttackPlacesVertically(t *testing.T) {
 			'x', '_', '_', '_', '_', '_', '_', '_',
 		}},
 		{"Test vertically one above and below", args{
-			out:      []byte{
+			out: []byte{
 				'_', '_', '_', '_', '_', '_', '_', '_',
 				'_', '_', '_', '_', '_', '_', '_', '_',
 				'_', '_', '_', '_', '_', '_', '_', '_',
@@ -251,7 +251,7 @@ func Test_placeAttackPlacesVertically(t *testing.T) {
 		// 	position: 17,
 		// }, []byte{'_', '_', '_', '_', '_', '_', '_', '_', '_', '_', '_', '_', '_', '_', '_', '_', '_', '_', '_', '_', '_', '_', '_', '_'}},
 		{"Test vertically one above", args{
-			out:      []byte{
+			out: []byte{
 				'_', '_', '_', '_', '_', '_', '_', '_',
 				'_', '_', '_', '_', '_', '_', '_', '_',
 				'_', '_', '_', '_', '_', '_', '_', '_',
@@ -284,7 +284,7 @@ func Test_placeDiagonallyAbove(t *testing.T) {
 		want []byte
 	}{
 		{"Test diag 1 above", args{
-			out:      []byte{
+			out: []byte{
 				'_', '_', '_', '_', '_', '_', '_', '_',
 				'_', '_', '_', '_', '_', '_', '_', '_',
 			},
@@ -294,7 +294,7 @@ func Test_placeDiagonallyAbove(t *testing.T) {
 			'_', '_', '_', '_', '_', '_', '_', '_',
 		}},
 		{"Test diag 1 above", args{
-			out:      []byte{
+			out: []byte{
 				'_', '_', '_', '_', '_', '_', '_', '_',
 				'_', '_', '_', '_', '_', '_', '_', '_',
 			},
@@ -304,7 +304,7 @@ func Test_placeDiagonallyAbove(t *testing.T) {
 			'_', '_', '_', '_', '_', '_', '_', '_',
 		}},
 		{"Test diag 1 above", args{
-			out:      []byte{
+			out: []byte{
 				'_', '_', '_', '_', '_', '_', '_', '_',
 				'_', '_', '_', '_', '_', '_', '_', '_',
 			},
@@ -318,17 +318,17 @@ func Test_placeDiagonallyAbove(t *testing.T) {
 		// 	position: 8,
 		// }, []byte{'_', '_', '_', '_', '_', '_', '_', '_', '_', '_', '_', '_', '_', '_', '_', '_'}},
 		{"Test diag above", args{
-			out:      []byte{
+			out: []byte{
 				'_', '_', '_', '_', '_', '_', '_', '_',
 				'_', '_', '_', '_', '_', '_', '_', '_',
 			},
 			position: 8,
 		}, []byte{
-			'_', '_', '_', '_', '_', '_', '_', '_',
+			'_', 'x', '_', '_', '_', '_', '_', '_',
 			'_', '_', '_', '_', '_', '_', '_', '_',
 		}},
 		{"Test diag above", args{
-			out:      []byte{
+			out: []byte{
 				'_', '_', '_', '_', '_', '_', '_', '_',
 				'_', '_', '_', '_', '_', '_', '_', '_',
 			},
@@ -338,7 +338,7 @@ func Test_placeDiagonallyAbove(t *testing.T) {
 			'_', '_', '_', '_', '_', '_', '_', '_',
 		}},
 		{"Test diag above", args{
-			out:      []byte{
+			out: []byte{
 				'_', '_', '_', '_', '_', '_', '_', '_',
 				'_', '_', '_', '_', '_', '_', '_', '_',
 			},
@@ -348,7 +348,7 @@ func Test_placeDiagonallyAbove(t *testing.T) {
 			'_', '_', '_', '_', '_', '_', '_', '_',
 		}},
 		{"Test diag above", args{
-			out:      []byte{
+			out: []byte{
 				'_', '_', '_', '_', '_', '_', '_', '_',
 				'_', '_', '_', '_', '_', '_', '_', '_',
 			},
@@ -362,7 +362,7 @@ func Test_placeDiagonallyAbove(t *testing.T) {
 		// 	position: 17,
 		// }, []byte{'_', '_', '_', '_', '_', '_', '_', '_', '_', '_', '_', '_', '_', '_', '_', '_'}},
 		{"Test diag above 18", args{
-			out:      []byte{
+			out: []byte{
 				'_', '_', '_', '_', '_', '_', '_', '_',
 				'_', '_', '_', '_', '_', '_', '_', '_',
 				'_', '_', '_', '_', '_', '_', '_', '_',
@@ -374,7 +374,7 @@ func Test_placeDiagonallyAbove(t *testing.T) {
 			'_', '_', '_', '_', '_', '_', '_', '_',
 		}},
 		{"Test diag above 19", args{
-			out:      []byte{
+			out: []byte{
 				'_', '_', '_', '_', '_', '_', '_', '_',
 				'_', '_', '_', '_', '_', '_', '_', '_',
 				'_', '_', '_', '_', '_', '_', '_', '_',
@@ -386,7 +386,7 @@ func Test_placeDiagonallyAbove(t *testing.T) {
 			'_', '_', '_', '_', '_', '_', '_', '_',
 		}},
 		{"Test diag above 41", args{
-			out:      []byte{
+			out: []byte{
 				'_', '_', '_', '_', '_', '_', '_', '_',
 				'_', '_', '_', '_', '_', '_', '_', '_',
 				'_', '_', '_', '_', '_', '_', '_', '_',
@@ -421,7 +421,7 @@ func Test_placeDiagonallyBelow(t *testing.T) {
 		want []byte
 	}{
 		{"Test diag below", args{
-			out:      []byte{
+			out: []byte{
 				'_', '_', '_', '_', '_', '_', '_', '_',
 				'_', '_', '_', '_', '_', '_', '_', '_',
 			},
@@ -431,7 +431,7 @@ func Test_placeDiagonallyBelow(t *testing.T) {
 			'_', 'x', '_', '_', '_', '_', '_', '_',
 		}},
 		{"Test diag below", args{
-			out:      []byte{
+			out: []byte{
 				'_', '_', '_', '_', '_', '_', '_', '_',
 				'_', '_', '_', '_', '_', '_', '_', '_',
 			},
@@ -441,7 +441,7 @@ func Test_placeDiagonallyBelow(t *testing.T) {
 			'x', '_', 'x', '_', '_', '_', '_', '_',
 		}},
 		{"Test diag below", args{
-			out:      []byte{
+			out: []byte{
 				'_', '_', '_', '_', '_', '_', '_', '_',
 				'_', '_', '_', '_', '_', '_', '_', '_',
 			},
@@ -455,7 +455,7 @@ func Test_placeDiagonallyBelow(t *testing.T) {
 		// 	position: 8,
 		// }, []byte{'_', '_', '_', '_', '_', '_', '_', '_', '_', '_', '_', '_', '_', '_', '_', '_'}},
 		{"Test diag below", args{
-			out:      []byte{
+			out: []byte{
 				'_', '_', '_', '_', '_', '_', '_', '_',
 				'_', '_', '_', '_', '_', '_', '_', '_',
 			},
@@ -466,7 +466,7 @@ func Test_placeDiagonallyBelow(t *testing.T) {
 		}},
 
 		{"Test diag below", args{
-			out:      []byte{
+			out: []byte{
 				'_', '_', '_', '_', '_', '_', '_', '_',
 				'_', '_', '_', '_', '_', '_', '_', '_',
 				'_', '_', '_', '_', '_', '_', '_', '_',
@@ -483,7 +483,7 @@ func Test_placeDiagonallyBelow(t *testing.T) {
 		// 	position: 17,
 		// }, []byte{'_', '_', '_', '_', '_', '_', '_', '_', '_', '_', '_', '_', '_', '_', '_', '_', '_', '_', '_', '_', '_', '_', '_', '_'}},
 		{"Test diag below", args{
-			out:      []byte{
+			out: []byte{
 				'_', '_', '_', '_', '_', '_', '_', '_',
 				'_', '_', '_', '_', '_', '_', '_', '_',
 				'_', '_', '_', '_', '_', '_', '_', '_',
@@ -497,7 +497,7 @@ func Test_placeDiagonallyBelow(t *testing.T) {
 			'x', '_', 'x', '_', '_', '_', '_', '_',
 		}},
 		{"Test diag below", args{
-			out:      []byte{
+			out: []byte{
 				'_', '_', '_', '_', '_', '_', '_', '_',
 				'_', '_', '_', '_', '_', '_', '_', '_',
 				'_', '_', '_', '_', '_', '_', '_', '_',
