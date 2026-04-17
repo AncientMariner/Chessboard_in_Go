@@ -44,15 +44,87 @@ func TestRook_Handle(t *testing.T) {
 	}{
 		// {"Test handle board size 8", fields{Figure{next: nil}}, args{board: []byte("____")}, 4},
 		{"Test handle board size 8 is not possible", fields{Figure{next: nil}}, args{board: []byte("________")}, 0},
-		{"Test handle empty board size 64", fields{Figure{next: nil}}, args{board: []byte("________________________________________________________________")}, 64},
-		{"Test handle board with 1 king size 45", fields{Figure{next: nil}}, args{board: []byte("xxx_____xkx_____xxx_____________________________________________")}, 45},
-		{"Test handle board with kings size 27", fields{Figure{next: nil}}, args{board: []byte("xxx_____xkx_____xxx__________________________xxx_____xkx_____xxx")}, 28},
-		{"Test handle board with kings size 13", fields{Figure{next: nil}}, args{board: []byte("xxx_____xkx_____xxxxxx_____xkx_____xxx_______xxx_____xkx_____xxx")}, 13},
-		{"Test handle board with kings size 8", fields{Figure{next: nil}}, args{board: []byte("xxx_____xkx_____xxxxxx_____xkx_____xxx____xxxxxx__xkxxkx__xxxxxx")}, 8},
-		{"Test handle board with kings size 7", fields{Figure{next: nil}}, args{board: []byte("xxxxxx__xkxxkx__xxxxxx_____xkx_____xxx____xxxxxx__xkxxkx__xxxxxx")}, 7},
-		{"Test handle board with kings size 4", fields{Figure{next: nil}}, args{board: []byte("xxxxxx__xkxxkx__xxxxxx__xkxxkx__xkxxxx____xxxxxx__xkxxkx__xxxxxx")}, 4},
-		{"Test handle board with kings size 2", fields{Figure{next: nil}}, args{board: []byte("xxxxxxxkxkxxkxxxxxxxxx__xkxxkx__xkxxxx____xxxxxx__xkxxkx__xxxxxx")}, 2},
-		{"Test handle board with kings size 0", fields{Figure{next: nil}}, args{board: []byte("xxxxxxxkxkxxkxxxxxxxxx__xkxxkx__xkxxxx____xxxxxxxxxkxxkxkxxxxxxx")}, 0},
+		{"Test handle empty board size 64", fields{Figure{next: nil}}, args{board: []byte(
+			"________" +
+				"________" +
+				"________" +
+				"________" +
+				"________" +
+				"________" +
+				"________" +
+				"________")}, 64},
+		{"Test handle board with 1 king size 45", fields{Figure{next: nil}}, args{board: []byte(
+			"xxx_____" +
+				"xkx_____" +
+				"xxx_____" +
+				"________" +
+				"________" +
+				"________" +
+				"________" +
+				"________")}, 45},
+		{"Test handle board with kings size 27", fields{Figure{next: nil}}, args{board: []byte(
+			"xxx_____" +
+				"xkx_____" +
+				"xxx_____" +
+				"________" +
+				"________" +
+				"_____xxx" +
+				"_____xkx" +
+				"_____xxx")}, 28},
+		{"Test handle board with kings size 13", fields{Figure{next: nil}}, args{board: []byte(
+			"xxx_____" +
+				"xkx_____" +
+				"xxxxxx__" +
+				"___xkx__" +
+				"___xxx__" +
+				"_____xxx" +
+				"_____xkx" +
+				"_____xxx")}, 13},
+		{"Test handle board with kings size 8", fields{Figure{next: nil}}, args{board: []byte(
+			"xxx_____" +
+				"xkx_____" +
+				"xxxxxx__" +
+				"___xkx__" +
+				"___xxx__" +
+				"__xxxxxx" +
+				"__xkxxkx" +
+				"__xxxxxx")}, 8},
+		{"Test handle board with kings size 7", fields{Figure{next: nil}}, args{board: []byte(
+			"xxxxxx__" +
+				"xkxxkx__" +
+				"xxxxxx__" +
+				"___xkx__" +
+				"___xxx__" +
+				"__xxxxxx" +
+				"__xkxxkx" +
+				"__xxxxxx")}, 7},
+		{"Test handle board with kings size 4", fields{Figure{next: nil}}, args{board: []byte(
+			"xxxxxx__" +
+				"xkxxkx__" +
+				"xxxxxx__" +
+				"xkxxkx__" +
+				"xkxxxx__" +
+				"__xxxxxx" +
+				"__xkxxkx" +
+				"__xxxxxx")}, 4},
+		{"Test handle board with kings size 2", fields{Figure{next: nil}}, args{board: []byte(
+			"xxxxxxxk" +
+				"xkxxkxxx" +
+				"xxxxxx__" +
+				"xkxxkx__" +
+				"xkxxxx__" +
+				"__xxxxxx" +
+				"__xkxxkx" +
+				"__xxxxxx")}, 2},
+		{"Test handle board with kings size 0", fields{Figure{next: nil}}, args{board: []byte(
+			"xxxxxxxk" +
+				"xkxxkxxx" +
+				"xxxxxx__" +
+				"xkxxkx__" +
+				"xkxxxx__" +
+				"__xxxxxx" +
+				"xxxkxxkx" +
+				"kxxxxxxx")}, 0},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

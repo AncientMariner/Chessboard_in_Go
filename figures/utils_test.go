@@ -13,8 +13,24 @@ func Test_getCountOfEmptyPlaces(t *testing.T) {
 		{name: "empty string", board: []byte(""), want: 0},
 		{name: "no empty places", board: []byte("rnbqkbnr"), want: 0},
 		{name: "one empty place", board: []byte("rnbqkbn_"), want: 1},
-		{name: "empty board", board: []byte("________________________________________________________________"), want: 64},
-		{name: "not empty board", board: []byte("r_______________________________________________________________"), want: 63},
+		{name: "empty board", board: []byte(
+			"________" +
+				"________" +
+				"________" +
+				"________" +
+				"________" +
+				"________" +
+				"________" +
+				"________"), want: 64},
+		{name: "not empty board", board: []byte(
+			"r_______" +
+				"________" +
+				"________" +
+				"________" +
+				"________" +
+				"________" +
+				"________" +
+				"________"), want: 63},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -173,9 +189,17 @@ func Test_getDimensionFromBoard(t *testing.T) {
 			want:  7,
 		},
 		{
-			name:  "8x8 board (64 bytes: 8*8)",
-			board: []byte("________________________________________________________________"),
-			want:  8,
+			name: "8x8 board (64 bytes: 8*8)",
+			board: []byte(
+				"________" +
+					"________" +
+					"________" +
+					"________" +
+					"________" +
+					"________" +
+					"________" +
+					"________"),
+			want: 8,
 		},
 		{
 			name:  "10x10 board (100 bytes: 10*10)",

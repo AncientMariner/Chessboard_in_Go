@@ -10,7 +10,15 @@ func Test_drawEmptyBoard(t *testing.T) {
 		name string
 		want []byte
 	}{
-		{"Initial board test", []byte("________________________________________________________________")},
+		{"Initial board test", []byte(
+			"________" +
+				"________" +
+				"________" +
+				"________" +
+				"________" +
+				"________" +
+				"________" +
+				"________")},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -28,7 +36,15 @@ func TestPlacement_PlaceFigures(t *testing.T) {
 		boards          map[uint64][]byte
 	}
 
-	board := []byte("________________________________________________________________")
+	board := []byte(
+		"________" +
+			"________" +
+			"________" +
+			"________" +
+			"________" +
+			"________" +
+			"________" +
+			"________")
 	hash := GenerateHash(board)
 
 	newMap := make(map[uint64][]byte)
@@ -78,7 +94,15 @@ func TestPlacement_placeFiguresOnBoard(t *testing.T) {
 		args   args
 		want   int
 	}{
-		{"Test placement on empty board", fields{}, args{[]byte("________________________________________________________________"), &King{}}, 64},
+		{"Test placement on empty board", fields{}, args{[]byte(
+			"________" +
+				"________" +
+				"________" +
+				"________" +
+				"________" +
+				"________" +
+				"________" +
+				"________"), &King{}}, 64},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -98,7 +122,15 @@ func TestPlacement_placeFigure(t *testing.T) {
 		behaviour FigureBehaviour
 	}
 
-	board := []byte("________________________________________________________________")
+	board := []byte(
+		"________" +
+			"________" +
+			"________" +
+			"________" +
+			"________" +
+			"________" +
+			"________" +
+			"________")
 	hash := GenerateHash(board)
 
 	newMap := make(map[uint64][]byte)
@@ -131,7 +163,23 @@ func TestPlacement_placeFigureSequential(t *testing.T) {
 		{
 			"Test sequential placement on board",
 			map[uint64][]byte{
-				GenerateHash([]byte("________________________________________________________________")): []byte("________________________________________________________________"),
+				GenerateHash([]byte(
+					"________" +
+						"________" +
+						"________" +
+						"________" +
+						"________" +
+						"________" +
+						"________" +
+						"________")): []byte(
+					"________" +
+						"________" +
+						"________" +
+						"________" +
+						"________" +
+						"________" +
+						"________" +
+						"________"),
 			},
 			&King{},
 		},
@@ -144,7 +192,15 @@ func TestPlacement_placeFigureSequential(t *testing.T) {
 				t.Errorf("placeFigureSequential() = %v, want %v", got, 64)
 			}
 			// check contains certain board
-			expectedBoard := []byte("____________________________xxx_____xkx_____xxx_________________")
+			expectedBoard := []byte(
+				"________" +
+					"________" +
+					"________" +
+					"____xxx_" +
+					"____xkx_" +
+					"____xxx_" +
+					"________" +
+					"________")
 			expectedHash := GenerateHash(expectedBoard)
 			if _, exists := got[expectedHash]; !exists {
 				t.Errorf("placeFigureSequential() did not contain expected board with hash %v", expectedHash)
@@ -162,7 +218,23 @@ func TestPlacement_placeFigureParallel(t *testing.T) {
 		want      map[uint64][]byte
 	}{
 		{"Test parallel placement on board", map[uint64][]byte{
-			GenerateHash([]byte("________________________________________________________________")): []byte("________________________________________________________________"),
+			GenerateHash([]byte(
+				"________" +
+					"________" +
+					"________" +
+					"________" +
+					"________" +
+					"________" +
+					"________" +
+					"________")): []byte(
+				"________" +
+					"________" +
+					"________" +
+					"________" +
+					"________" +
+					"________" +
+					"________" +
+					"________"),
 		}, &King{}, nil},
 	}
 	for _, tt := range tests {
@@ -172,8 +244,16 @@ func TestPlacement_placeFigureParallel(t *testing.T) {
 			if len(got) != 64 {
 				t.Errorf("placeFigureParallel() = %v, want %v", got, 64)
 			}
-				// check contains certain board
-			expectedBoard := []byte("____________________________xxx_____xkx_____xxx_________________")
+			// check contains certain board
+			expectedBoard := []byte(
+				"________" +
+					"________" +
+					"________" +
+					"____xxx_" +
+					"____xkx_" +
+					"____xxx_" +
+					"________" +
+					"________")
 			expectedHash := GenerateHash(expectedBoard)
 			if _, exists := got[expectedHash]; !exists {
 				t.Errorf("placeFigureParallel() did not contain expected board with hash %v", expectedHash)

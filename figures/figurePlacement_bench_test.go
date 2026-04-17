@@ -46,10 +46,42 @@ func BenchmarkGenerateHashParallel(b *testing.B) {
 // BenchmarkGenerateHashVariedBoards benchmarks with different board states
 func BenchmarkGenerateHashVariedBoards(b *testing.B) {
 	boards := [][]byte{
-		[]byte("________________________________________________________________"),
-		[]byte("k_______________________________________________________________"),
-		[]byte("xxx_____xkx_____xxx_____________________________________________"),
-		[]byte("kxkxkxkxxxxxxxxxkxkxkxkxxxxxxxxxkxkxkxkxxxxxxxxxkxkxkxkxxxxxxxxx"),
+		[]byte(
+			"________" +
+				"________" +
+				"________" +
+				"________" +
+				"________" +
+				"________" +
+				"________" +
+				"________"),
+		[]byte(
+			"k_______" +
+				"________" +
+				"________" +
+				"________" +
+				"________" +
+				"________" +
+				"________" +
+				"________"),
+		[]byte(
+			"xxx_____" +
+				"xkx_____" +
+				"xxx_____" +
+				"________" +
+				"________" +
+				"________" +
+				"________" +
+				"________"),
+		[]byte(
+			"kxkxkxkx" +
+				"xxxxxxxx" +
+				"kxkxkxkx" +
+				"xxxxxxxx" +
+				"kxkxkxkx" +
+				"xxxxxxxx" +
+				"kxkxkxkx" +
+				"xxxxxxxx"),
 	}
 
 	b.ResetTimer()
