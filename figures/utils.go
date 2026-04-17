@@ -6,16 +6,14 @@ import (
 )
 
 // getDimensionFromBoard calculates the board dimension from the board byte slice
-// Board format: each row is dimension bytes + 1 newline, total dimension rows
-// So total length = dimension * (dimension + 1)
-// Solving: d^2 + d - len = 0 using quadratic formula
+// Board format: flat array of dimension * dimension bytes (no newlines)
+// So dimension = sqrt(length)
 func getDimensionFromBoard(board []byte) int {
 	length := float64(len(board))
-	// Quadratic formula: d = (-1 + sqrt(1 + 4*len)) / 2
-	d := int((-1.0 + math.Sqrt(1.0+4.0*length)) / 2.0)
+	d := int(math.Sqrt(length))
 
 	// Verify the result is correct
-	if d > 0 && d*(d+1) == len(board) {
+	if d > 0 && d*d == len(board) {
 		return d
 	}
 
@@ -26,7 +24,7 @@ func getDimensionFromBoard(board []byte) int {
 // This reduces allocations by reusing temporary board representations
 var boardPool = sync.Pool{
 	New: func() interface{} {
-		b := make([]byte, (defaultDimension+1)*defaultDimension)
+		b := make([]byte, defaultDimension*defaultDimension)
 		return &b
 	},
 }
@@ -35,7 +33,7 @@ var boardPool = sync.Pool{
 func getBoardFromPool(dimension int) *[]byte {
 	ptr := boardPool.Get().(*[]byte)
 	board := *ptr
-	requiredSize := (dimension + 1) * dimension
+	requiredSize := dimension * dimension
 
 	// If the pooled board is the wrong size, resize it
 	if len(board) != requiredSize {

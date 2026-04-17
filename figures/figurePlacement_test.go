@@ -10,7 +10,7 @@ func Test_drawEmptyBoard(t *testing.T) {
 		name string
 		want []byte
 	}{
-		{"Initial board test", []byte("________\n________\n________\n________\n________\n________\n________\n________\n")},
+		{"Initial board test", []byte("________________________________________________________________")},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -28,7 +28,7 @@ func TestPlacement_PlaceFigures(t *testing.T) {
 		boards          map[uint64][]byte
 	}
 
-	board := []byte("________\n________\n________\n________\n________\n________\n________\n________\n")
+	board := []byte("________________________________________________________________")
 	hash := GenerateHash(board)
 
 	newMap := make(map[uint64][]byte)
@@ -78,7 +78,7 @@ func TestPlacement_placeFiguresOnBoard(t *testing.T) {
 		args   args
 		want   int
 	}{
-		{"Test placement on empty board", fields{}, args{[]byte("________\n________\n________\n________\n________\n________\n________\n________\n"), &King{}}, 64},
+		{"Test placement on empty board", fields{}, args{[]byte("________________________________________________________________"), &King{}}, 64},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -98,7 +98,7 @@ func TestPlacement_placeFigure(t *testing.T) {
 		behaviour FigureBehaviour
 	}
 
-	board := []byte("________\n________\n________\n________\n________\n________\n________\n________\n")
+	board := []byte("________________________________________________________________")
 	hash := GenerateHash(board)
 
 	newMap := make(map[uint64][]byte)
@@ -131,7 +131,7 @@ func TestPlacement_placeFigureSequential(t *testing.T) {
 		{
 			"Test sequential placement on board",
 			map[uint64][]byte{
-				GenerateHash([]byte("________\n________\n________\n________\n________\n________\n________\n________\n")): []byte("________\n________\n________\n________\n________\n________\n________\n________\n"),
+				GenerateHash([]byte("________________________________________________________________")): []byte("________________________________________________________________"),
 			},
 			&King{},
 		},
@@ -144,7 +144,7 @@ func TestPlacement_placeFigureSequential(t *testing.T) {
 				t.Errorf("placeFigureSequential() = %v, want %v", got, 64)
 			}
 			// check contains certain board
-			expectedBoard := []byte("________\n________\n________\n____xxx_\n____xkx_\n____xxx_\n________\n________\n")
+			expectedBoard := []byte("____________________________xxx_____xkx_____xxx_________________")
 			expectedHash := GenerateHash(expectedBoard)
 			if _, exists := got[expectedHash]; !exists {
 				t.Errorf("placeFigureSequential() did not contain expected board with hash %v", expectedHash)
@@ -162,7 +162,7 @@ func TestPlacement_placeFigureParallel(t *testing.T) {
 		want      map[uint64][]byte
 	}{
 		{"Test parallel placement on board", map[uint64][]byte{
-			GenerateHash([]byte("________\n________\n________\n________\n________\n________\n________\n________\n")): []byte("________\n________\n________\n________\n________\n________\n________\n________\n"),
+			GenerateHash([]byte("________________________________________________________________")): []byte("________________________________________________________________"),
 		}, &King{}, nil},
 	}
 	for _, tt := range tests {
@@ -173,7 +173,7 @@ func TestPlacement_placeFigureParallel(t *testing.T) {
 				t.Errorf("placeFigureParallel() = %v, want %v", got, 64)
 			}
 				// check contains certain board
-			expectedBoard := []byte("________\n________\n________\n____xxx_\n____xkx_\n____xxx_\n________\n________\n")
+			expectedBoard := []byte("____________________________xxx_____xkx_____xxx_________________")
 			expectedHash := GenerateHash(expectedBoard)
 			if _, exists := got[expectedHash]; !exists {
 				t.Errorf("placeFigureParallel() did not contain expected board with hash %v", expectedHash)

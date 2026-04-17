@@ -11,10 +11,10 @@ func Test_getCountOfEmptyPlaces(t *testing.T) {
 		{name: "empty string", board: make([]byte, 0), want: 0},
 		{name: "empty string", board: make([]byte, 1), want: 0},
 		{name: "empty string", board: []byte(""), want: 0},
-		{name: "no empty places", board: []byte("rnbqkbnr\n"), want: 0},
-		{name: "one empty place", board: []byte("rnbqkbn_\n"), want: 1},
-		{name: "empty board", board: []byte("________\n________\n________\n________\n________\n________\n________\n________\n"), want: 64},
-		{name: "not empty board", board: []byte("r_______\n________\n________\n________\n________\n________\n________\n________\n"), want: 63},
+		{name: "no empty places", board: []byte("rnbqkbnr"), want: 0},
+		{name: "one empty place", board: []byte("rnbqkbn_"), want: 1},
+		{name: "empty board", board: []byte("________________________________________________________________"), want: 64},
+		{name: "not empty board", board: []byte("r_______________________________________________________________"), want: 63},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -54,27 +54,27 @@ func Test_getBoardFromPool(t *testing.T) {
 		{
 			name:      "dimension 1",
 			dimension: 1,
-			wantSize:  2, // 1 * (1+1) = 2
+			wantSize:  1, // 1 * 1 = 1
 		},
 		{
 			name:      "dimension 7",
 			dimension: 7,
-			wantSize:  56, // 7 * (7+1) = 56
+			wantSize:  49, // 7 * 7 = 49
 		},
 		{
 			name:      "dimension 8",
 			dimension: 8,
-			wantSize:  72, // 8 * (8+1) = 72
+			wantSize:  64, // 8 * 8 = 64
 		},
 		{
 			name:      "dimension 10",
 			dimension: 10,
-			wantSize:  110, // 10 * (10+1) = 110
+			wantSize:  100, // 10 * 10 = 100
 		},
 		{
 			name:      "dimension 20",
 			dimension: 20,
-			wantSize:  420, // 20 * (20+1) = 420
+			wantSize:  400, // 20 * 20 = 400
 		},
 	}
 	for _, tt := range tests {
@@ -98,7 +98,7 @@ func Test_getBoardFromPool_reusesPooledBoards(t *testing.T) {
 	// Get a board for dimension 8
 	boardPtr1 := getBoardFromPool(8)
 	board1 := *boardPtr1
-	expectedSize8 := 72 // 8 * 9 = 72
+	expectedSize8 := 64 // 8 * 8 = 64
 
 	if len(board1) != expectedSize8 {
 		t.Errorf("First board size = %v, want %v", len(board1), expectedSize8)
@@ -120,7 +120,7 @@ func Test_getBoardFromPool_reusesPooledBoards(t *testing.T) {
 func Test_getBoardFromPool_resizesWhenNeeded(t *testing.T) {
 	// Get a board for dimension 8
 	boardPtr := getBoardFromPool(8)
-	expectedSize8 := 72 // 8 * 9 = 72
+	expectedSize8 := 64 // 8 * 8 = 64
 
 	if len(*boardPtr) != expectedSize8 {
 		t.Errorf("Board size = %v, want %v", len(*boardPtr), expectedSize8)
@@ -131,7 +131,7 @@ func Test_getBoardFromPool_resizesWhenNeeded(t *testing.T) {
 
 	// Get a board for different dimension 7 - should resize
 	boardPtr7 := getBoardFromPool(7)
-	expectedSize7 := 56 // 7 * 8 = 56
+	expectedSize7 := 49 // 7 * 7 = 49
 	board7 := *boardPtr7
 
 	if len(board7) != expectedSize7 {
@@ -153,33 +153,33 @@ func Test_getDimensionFromBoard(t *testing.T) {
 			want:  8, // Default fallback
 		},
 		{
-			name:  "1x1 board (2 bytes: 1 char + 1 newline)",
-			board: []byte("_\n"),
+			name:  "1x1 board (1 byte)",
+			board: []byte("_"),
 			want:  1,
 		},
 		{
-			name:  "2x2 board (6 bytes: 2*(2+1))",
-			board: []byte("__\n__\n"),
+			name:  "2x2 board (4 bytes: 2*2)",
+			board: []byte("____"),
 			want:  2,
 		},
 		{
-			name:  "3x3 board (12 bytes: 3*(3+1))",
-			board: []byte("___\n___\n___\n"),
+			name:  "3x3 board (9 bytes: 3*3)",
+			board: []byte("_________"),
 			want:  3,
 		},
 		{
-			name:  "7x7 board (56 bytes: 7*(7+1))",
-			board: []byte("_______\n_______\n_______\n_______\n_______\n_______\n_______\n"),
+			name:  "7x7 board (49 bytes: 7*7)",
+			board: []byte("_________________________________________________"),
 			want:  7,
 		},
 		{
-			name:  "8x8 board (72 bytes: 8*(8+1))",
-			board: []byte("________\n________\n________\n________\n________\n________\n________\n________\n"),
+			name:  "8x8 board (64 bytes: 8*8)",
+			board: []byte("________________________________________________________________"),
 			want:  8,
 		},
 		{
-			name:  "10x10 board (110 bytes: 10*(10+1))",
-			board: make([]byte, 110), // 10 * 11 = 110
+			name:  "10x10 board (100 bytes: 10*10)",
+			board: make([]byte, 100), // 10 * 10 = 100
 			want:  10,
 		},
 		{
@@ -196,4 +196,3 @@ func Test_getDimensionFromBoard(t *testing.T) {
 		})
 	}
 }
-

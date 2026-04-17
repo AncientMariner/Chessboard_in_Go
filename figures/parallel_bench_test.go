@@ -9,14 +9,14 @@ func createMultipleBoards(count int) map[uint64][]byte {
 	boards := make(map[uint64][]byte, count)
 
 	// Create variations of boards with a king placed at different positions
-	emptyBoard := []byte("________\n" +
-		"________\n" +
-		"________\n" +
-		"________\n" +
-		"________\n" +
-		"________\n" +
-		"________\n" +
-		"________\n")
+	emptyBoard := []byte("________" +
+		"________" +
+		"________" +
+		"________" +
+		"________" +
+		"________" +
+		"________" +
+		"________")
 
 	king := &King{}
 	result := king.Handle(emptyBoard)

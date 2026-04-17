@@ -10,7 +10,7 @@ func (queen *Queen) Handle(board []byte) map[uint64][]byte {
 	boards := getMapFromPool(getCountOfEmptyPlaces(board))
 	dimension := getDimensionFromBoard(board)
 
-	for i := 0; i < len(board) && len(board) == ((dimension+1)*dimension); i++ {
+	for i := 0; i < len(board) && len(board) == (dimension*dimension); i++ {
 		if board[i] == emptyField {
 			// Check validity first before doing any allocation
 			if !isAnotherFigurePresentOnTheLine(board, i, dimension) &&

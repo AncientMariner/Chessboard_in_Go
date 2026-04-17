@@ -7,14 +7,14 @@ import (
 // BenchmarkGenerateHash benchmarks the hash generation with pooled hashers
 func BenchmarkGenerateHash(b *testing.B) {
 	board := []byte(
-		"________\n" +
-			"________\n" +
-			"________\n" +
-			"________\n" +
-			"________\n" +
-			"________\n" +
-			"________\n" +
-			"________\n",
+		"________" +
+			"________" +
+			"________" +
+			"________" +
+			"________" +
+			"________" +
+			"________" +
+			"________",
 	)
 
 	b.ResetTimer()
@@ -26,14 +26,14 @@ func BenchmarkGenerateHash(b *testing.B) {
 // BenchmarkGenerateHashParallel benchmarks hash generation under concurrent load
 func BenchmarkGenerateHashParallel(b *testing.B) {
 	board := []byte(
-		"________\n" +
-			"________\n" +
-			"________\n" +
-			"________\n" +
-			"________\n" +
-			"________\n" +
-			"________\n" +
-			"________\n",
+		"________" +
+			"________" +
+			"________" +
+			"________" +
+			"________" +
+			"________" +
+			"________" +
+			"________",
 	)
 
 	b.RunParallel(func(pb *testing.PB) {
@@ -46,10 +46,10 @@ func BenchmarkGenerateHashParallel(b *testing.B) {
 // BenchmarkGenerateHashVariedBoards benchmarks with different board states
 func BenchmarkGenerateHashVariedBoards(b *testing.B) {
 	boards := [][]byte{
-		[]byte("________\n________\n________\n________\n________\n________\n________\n________\n"),
-		[]byte("k_______\n________\n________\n________\n________\n________\n________\n________\n"),
-		[]byte("xxx_____\nxkx_____\nxxx_____\n________\n________\n________\n________\n________\n"),
-		[]byte("kxkxkxkx\nxxxxxxxx\nkxkxkxkx\nxxxxxxxx\nkxkxkxkx\nxxxxxxxx\nkxkxkxkx\nxxxxxxxx\n"),
+		[]byte("________________________________________________________________"),
+		[]byte("k_______________________________________________________________"),
+		[]byte("xxx_____xkx_____xxx_____________________________________________"),
+		[]byte("kxkxkxkxxxxxxxxxkxkxkxkxxxxxxxxxkxkxkxkxxxxxxxxxkxkxkxkxxxxxxxxx"),
 	}
 
 	b.ResetTimer()

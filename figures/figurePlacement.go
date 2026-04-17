@@ -2,7 +2,6 @@ package figures
 
 import (
 	"runtime"
-	"strings"
 	"sync"
 )
 
@@ -47,17 +46,11 @@ const emptyField = '_'
 const attackPlace = 'x'
 
 func drawEmptyBoard() []byte {
-
-	var board strings.Builder
-	board.Grow(defaultDimension*defaultDimension + defaultDimension)
-
-	for x := 0; x < defaultDimension; x++ {
-		for y := 0; y < defaultDimension; y++ {
-			board.WriteByte(emptyField)
-		}
-		board.WriteByte('\n')
+	board := make([]byte, defaultDimension*defaultDimension)
+	for i := range board {
+		board[i] = emptyField
 	}
-	return []byte(board.String())
+	return board
 }
 
 func (p *Placement) SetDimension(value int) {

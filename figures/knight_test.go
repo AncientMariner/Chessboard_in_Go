@@ -42,13 +42,13 @@ func TestKnight_Handle(t *testing.T) {
 		args   args
 		want   int
 	}{
-		{"Test handle board size 8 is not possible", fields{Figure{next: nil}}, args{board: []byte("________\n")}, 0},
-		{"Test handle empty board size 64", fields{Figure{next: nil}}, args{board: []byte("________\n________\n________\n________\n________\n________\n________\n________\n")}, 64},
-		{"Test handle empty board size 64", fields{Figure{next: nil}}, args{board: []byte("xxx_____\nxkx_____\nxxx_____\n________\n________\n________\n________\n________\n")}, 51},
-		{"Test handle empty board size 64", fields{Figure{next: nil}}, args{board: []byte("xxx_____\nxkx_____\nxxx_____\n___xxx__\n___xkx__\n___xxx__\n________\n________\n")}, 36},
-		{"Test handle empty board size 64", fields{Figure{next: nil}}, args{board: []byte("xxx_____\nxkx_____\nxxx_____\n___xxx__\n___xkx__\n___xxx__\nxxx__xxx\nxkx__xkx\n")}, 22},
-		{"Test handle empty board size 64", fields{Figure{next: nil}}, args{board: []byte("xxx__xxx\nxkx__xkx\nxxx__xxx\nxxxxxx__\nxkxxkx__\nxxxxxx__\nxxx__xxx\nxkx__xkx\n")}, 6},
-		{"Test handle empty board size 64", fields{Figure{next: nil}}, args{board: []byte("xxx__xxx\nxkx__xkx\nxxx__xxx\nxxxxxx__\nxkxxkxxx\nxxxxxxxk\nxxxxxxxx\nxkxkxxkx\n")}, 2},
+		{"Test handle board size 8 is not possible", fields{Figure{next: nil}}, args{board: []byte("________")}, 0},
+		{"Test handle empty board size 64", fields{Figure{next: nil}}, args{board: []byte("________________________________________________________________")}, 64},
+		{"Test handle empty board size 64", fields{Figure{next: nil}}, args{board: []byte("xxx_____xkx_____xxx_____________________________________________")}, 51},
+		{"Test handle empty board size 64", fields{Figure{next: nil}}, args{board: []byte("xxx_____xkx_____xxx________xxx_____xkx_____xxx__________________")}, 36},
+		{"Test handle empty board size 64", fields{Figure{next: nil}}, args{board: []byte("xxx_____xkx_____xxx________xxx_____xkx_____xxx__xxx__xxxxkx__xkx")}, 22},
+		{"Test handle empty board size 64", fields{Figure{next: nil}}, args{board: []byte("xxx__xxxxkx__xkxxxx__xxxxxxxxx__xkxxkx__xxxxxx__xxx__xxxxkx__xkx")}, 6},
+		{"Test handle empty board size 64", fields{Figure{next: nil}}, args{board: []byte("xxx__xxxxkx__xkxxxx__xxxxxxxxx__xkxxkxxxxxxxxxxkxxxxxxxxxkxkxxkx")}, 2},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -73,31 +73,31 @@ func Test_isAnotherFigurePresentAbove(t *testing.T) {
 		want bool
 	}{
 		{"Test vertically 1 above", args{
-			out:      []byte{'_', '_', '_', '_', '_', '_', '_', '_', '\n', '_', '_', '_', '_', '_', '_', '_', '_', '\n'},
+			out:      []byte{'_', '_', '_', '_', '_', '_', '_', '_', '_', '_', '_', '_', '_', '_', '_', '_'},
 			position: 5,
 		}, false},
 		{"Test vertically 1 above", args{
-			out:      []byte{'_', '_', '_', '_', '_', '_', '_', '_', '\n', '_', '_', '_', '_', '_', '_', '_', '_', '\n'},
+			out:      []byte{'_', '_', '_', '_', '_', '_', '_', '_', '_', '_', '_', '_', '_', '_', '_', '_'},
 			position: 10,
 		}, false},
 		{"Test vertically 1 above", args{
-			out:      []byte{'b', '_', '_', 'k', '_', '_', '_', '_', '\n', '_', '_', '_', '_', '_', '_', '_', '_', '\n'},
+			out:      []byte{'b', '_', '_', 'k', '_', '_', '_', '_', '_', '_', '_', '_', '_', '_', '_', '_'},
 			position: 10,
 		}, true},
 		{"Test vertically 1 above", args{
-			out:      []byte{'b', '_', '_', '_', 'k', '_', '_', '_', '\n', '_', '_', '_', '_', '_', '_', '_', '_', '\n'},
+			out:      []byte{'_', 'b', '_', '_', '_', 'k', '_', '_', '_', '_', '_', '_', '_', '_', '_', '_'},
 			position: 11,
 		}, true},
 		{"Test vertically 1 above", args{
-			out:      []byte{'b', '_', '_', '_', 'k', 'q', '_', '_', '\n', '_', '_', '_', '_', '_', '_', '_', '_', '\n'},
-			position: 16,
+			out:      []byte{'b', '_', '_', '_', 'k', 'q', '_', '_', '_', '_', '_', '_', '_', '_', '_', '_'},
+			position: 15,
 		}, true},
 		{"Test vertically 1 above", args{
-			out:      []byte{'_', 'b', '_', 'b', '_', 'q', '_', '_', '\n', 'k', '_', '_', '_', 'k', '_', '_', '_', '\n', '_', '_', '_', '_', '_', '_', '_', '_', '\n'},
+			out:      []byte{'_', 'b', '_', 'b', '_', 'q', '_', '_', 'k', '_', '_', '_', 'k', '_', '_', '_', '_', '_', '_', '_', '_', '_', '_', '_'},
 			position: 20,
 		}, true},
 		{"Test vertically 1 above", args{
-			out:      []byte{'_', 'b', 'k', 'b', '_', 'q', '_', '_', '\n', 'k', '_', 'r', '_', 'k', '_', '_', '_', '\n', '_', '_', '_', '_', '_', '_', '_', '_', '\n'},
+			out:      []byte{'_', 'b', 'k', 'b', '_', 'q', '_', '_', 'k', '_', 'r', '_', 'k', '_', '_', '_', '_', '_', '_', '_', '_', '_', '_', '_'},
 			position: 18,
 		}, true},
 	}
@@ -121,51 +121,51 @@ func Test_isAnotherFigurePresentBelow(t *testing.T) {
 		want bool
 	}{
 		{"Test vertically 1 below", args{
-			out:      []byte{'_', '_', '_', '_', '_', '_', '_', '_', '\n', '_', '_', '_', '_', '_', '_', '_', '_', '\n'},
+			out:      []byte{'_', '_', '_', '_', '_', '_', '_', '_', '_', '_', '_', '_', '_', '_', '_', '_'},
 			position: 5,
 		}, false},
 		{"Test vertically 1 below", args{
-			out:      []byte{'_', '_', '_', '_', '_', '_', '_', '_', '\n', '_', '_', '_', '_', '_', '_', '_', '_', '\n'},
+			out:      []byte{'_', '_', '_', '_', '_', '_', '_', '_', '_', '_', '_', '_', '_', '_', '_', '_'},
 			position: 10,
 		}, false},
 		{"Test vertically 1 below", args{
-			out:      []byte{'b', '_', '_', 'k', '_', '_', '_', '_', '\n', '_', '_', '_', '_', '_', '_', '_', '_', '\n'},
+			out:      []byte{'b', '_', '_', 'k', '_', '_', '_', '_', '_', '_', '_', '_', '_', '_', '_', '_'},
 			position: 10,
 		}, false},
 		{"Test vertically 1 below", args{
-			out:      []byte{'b', '_', '_', '_', 'k', '_', '_', '_', '\n', '_', '_', '_', '_', '_', '_', '_', '_', '\n'},
+			out:      []byte{'b', '_', '_', '_', 'k', '_', '_', '_', '_', '_', '_', '_', '_', '_', '_', '_'},
 			position: 11,
 		}, false},
 		{"Test vertically 1 below", args{
-			out:      []byte{'b', '_', '_', '_', 'k', 'q', '_', '_', '\n', '_', '_', '_', '_', '_', '_', '_', '_', '\n'},
+			out:      []byte{'b', '_', '_', '_', 'k', 'q', '_', '_', '_', '_', '_', '_', '_', '_', '_', '_'},
 			position: 16,
 		}, false},
 		{"Test vertically 1 below", args{
-			out:      []byte{'_', 'b', '_', 'b', '_', 'q', '_', '_', '\n', 'k', '_', '_', '_', 'k', '_', '_', '_', '\n', '_', '_', '_', '_', '_', '_', '_', '_', '\n'},
+			out:      []byte{'_', 'b', '_', 'b', '_', 'q', '_', '_', 'k', '_', '_', '_', 'k', '_', '_', '_', '_', '_', '_', '_', '_', '_', '_', '_'},
 			position: 20,
 		}, false},
 		{"Test vertically 1 below", args{
-			out:      []byte{'_', 'b', 'k', 'b', '_', 'q', '_', '_', '\n', 'k', '_', 'r', '_', 'k', '_', '_', '_', '\n', '_', '_', '_', '_', '_', '_', '_', '_', '\n'},
+			out:      []byte{'_', 'b', 'k', 'b', '_', 'q', '_', '_', 'k', '_', 'r', '_', 'k', '_', '_', '_', '_', '_', '_', '_', '_', '_', '_', '_'},
 			position: 18,
 		}, false},
 		{"Test vertically 1 below", args{
-			out:      []byte{'_', 'b', 'k', 'b', '_', '_', '_', '_', '\n', '_', '_', 'b', '_', '_', '_', 'b', '_', '\n', '_', '_', '_', 'b', '_', 'b', '_', '_', '\n'},
+			out:      []byte{'_', 'b', 'k', 'b', '_', '_', '_', '_', '_', '_', 'b', '_', '_', '_', 'b', '_', '_', '_', '_', 'b', '_', 'b', '_', '_'},
 			position: 4,
 		}, true},
 		{"Test vertically 1 below", args{
-			out:      []byte{'_', 'b', 'k', 'b', '_', '_', '_', '_', '\n', '_', '_', '_', '_', '_', '_', 'b', '_', '\n', '_', '_', '_', 'b', '_', 'b', '_', '_', '\n'},
+			out:      []byte{'_', 'b', 'k', 'b', '_', '_', '_', '_', '_', '_', '_', '_', '_', '_', 'b', '_', '_', '_', '_', 'b', '_', 'b', '_', '_'},
 			position: 4,
 		}, true},
 		{"Test vertically 1 below", args{
-			out:      []byte{'_', 'b', 'k', 'b', '_', '_', '_', '_', '\n', '_', '_', '_', '_', '_', '_', '_', '_', '\n', '_', '_', '_', 'b', '_', 'b', '_', '_', '\n'},
+			out:      []byte{'_', 'b', 'k', 'b', '_', '_', '_', '_', '_', '_', '_', '_', '_', '_', '_', '_', '_', '_', '_', 'b', '_', 'b', '_', '_'},
 			position: 4,
 		}, true},
 		{"Test vertically 1 below", args{
-			out:      []byte{'_', 'b', 'k', 'b', '_', '_', '_', '_', '\n', '_', '_', '_', '_', '_', '_', '_', '_', '\n', '_', '_', '_', '_', '_', 'b', '_', '_', '\n'},
+			out:      []byte{'_', 'b', 'k', 'b', '_', '_', '_', '_', '_', '_', '_', '_', '_', '_', '_', '_', '_', '_', '_', '_', '_', 'b', '_', '_'},
 			position: 4,
 		}, true},
 		{"Test vertically 1 below", args{
-			out:      []byte{'_', 'b', 'k', 'b', '_', '_', '_', '_', '\n', '_', '_', '_', '_', '_', '_', '_', '_', '\n', '_', '_', '_', '_', '_', '_', '_', '_', '\n'},
+			out:      []byte{'_', 'b', 'k', 'b', '_', '_', '_', '_', '_', '_', '_', '_', '_', '_', '_', '_', '_', '_', '_', '_', '_', '_', '_', '_'},
 			position: 4,
 		}, false},
 	}
@@ -189,9 +189,9 @@ func Test_placeAttackPlacesBelow(t *testing.T) {
 		want []byte
 	}{
 		{"Test vertically 1 below", args{
-			out:      []byte{'_', '_', '_', '_', '_', '_', '_', '_', '\n', '_', '_', '_', '_', '_', '_', '_', '_', '\n', '_', '_', '_', '_', '_', '_', '_', '_', '\n'},
+			out:      []byte{'_', '_', '_', '_', '_', '_', '_', '_', '_', '_', '_', '_', '_', '_', '_', '_', '_', '_', '_', '_', '_', '_', '_', '_'},
 			position: 2,
-		}, []byte{'_', '_', '_', '_', '_', '_', '_', '_', '\n', 'x', '_', '_', '_', 'x', '_', '_', '_', '\n', '_', 'x', '_', 'x', '_', '_', '_', '_', '\n'}},
+		}, []byte{'_', '_', '_', '_', '_', '_', '_', '_', 'x', '_', '_', '_', 'x', '_', '_', '_', '_', 'x', '_', 'x', '_', '_', '_', '_'}},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -214,14 +214,14 @@ func Test_placeAttackPlacesAbove(t *testing.T) {
 		want []byte
 	}{
 		{"Test above", args{
-			out:      []byte{'_', '_', '_', '_', '_', '_', '_', '_', '\n', '_', '_', '_', '_', '_', '_', '_', '_', '\n', '_', '_', '_', '_', '_', '_', '_', '_', '\n'},
-			position: 20,
-		}, []byte{'_', 'x', '_', 'x', '_', '_', '_', '_', '\n', 'x', '_', '_', '_', 'x', '_', '_', '_', '\n', '_', '_', '_', '_', '_', '_', '_', '_', '\n'}},
+			out:      []byte{'_', '_', '_', '_', '_', '_', '_', '_', '_', '_', '_', '_', '_', '_', '_', '_', '_', '_', '_', '_', '_', '_', '_', '_'},
+			position: 18,
+		}, []byte{'_', 'x', '_', 'x', '_', '_', '_', '_', 'x', '_', '_', '_', 'x', '_', '_', '_', '_', '_', '_', '_', '_', '_', '_', '_'}},
 
 		{"Test below", args{
-			out:      []byte{'_', '_', '_', '_', '_', '_', '_', '_', '\n', '_', '_', '_', '_', '_', '_', '_', '_', '\n', '_', '_', '_', '_', '_', '_', '_', '_', '\n'},
-			position: 18,
-		}, []byte{'_', 'x', '_', '_', '_', '_', '_', '_', '\n', '_', '_', 'x', '_', '_', '_', '_', '_', '\n', '_', '_', '_', '_', '_', '_', '_', '_', '\n'}},
+			out:      []byte{'_', '_', '_', '_', '_', '_', '_', '_', '_', '_', '_', '_', '_', '_', '_', '_', '_', '_', '_', '_', '_', '_', '_', '_'},
+			position: 16,
+		}, []byte{'_', 'x', '_', '_', '_', '_', '_', '_', '_', '_', 'x', '_', '_', '_', '_', '_', '_', '_', '_', '_', '_', '_', '_', '_'}},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

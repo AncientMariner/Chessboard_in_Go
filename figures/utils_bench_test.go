@@ -6,14 +6,14 @@ import (
 
 // BenchmarkMapPooling_WithPool benchmarks map operations using the pool
 func BenchmarkMapPooling_WithPool(b *testing.B) {
-	board := []byte("________\n" +
-		"________\n" +
-		"________\n" +
-		"________\n" +
-		"________\n" +
-		"________\n" +
-		"________\n" +
-		"________\n")
+	board := []byte("________" +
+		"________" +
+		"________" +
+		"________" +
+		"________" +
+		"________" +
+		"________" +
+		"________")
 
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
@@ -29,14 +29,14 @@ func BenchmarkMapPooling_WithPool(b *testing.B) {
 
 // BenchmarkMapPooling_WithoutPool benchmarks map operations without pooling
 func BenchmarkMapPooling_WithoutPool(b *testing.B) {
-	board := []byte("________\n" +
-		"________\n" +
-		"________\n" +
-		"________\n" +
-		"________\n" +
-		"________\n" +
-		"________\n" +
-		"________\n")
+	board := []byte("________" +
+		"________" +
+		"________" +
+		"________" +
+		"________" +
+		"________" +
+		"________" +
+		"________")
 
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
@@ -52,14 +52,14 @@ func BenchmarkMapPooling_WithoutPool(b *testing.B) {
 
 // BenchmarkMapPooling_WithPool_Parallel benchmarks pooled map operations under parallel load
 func BenchmarkMapPooling_WithPool_Parallel(b *testing.B) {
-	board := []byte("________\n" +
-		"________\n" +
-		"________\n" +
-		"________\n" +
-		"________\n" +
-		"________\n" +
-		"________\n" +
-		"________\n")
+	board := []byte("________" +
+		"________" +
+		"________" +
+		"________" +
+		"________" +
+		"________" +
+		"________" +
+		"________")
 
 	b.RunParallel(func(pb *testing.PB) {
 		i := 0
@@ -77,14 +77,14 @@ func BenchmarkMapPooling_WithPool_Parallel(b *testing.B) {
 
 // BenchmarkMapPooling_WithoutPool_Parallel benchmarks non-pooled map operations under parallel load
 func BenchmarkMapPooling_WithoutPool_Parallel(b *testing.B) {
-	board := []byte("________\n" +
-		"________\n" +
-		"________\n" +
-		"________\n" +
-		"________\n" +
-		"________\n" +
-		"________\n" +
-		"________\n")
+	board := []byte("________" +
+		"________" +
+		"________" +
+		"________" +
+		"________" +
+		"________" +
+		"________" +
+		"________")
 
 	b.RunParallel(func(pb *testing.PB) {
 		i := 0
@@ -102,14 +102,14 @@ func BenchmarkMapPooling_WithoutPool_Parallel(b *testing.B) {
 // BenchmarkKingHandle_WithPooling benchmarks the King figure Handle method with pooling
 func BenchmarkKingHandle_WithPooling(b *testing.B) {
 	king := King{}
-	board := []byte("________\n" +
-		"________\n" +
-		"________\n" +
-		"________\n" +
-		"________\n" +
-		"________\n" +
-		"________\n" +
-		"________\n")
+	board := []byte("________" +
+		"________" +
+		"________" +
+		"________" +
+		"________" +
+		"________" +
+		"________" +
+		"________")
 
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
@@ -122,14 +122,14 @@ func BenchmarkKingHandle_WithPooling(b *testing.B) {
 // BenchmarkPlacement_WithPooling benchmarks Placement.placeFigure with map pooling
 func BenchmarkPlacement_WithPooling(b *testing.B) {
 	boards := make(map[uint64][]byte)
-	emptyBoard := []byte("________\n" +
-		"________\n" +
-		"________\n" +
-		"________\n" +
-		"________\n" +
-		"________\n" +
-		"________\n" +
-		"________\n")
+	emptyBoard := []byte("________" +
+		"________" +
+		"________" +
+		"________" +
+		"________" +
+		"________" +
+		"________" +
+		"________")
 	boards[GenerateHash(emptyBoard)] = emptyBoard
 
 	placement := &Placement{}
@@ -145,14 +145,14 @@ func BenchmarkPlacement_WithPooling(b *testing.B) {
 
 // BenchmarkMapPooling_LargeCapacity benchmarks pooled maps with larger capacity hints
 func BenchmarkMapPooling_LargeCapacity(b *testing.B) {
-	board := []byte("________\n" +
-		"________\n" +
-		"________\n" +
-		"________\n" +
-		"________\n" +
-		"________\n" +
-		"________\n" +
-		"________\n")
+	board := []byte("________" +
+		"________" +
+		"________" +
+		"________" +
+		"________" +
+		"________" +
+		"________" +
+		"________")
 
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
@@ -168,14 +168,14 @@ func BenchmarkMapPooling_LargeCapacity(b *testing.B) {
 
 // BenchmarkMapPooling_SmallCapacity benchmarks pooled maps with small capacity hints
 func BenchmarkMapPooling_SmallCapacity(b *testing.B) {
-	board := []byte("________\n" +
-		"________\n" +
-		"________\n" +
-		"________\n" +
-		"________\n" +
-		"________\n" +
-		"________\n" +
-		"________\n")
+	board := []byte("________" +
+		"________" +
+		"________" +
+		"________" +
+		"________" +
+		"________" +
+		"________" +
+		"________")
 
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
