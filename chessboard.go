@@ -66,6 +66,7 @@ func (b *boardBuilder) withRook(quantity int) ChessboardBuilder {
 }
 
 func (b *boardBuilder) addFigure(figure figures.FigureBehaviour, quantity int) ChessboardBuilder {
+	// += allows for multiple calls with the same figure type to accumulate quantities
 	b.figureQuantityMap[figure.GetName()] += quantity
 	return b.addToChain(figure)
 }

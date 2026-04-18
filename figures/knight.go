@@ -95,10 +95,10 @@ func placeAttackPlacesAbove(out []byte, position int, dimension int) {
 	above2LineLeft := positionAbove2LinesLeft/dimension + 1
 	above2LineRight := positionAbove2LinesRight/dimension + 1
 	line2Above := currentLine - 1 - 1
-	if above2LineLeft == line2Above && positionAbove2LinesLeft >= 0 {
+	if above2LineLeft == line2Above && positionAbove2LinesLeft >= 0 && out[positionAbove2LinesLeft] == emptyField {
 		out[positionAbove2LinesLeft] = attackPlace
 	}
-	if above2LineRight == line2Above && positionAbove2LinesRight >= 0 {
+	if above2LineRight == line2Above && positionAbove2LinesRight >= 0 && out[positionAbove2LinesRight] == emptyField {
 		out[positionAbove2LinesRight] = attackPlace
 	}
 }

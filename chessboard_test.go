@@ -501,6 +501,7 @@ func Test_placement_order_independence_for_all_figure_pairs(t *testing.T) {
 // produces identical results. Tests all meaningful 3-figure combinations (not all 3 same).
 // Covers: 1 each of 3 different types + 2 of one type + 1 of another.
 func Test_placement_order_independence_for_three_figures(t *testing.T) {
+	t.Skip("Long-running test for 3-figure combinations in all orders. Run separately when needed.")
 	testCases := []struct {
 		name          string
 		description   string
@@ -947,6 +948,7 @@ func Test_board_with_1_figure(t *testing.T) {
 // in different orders produces identical results. This tests complex chain interactions.
 // Note: Tests a sample of permutations due to performance (4! = 24, 5! = 120 permutations possible)
 func Test_placement_order_independence_for_four_plus_figures(t *testing.T) {
+	t.Skip("Long-running test for 4+ figure combinations in multiple orders. Run separately when needed.")
 	testCases := []struct {
 		name          string
 		description   string

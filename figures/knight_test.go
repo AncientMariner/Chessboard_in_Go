@@ -360,6 +360,40 @@ func Test_placeAttackPlacesAbove(t *testing.T) {
 			'_', '_', 'x', '_', '_', '_', '_', '_',
 			'_', '_', '_', '_', '_', '_', '_', '_',
 		}},
+
+		{"Test above with existing kings 2 rows above - should NOT overwrite", args{
+			out: []byte{
+				'_', '_', '_', '_', '_', '_', '_', '_',
+				'_', '_', '_', '_', '_', '_', '_', '_',
+				'_', 'k', '_', 'k', '_', '_', '_', '_', // Kings at positions 17, 19
+				'_', '_', '_', '_', '_', '_', '_', '_',
+				'_', '_', 'N', '_', '_', '_', '_', '_', // Knight at position 34
+			},
+			position: 34, // Knight at row 4, col 2
+		}, []byte{
+			'_', '_', '_', '_', '_', '_', '_', '_',
+			'_', '_', '_', '_', '_', '_', '_', '_',
+			'_', 'k', '_', 'k', '_', '_', '_', '_', // Kings should remain 'k', NOT become 'x'!
+			'x', '_', '_', '_', 'x', '_', '_', '_', // Positions 24, 28 get 'x'
+			'_', '_', 'N', '_', '_', '_', '_', '_',
+		}},
+
+		{"Test above with attack places 2 rows above - should not overwrite", args{
+			out: []byte{
+				'_', '_', '_', '_', '_', '_', '_', '_',
+				'_', '_', '_', '_', '_', '_', '_', '_',
+				'_', 'x', '_', 'x', '_', '_', '_', '_', // Attack places at positions 17, 19
+				'_', '_', '_', '_', '_', '_', '_', '_',
+				'_', '_', 'N', '_', '_', '_', '_', '_', // Knight at position 34
+			},
+			position: 34,
+		}, []byte{
+			'_', '_', '_', '_', '_', '_', '_', '_',
+			'_', '_', '_', '_', '_', '_', '_', '_',
+			'_', 'x', '_', 'x', '_', '_', '_', '_', // Attack places should remain 'x'
+			'x', '_', '_', '_', 'x', '_', '_', '_', // Positions 24, 28 get 'x'
+			'_', '_', 'N', '_', '_', '_', '_', '_',
+		}},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
