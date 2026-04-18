@@ -235,7 +235,7 @@ func Test_queen_combinations(t *testing.T) {
 		{"Test empty board with 6 queen", args{board: NewChessboard().withQueen(6).Build()}, 22708},
 		{"Test empty board with 7 queen", args{board: NewChessboard().withQueen(7).Build()}, 3192},
 		{"Test empty board with 8 queen", args{board: NewChessboard().withQueen(8).Build()}, 92},
-		{"Test empty board with 8 queen", args{board: NewChessboard().withQueen(1).withQueen(1).withQueen(1).withQueen(1).withQueen(1).withQueen(1).withQueen(1).withQueen(1).Build()}, 92}, // Now fixed - no longer adds duplicate handlers, same as withQueen(8)
+		{"Test empty board with 8 queen (mixed calls)", args{board: NewChessboard().withQueen(1).withQueen(1).withQueen(1).withQueen(1).withQueen(1).withQueen(1).withQueen(1).withQueen(1).Build()}, 92}, // Now fixed - no longer adds duplicate handlers, same as withQueen(8)
 		// {"Test empty board with 9 queen, impossible case", args{board: NewChessboard().withQueen(9).Build()}, 0},
 	}
 	for _, tt := range tests {
@@ -967,66 +967,6 @@ func Test_placement_order_independence_for_four_plus_figures(t *testing.T) {
 				func() *Chessboard { return NewChessboard().withBishop(1).withKnight(1).withKing(1).withRook(1).Build() },
 			},
 			expectedCount: 2444016,
-		},
-		{
-			name:        "K(1)-R(1)-B(1)-Q(1) sample permutations",
-			description: "1 King + 1 Rook + 1 Bishop + 1 Queen - testing 4 key permutations",
-			builders: []func() *Chessboard{
-				func() *Chessboard { return NewChessboard().withKing(1).withRook(1).withBishop(1).withQueen(1).Build() },
-				func() *Chessboard { return NewChessboard().withQueen(1).withBishop(1).withRook(1).withKing(1).Build() },
-				func() *Chessboard { return NewChessboard().withRook(1).withQueen(1).withKing(1).withBishop(1).Build() },
-				func() *Chessboard { return NewChessboard().withBishop(1).withKing(1).withQueen(1).withRook(1).Build() },
-			},
-			expectedCount: 1309152,
-		},
-		{
-			name:        "K(1)-R(1)-N(1)-Q(1) sample permutations",
-			description: "1 King + 1 Rook + 1 Knight + 1 Queen - testing 4 key permutations",
-			builders: []func() *Chessboard{
-				func() *Chessboard { return NewChessboard().withKing(1).withRook(1).withKnight(1).withQueen(1).Build() },
-				func() *Chessboard { return NewChessboard().withQueen(1).withKnight(1).withRook(1).withKing(1).Build() },
-				func() *Chessboard { return NewChessboard().withRook(1).withQueen(1).withKing(1).withKnight(1).Build() },
-				func() *Chessboard { return NewChessboard().withKnight(1).withKing(1).withQueen(1).withRook(1).Build() },
-			},
-			expectedCount: 1237560,
-		},
-		{
-			name:        "K(1)-B(1)-N(1)-Q(1) sample permutations",
-			description: "1 King + 1 Bishop + 1 Knight + 1 Queen - testing 4 key permutations",
-			builders: []func() *Chessboard{
-				func() *Chessboard {
-					return NewChessboard().withKing(1).withBishop(1).withKnight(1).withQueen(1).Build()
-				},
-				func() *Chessboard {
-					return NewChessboard().withQueen(1).withKnight(1).withBishop(1).withKing(1).Build()
-				},
-				func() *Chessboard {
-					return NewChessboard().withBishop(1).withQueen(1).withKing(1).withKnight(1).Build()
-				},
-				func() *Chessboard {
-					return NewChessboard().withKnight(1).withKing(1).withQueen(1).withBishop(1).Build()
-				},
-			},
-			expectedCount: 1657656,
-		},
-		{
-			name:        "R(1)-B(1)-N(1)-Q(1) sample permutations",
-			description: "1 Rook + 1 Bishop + 1 Knight + 1 Queen - testing 4 key permutations",
-			builders: []func() *Chessboard{
-				func() *Chessboard {
-					return NewChessboard().withRook(1).withBishop(1).withKnight(1).withQueen(1).Build()
-				},
-				func() *Chessboard {
-					return NewChessboard().withQueen(1).withKnight(1).withBishop(1).withRook(1).Build()
-				},
-				func() *Chessboard {
-					return NewChessboard().withBishop(1).withQueen(1).withRook(1).withKnight(1).Build()
-				},
-				func() *Chessboard {
-					return NewChessboard().withKnight(1).withRook(1).withQueen(1).withBishop(1).Build()
-				},
-			},
-			expectedCount: 1082800,
 		},
 		{
 			name:        "K(1)-R(1)-B(1)-Q(1) sample permutations",
