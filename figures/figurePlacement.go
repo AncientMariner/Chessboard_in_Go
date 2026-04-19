@@ -6,6 +6,7 @@ import (
 )
 
 type Placement struct {
+	dimension int
 }
 
 // GenerateHash returns a uint64 hash for efficient map keys (no allocations)
@@ -23,7 +24,7 @@ func GenerateHash(s []byte) uint64 {
 	return h
 }
 
-var defaultDimension = 8
+const defaultDimension = 8
 
 // numWorkers determines the worker pool size for parallel processing
 // Defaults to number of CPU cores for optimal performance
@@ -45,8 +46,8 @@ func getParallelThreshold() int {
 const emptyField = '_'
 const attackPlace = 'x'
 
-func drawEmptyBoard() []byte {
-	board := make([]byte, defaultDimension*defaultDimension)
+func drawEmptyBoard(dimension int) []byte {
+	board := make([]byte, dimension*dimension)
 	for i := range board {
 		board[i] = emptyField
 	}
@@ -54,13 +55,20 @@ func drawEmptyBoard() []byte {
 }
 
 func (p *Placement) SetDimension(value int) {
-	defaultDimension = value
+	p.dimension = value
+}
+
+func (p *Placement) GetDimension() int {
+	if p.dimension == 0 {
+		return defaultDimension
+	}
+	return p.dimension
 }
 
 func (p *Placement) PlaceFigures(numberOfFigures int, behaviour FigureBehaviour, boards map[uint64][]byte) map[uint64][]byte {
 	for i := 0; i < numberOfFigures; i++ {
 		if len(boards) == 0 {
-			boards = p.placeFigureOnBoard(drawEmptyBoard(), behaviour)
+			boards = p.placeFigureOnBoard(drawEmptyBoard(p.GetDimension()), behaviour)
 		} else {
 			boards = p.placeFigure(boards, behaviour)
 		}

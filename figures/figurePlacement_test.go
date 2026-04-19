@@ -7,10 +7,11 @@ import (
 
 func Test_drawEmptyBoard(t *testing.T) {
 	tests := []struct {
-		name string
-		want []byte
+		name      string
+		dimension int
+		want      []byte
 	}{
-		{"Initial board test", []byte(
+		{"Initial board test", 8, []byte(
 			"________" +
 				"________" +
 				"________" +
@@ -22,7 +23,7 @@ func Test_drawEmptyBoard(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := drawEmptyBoard(); !reflect.DeepEqual(got, tt.want) {
+			if got := drawEmptyBoard(tt.dimension); !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("drawEmptyBoard() = %v, want %v", got, tt.want)
 			}
 		})
@@ -272,8 +273,8 @@ func TestPlacement_SetDimension(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			p := &Placement{}
 			p.SetDimension(tt.value)
-			if defaultDimension != tt.value {
-				t.Errorf("SetDimension() did not set the dimension correctly, got %v, want %v", defaultDimension, tt.value)
+			if p.GetDimension() != tt.value {
+				t.Errorf("SetDimension() did not set the dimension correctly, got %v, want %v", p.GetDimension(), tt.value)
 			}
 		})
 	}

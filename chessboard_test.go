@@ -12,12 +12,22 @@ func TestNewChessBoard(t *testing.T) {
 		name string
 		want ChessboardBuilder
 	}{
-		{"Test empty chessboard", &boardBuilder{chessboard: &Chessboard{}, figureQuantityMap: make(map[byte]int)}},
+		{"Test empty chessboard", &boardBuilder{chessboard: &Chessboard{figurePlacement: figures.Placement{}}, figureQuantityMap: make(map[byte]int)}},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := NewChessboard(); !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("NewChessboard() = %v, want %v", got, tt.want)
+			got := NewChessboard()
+			gotBuilder := got.(*boardBuilder)
+			wantBuilder := tt.want.(*boardBuilder)
+
+			// Compare the dimension separately since it's set in NewChessboard
+			if gotBuilder.chessboard.figurePlacement.GetDimension() != 8 {
+				t.Errorf("NewChessboard() dimension = %v, want 8", gotBuilder.chessboard.figurePlacement.GetDimension())
+			}
+
+			// Compare other fields
+			if !reflect.DeepEqual(gotBuilder.figureQuantityMap, wantBuilder.figureQuantityMap) {
+				t.Errorf("NewChessboard() figureQuantityMap = %v, want %v", gotBuilder.figureQuantityMap, wantBuilder.figureQuantityMap)
 			}
 		})
 	}
@@ -26,14 +36,25 @@ func TestNewChessBoard(t *testing.T) {
 func TestNewChessBoardWithSize(t *testing.T) {
 	tests := []struct {
 		name string
+		size int
 		want ChessboardBuilder
 	}{
-		{"Test empty chessboard size 10", &boardBuilder{chessboard: &Chessboard{}, figureQuantityMap: make(map[byte]int)}},
+		{"Test empty chessboard size 10", 10, &boardBuilder{chessboard: &Chessboard{figurePlacement: figures.Placement{}}, figureQuantityMap: make(map[byte]int)}},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := NewChessboardWithSize(10); !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("NewChessboard() = %v, want %v", got, tt.want)
+			got := NewChessboardWithSize(tt.size)
+			gotBuilder := got.(*boardBuilder)
+			wantBuilder := tt.want.(*boardBuilder)
+
+			// Compare the dimension separately since it's set in NewChessboardWithSize
+			if gotBuilder.chessboard.figurePlacement.GetDimension() != tt.size {
+				t.Errorf("NewChessboardWithSize() dimension = %v, want %v", gotBuilder.chessboard.figurePlacement.GetDimension(), tt.size)
+			}
+
+			// Compare other fields
+			if !reflect.DeepEqual(gotBuilder.figureQuantityMap, wantBuilder.figureQuantityMap) {
+				t.Errorf("NewChessboardWithSize() figureQuantityMap = %v, want %v", gotBuilder.figureQuantityMap, wantBuilder.figureQuantityMap)
 			}
 		})
 	}
@@ -247,6 +268,32 @@ func Test_queen_combinations(t *testing.T) {
 	}
 }
 
+func Test_queen_different_size_boards(t *testing.T) {
+	type args struct {
+		board *Chessboard
+	}
+	tests := []struct {
+		name string
+		args args
+		want int
+	}{
+		{"Test empty board with 9 queen", args{board: NewChessboardWithSize(9).withQueen(9).Build()}, 352},
+		// {"Test empty board with 10 queen", args{board: NewChessboardWithSize(10).withQueen(10).Build()}, 724},
+		// {"Test empty board with 11 queen", args{board: NewChessboardWithSize(11).withQueen(11).Build()}, 2680},
+		// {"Test empty board with 12 queen", args{board: NewChessboardWithSize(12).withQueen(12).Build()}, 2680},
+		// {"Test empty board with 13 queen", args{board: NewChessboardWithSize(13).withQueen(13).Build()}, 73712},
+		// {"Test empty board with 14 queen", args{board: NewChessboardWithSize(14).withQueen(14).Build()}, 365596},
+		// {"Test empty board with 15 queen", args{board: NewChessboardWithSize(15).withQueen(15).Build()}, 2279184},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := tt.args.board.calculateBoards(); len(got) != tt.want {
+				t.Errorf("calculateBoards() = %v, want %v", len(got), tt.want)
+			}
+		})
+	}
+}
+
 func Test_different_combinations_long_running(t *testing.T) {
 	type args struct {
 		board *Chessboard
@@ -271,46 +318,47 @@ func Test_different_combinations_long_running(t *testing.T) {
 	}
 }
 
-// When all the tests are run in parallel, and there are different board sizes, a race condition happens
-// func Test_number_of_boards_with_1_figure_7x7(t *testing.T) {
-// 	type args struct {
-// 		board *Chessboard
-// 	}
-// 	tests := []struct {
-// 		name string
-// 		args args
-// 		want int
-// 	}{
-// 		{"Test empty board 7x7 with 1 king", args{board: NewChessboardWithSize(7).withKing(1).Build()}, 49},
-// 	}
-// 	for _, tt := range tests {
-// 		t.Run(tt.name, func(t *testing.T) {
-// 			if got := tt.args.board.calculateBoards(); len(got) != tt.want {
-// 				t.Errorf("calculateBoards() = %v, want %v", got, tt.want)
-// 			}
-// 		})
-// 	}
-// }
+// Now these tests can run without race conditions because dimension is stored per Placement instance
+func Test_number_of_boards_with_1_figure_7x7(t *testing.T) {
+	type args struct {
+		board *Chessboard
+	}
+	tests := []struct {
+		name string
+		args args
+		want int
+	}{
+		{"Test empty board 7x7 with 1 king", args{board: NewChessboardWithSize(7).withKing(1).Build()}, 49},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := tt.args.board.calculateBoards(); len(got) != tt.want {
+				t.Errorf("calculateBoards() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
 
-// func Test_number_of_boards_with_1_figure_7x7_long(t *testing.T) {
-// 	type args struct {
-// 		board *Chessboard
-// 	}
-// 	tests := []struct {
-// 		name string
-// 		args args
-// 		want int
-// 	}{
-// 		{"Test empty 7x7 board with 2 king 2 queen 2 bishop 1 knight", args{board: NewChessboardWithSize(7).withKing(2).withQueen(2).withBishop(2).withKnight(1).Build()}, 3761852},
-// 	}
-// 	for _, tt := range tests {
-// 		t.Run(tt.name, func(t *testing.T) {
-// 			if got := tt.args.board.calculateBoards(); len(got) != tt.want {
-// 				t.Errorf("calculateBoards() = %v, want %v", got, tt.want)
-// 			}
-// 		})
-// 	}
-// }
+func Test_number_of_boards_with_1_figure_7x7_long(t *testing.T) {
+	t.Skip("Long-running test - expected value may need verification")
+	type args struct {
+		board *Chessboard
+	}
+	tests := []struct {
+		name string
+		args args
+		want int
+	}{
+		{"Test empty 7x7 board with 2 king 2 queen 2 bishop 1 knight", args{board: NewChessboardWithSize(7).withKing(2).withQueen(2).withBishop(2).withKnight(1).Build()}, 3761852},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := tt.args.board.calculateBoards(); len(got) != tt.want {
+				t.Errorf("calculateBoards() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
 
 func Test_number_of_boards_with_different_figure_variations(t *testing.T) {
 	// After fixing the king placement bug and duplicate handler bug, all three approaches now produce identical results

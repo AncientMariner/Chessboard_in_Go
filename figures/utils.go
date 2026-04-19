@@ -24,7 +24,9 @@ func getDimensionFromBoard(board []byte) int {
 // This reduces allocations by reusing temporary board representations
 var boardPool = sync.Pool{
 	New: func() interface{} {
-		b := make([]byte, defaultDimension*defaultDimension)
+		// Start with a default 8x8 board size
+		// Will be resized as needed in getBoardFromPool
+		b := make([]byte, 64)
 		return &b
 	},
 }
