@@ -192,7 +192,6 @@ func TestPlacement_placeFigureSequential(t *testing.T) {
 			if len(got) != 64 {
 				t.Errorf("placeFigureSequential() = %v, want %v", got, 64)
 			}
-			// check contains certain board
 			expectedBoard := []byte(
 				"________" +
 					"________" +
@@ -212,8 +211,7 @@ func TestPlacement_placeFigureSequential(t *testing.T) {
 
 func TestPlacement_placeFigureParallel(t *testing.T) {
 	tests := []struct {
-		name string // description of this test case
-		// Named input parameters for target function.
+		name string
 		boards    map[uint64][]byte
 		behaviour FigureBehaviour
 		want      map[uint64][]byte
@@ -245,7 +243,6 @@ func TestPlacement_placeFigureParallel(t *testing.T) {
 			if len(got) != 64 {
 				t.Errorf("placeFigureParallel() = %v, want %v", got, 64)
 			}
-			// check contains certain board
 			expectedBoard := []byte(
 				"________" +
 					"________" +
