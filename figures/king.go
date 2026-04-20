@@ -7,7 +7,7 @@ type King struct {
 }
 
 func (king *King) Handle(board []byte) map[uint64][]byte {
-	boards := getMapFromPool(getCountOfEmptyPlaces(board))
+	boards := getMapFromPool()
 	dimension := getDimensionFromBoard(board)
 
 	for i := 0; i < len(board) && len(board) == (dimension*dimension); i++ {

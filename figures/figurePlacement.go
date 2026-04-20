@@ -89,7 +89,7 @@ func (p *Placement) placeFigure(boards map[uint64][]byte, behaviour FigureBehavi
 
 // placeFigureSequential processes boards sequentially (original implementation)
 func (p *Placement) placeFigureSequential(boards map[uint64][]byte, behaviour FigureBehaviour) map[uint64][]byte {
-	resultingMap := getMapFromPool(len(boards) * 10) // Rough estimate of result size
+	resultingMap := getMapFromPool()
 
 	for _, board := range boards {
 
@@ -146,7 +146,7 @@ func (p *Placement) placeFigureParallel(boards map[uint64][]byte, behaviour Figu
 	}()
 
 	// Collect results - use mutex to protect the shared map
-	resultingMap := getMapFromPool(len(boards) * 10)
+	resultingMap := getMapFromPool()
 	var mu sync.Mutex
 
 	for res := range results {

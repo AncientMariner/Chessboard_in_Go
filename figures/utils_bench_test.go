@@ -17,7 +17,7 @@ func BenchmarkMapPooling_WithPool(b *testing.B) {
 
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		m := getMapFromPool(64)
+		m := getMapFromPool()
 		// Simulate typical usage: add some entries
 		for j := 0; j < 10; j++ {
 			hash := uint64(i*10 + j)
@@ -64,7 +64,7 @@ func BenchmarkMapPooling_WithPool_Parallel(b *testing.B) {
 	b.RunParallel(func(pb *testing.PB) {
 		i := 0
 		for pb.Next() {
-			m := getMapFromPool(64)
+			m := getMapFromPool()
 			for j := 0; j < 10; j++ {
 				hash := uint64(i*10 + j)
 				m[hash] = board
@@ -156,7 +156,7 @@ func BenchmarkMapPooling_LargeCapacity(b *testing.B) {
 
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		m := getMapFromPool(256) // Larger capacity
+		m := getMapFromPool() // Larger capacity
 		// Simulate typical usage with more entries
 		for j := 0; j < 50; j++ {
 			hash := uint64(i*50 + j)
@@ -179,7 +179,7 @@ func BenchmarkMapPooling_SmallCapacity(b *testing.B) {
 
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		m := getMapFromPool(8) // Small capacity
+		m := getMapFromPool() // Small capacity
 		// Simulate typical usage with few entries
 		for j := 0; j < 3; j++ {
 			hash := uint64(i*3 + j)

@@ -55,7 +55,7 @@ var mapPool = sync.Pool{
 }
 
 // getMapFromPool retrieves a clean map from the pool with the given capacity hint
-func getMapFromPool(capacityHint int) map[uint64][]byte {
+func getMapFromPool() map[uint64][]byte {
 	m := mapPool.Get().(map[uint64][]byte)
 	// Map should already be empty from putMapToPool, but this is a safety check
 	if len(m) > 0 {

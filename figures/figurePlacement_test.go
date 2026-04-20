@@ -276,3 +276,21 @@ func TestPlacement_SetDimension(t *testing.T) {
 		})
 	}
 }
+
+func Test_getParallelThreshold(t *testing.T) {
+	tests := []struct {
+		name string 
+		want int
+	}{
+		{ "Test get parallel threshold", 100},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got := getParallelThreshold()
+			if got != tt.want {
+				t.Errorf("getParallelThreshold() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+

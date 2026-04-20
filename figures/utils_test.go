@@ -1,6 +1,9 @@
 package figures
 
-import "testing"
+import (
+	"reflect"
+	"testing"
+)
 
 func Test_getCountOfEmptyPlaces(t *testing.T) {
 	tests := []struct {
@@ -218,5 +221,49 @@ func Test_getDimensionFromBoard(t *testing.T) {
 				t.Errorf("getDimensionFromBoard() = %v, want %v (board length = %d)", got, tt.want, len(tt.board))
 			}
 		})
+	}
+}
+
+func Test_getMapFromPool(t *testing.T) {
+	map1 := getMapFromPool()
+
+	if map1 == nil {
+		t.Error("Expected a map from the pool, got nil")
+	}
+
+	map1[123] = []byte("r_r")
+	mapPool.Put(map1)
+
+	map2 := getMapFromPool()
+	if map2 == nil {
+		t.Error("Expected a map from the pool, got nil")
+	}
+
+	if len(map2) != 0 {
+		t.Errorf("Expected to get an empty map from the pool, got a map with length %d", len(map2))
+	}
+}
+
+func TestPutMapToPool(t *testing.T) {
+	// Get a map from the pool and add some entries
+	m := getMapFromPool()
+	m[123] = []byte("r_r")
+	m[456] = []byte("___")
+
+	// Put it back to the pool
+	PutMapToPool(m)
+
+	// Get another map from the pool - should be empty
+	m2 := getMapFromPool()
+	if m2 == nil {
+		t.Error("Expected a map from the pool, got nil")
+	}
+
+	if len(m2) != 0 {
+		t.Errorf("Expected to get an empty map from the pool, got a map with length %d", len(m2))
+	}
+
+	if !reflect.DeepEqual(m, m2) {
+		t.Error("Expected to get a different map instance from the pool, got the same one")
 	}
 }
