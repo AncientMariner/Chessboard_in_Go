@@ -1,23 +1,27 @@
 package figures
 
 import (
-	"math"
 	"sync"
 )
-
-// getDimensionFromBoard calculates the board dimension from the board byte slice
-// Board format: flat array of dimension * dimension bytes (no newlines)
-// So dimension = sqrt(length)
+// getDimensionFromBoard calculates the dimension of the chessboard based on the length of the board slice
+// using Newton method to find the integer square root. If the length is not a perfect square, it defaults to 8.
 func getDimensionFromBoard(board []byte) int {
-	length := float64(len(board))
-	d := int(math.Sqrt(length))
-
-	// Verify the result is correct
-	if d > 0 && d*d == len(board) {
+	n := len(board)
+	if n <= 0 {
+		return 8
+	}
+	d := n
+	for {
+		d1 := (d + n/d) / 2
+		if d1 >= d {
+			break
+		}
+		d = d1
+	}
+	if d*d == n {
 		return d
 	}
-
-	return 8 // Default fallback
+	return 8
 }
 
 // boardPool is a shared pool for all chess figures to reuse byte slices
