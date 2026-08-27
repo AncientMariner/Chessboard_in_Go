@@ -91,8 +91,9 @@ var mapPool = sync.Pool{
 	},
 }
 
-// getMapFromPool retrieves a clean map from the pool with the given capacity hint
-func getMapFromPool() map[uint64][]byte {
+// getMapFromPool retrieves a clean map from the pool with the given capacity hint.
+// The hint is used only when allocating a new map (pool miss); pooled maps are reused as-is.
+func getMapFromPool(capacityHint int) map[uint64][]byte {
 	m := mapPool.Get().(map[uint64][]byte)
 	// Map should already be empty from putMapToPool, but this is a safety check
 	if len(m) > 0 {
@@ -100,6 +101,11 @@ func getMapFromPool() map[uint64][]byte {
 		for k := range m {
 			delete(m, k)
 		}
+	}
+	// If the pooled map is small and we expect many entries, replace it
+	// to avoid rehash churn on large board sets
+	if capacityHint > 64 && len(m) == 0 {
+		m = make(map[uint64][]byte, capacityHint)
 	}
 	return m
 }

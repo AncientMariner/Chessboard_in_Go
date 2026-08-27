@@ -7,7 +7,7 @@ type Queen struct {
 }
 
 func (queen *Queen) Handle(board []byte) map[uint64][]byte {
-	boards := getMapFromPool()
+	boards := getMapFromPool(0)
 	dimension := getDimensionFromBoard(board)
 	boardHash := ZobristHash(board)
 

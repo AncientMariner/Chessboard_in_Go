@@ -7,7 +7,7 @@ type Rook struct {
 }
 
 func (rook *Rook) Handle(board []byte) map[uint64][]byte {
-	boards := getMapFromPool()
+	boards := getMapFromPool(0)
 	dimension := getDimensionFromBoard(board)
 	boardHash := ZobristHash(board)
 

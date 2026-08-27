@@ -225,7 +225,7 @@ func Test_getDimensionFromBoard(t *testing.T) {
 }
 
 func Test_getMapFromPool(t *testing.T) {
-	map1 := getMapFromPool()
+	map1 := getMapFromPool(0)
 
 	if map1 == nil {
 		t.Error("Expected a map from the pool, got nil")
@@ -234,7 +234,7 @@ func Test_getMapFromPool(t *testing.T) {
 	map1[123] = []byte("r_r")
 	mapPool.Put(map1)
 
-	map2 := getMapFromPool()
+	map2 := getMapFromPool(0)
 	if map2 == nil {
 		t.Error("Expected a map from the pool, got nil")
 	}
@@ -246,7 +246,7 @@ func Test_getMapFromPool(t *testing.T) {
 
 func TestPutMapToPool(t *testing.T) {
 	// Get a map from the pool and add some entries
-	m := getMapFromPool()
+	m := getMapFromPool(0)
 	m[123] = []byte("r_r")
 	m[456] = []byte("___")
 
@@ -254,7 +254,7 @@ func TestPutMapToPool(t *testing.T) {
 	PutMapToPool(m)
 
 	// Get another map from the pool - should be empty
-	m2 := getMapFromPool()
+	m2 := getMapFromPool(0)
 	if m2 == nil {
 		t.Error("Expected a map from the pool, got nil")
 	}
