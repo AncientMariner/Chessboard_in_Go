@@ -85,47 +85,33 @@ func placeAttackPlacesDiagonallyAbove(out []byte, position int, dimension int) {
 }
 
 func isAnotherFigurePresentDiag(out []byte, position int, dimension int) bool {
+	isPiece := func(i int) bool { return out[i] != emptyField && out[i] != attackPlace }
 	currentLine := position/dimension + 1
-	var diagNumbers []int
 
-	previousLinePositionLeft := position - dimension - 1
-	previousLinePositionRight := position - dimension + 1
-
+	diagAboveLeft := position - dimension - 1
+	diagAboveRight := position - dimension + 1
 	for lineAbove := currentLine - 1; lineAbove > 0; lineAbove-- {
-		lineOfTheDiagAboveLeft := previousLinePositionLeft/dimension + 1
-		lineOfTheDiagAboveRight := previousLinePositionRight/dimension + 1
-
-		if lineOfTheDiagAboveLeft == lineAbove && previousLinePositionLeft >= 0 {
-			diagNumbers = append(diagNumbers, previousLinePositionLeft)
-		}
-		previousLinePositionLeft = previousLinePositionLeft - dimension - 1
-		if lineOfTheDiagAboveRight == lineAbove && previousLinePositionRight >= 0 {
-			diagNumbers = append(diagNumbers, previousLinePositionRight)
-		}
-		previousLinePositionRight = previousLinePositionRight - dimension + 1
-	}
-
-	nextLinePositionLeft := position + dimension - 1
-	nextLinePositionRight := position + dimension + 1
-
-	for lineBelow := currentLine + 1; lineBelow <= dimension; lineBelow++ {
-		lineOfTheDiagBelowLeft := nextLinePositionLeft/dimension + 1
-		lineOfTheDiagBelowRight := nextLinePositionRight/dimension + 1
-
-		if lineBelow == lineOfTheDiagBelowRight && nextLinePositionRight < len(out) {
-			diagNumbers = append(diagNumbers, nextLinePositionRight)
-		}
-		nextLinePositionRight = nextLinePositionRight + dimension + 1
-		if lineBelow == lineOfTheDiagBelowLeft && nextLinePositionLeft < len(out) {
-			diagNumbers = append(diagNumbers, nextLinePositionLeft)
-		}
-		nextLinePositionLeft = nextLinePositionLeft + dimension - 1
-	}
-
-	for _, number := range diagNumbers {
-		if out[number] != emptyField && out[number] != attackPlace {
+		if diagAboveLeft/dimension+1 == lineAbove && diagAboveLeft >= 0 && isPiece(diagAboveLeft) {
 			return true
 		}
+		diagAboveLeft -= dimension + 1
+		if diagAboveRight/dimension+1 == lineAbove && diagAboveRight >= 0 && isPiece(diagAboveRight) {
+			return true
+		}
+		diagAboveRight -= dimension - 1
+	}
+
+	diagBelowLeft := position + dimension - 1
+	diagBelowRight := position + dimension + 1
+	for lineBelow := currentLine + 1; lineBelow <= dimension; lineBelow++ {
+		if diagBelowRight/dimension+1 == lineBelow && diagBelowRight < len(out) && isPiece(diagBelowRight) {
+			return true
+		}
+		diagBelowRight += dimension + 1
+		if diagBelowLeft/dimension+1 == lineBelow && diagBelowLeft < len(out) && isPiece(diagBelowLeft) {
+			return true
+		}
+		diagBelowLeft += dimension - 1
 	}
 	return false
 }

@@ -104,80 +104,53 @@ func placeAttackPlacesAbove(out []byte, position int, dimension int) {
 }
 
 func isAnotherFigurePresentBelow(out []byte, position int, dimension int) bool {
+	isPiece := func(i int) bool { return out[i] != emptyField && out[i] != attackPlace }
 	currentLine := position/dimension + 1
-	var numbersToCheck []int
-
-	positionBelowLineLeft := position + dimension - 2
-	positionBelowLineRight := position + dimension + 2
 
 	lineBelow := currentLine + 1
-	belowLineLeft := positionBelowLineLeft/dimension + 1
-	belowLineRight := positionBelowLineRight/dimension + 1
-
-	if lineBelow == belowLineLeft && positionBelowLineLeft < len(out) {
-		numbersToCheck = append(numbersToCheck, positionBelowLineLeft)
+	positionBelowLineLeft := position + dimension - 2
+	if lineBelow == positionBelowLineLeft/dimension+1 && positionBelowLineLeft < len(out) && isPiece(positionBelowLineLeft) {
+		return true
 	}
-	if lineBelow == belowLineRight && positionBelowLineRight < len(out) {
-		numbersToCheck = append(numbersToCheck, positionBelowLineRight)
+	positionBelowLineRight := position + dimension + 2
+	if lineBelow == positionBelowLineRight/dimension+1 && positionBelowLineRight < len(out) && isPiece(positionBelowLineRight) {
+		return true
 	}
 
+	line2Below := currentLine + 2
 	positionBelow2LinesLeft := position + 2*dimension - 1
+	if line2Below == positionBelow2LinesLeft/dimension+1 && positionBelow2LinesLeft < len(out) && isPiece(positionBelow2LinesLeft) {
+		return true
+	}
 	positionBelow2LinesRight := position + 2*dimension + 1
-
-	below2LineLeft := positionBelow2LinesLeft/dimension + 1
-	below2LineRight := positionBelow2LinesRight/dimension + 1
-	line2Below := currentLine + 1 + 1
-	if line2Below == below2LineRight && positionBelow2LinesRight < len(out) {
-		numbersToCheck = append(numbersToCheck, positionBelow2LinesRight)
-	}
-	if line2Below == below2LineLeft && positionBelow2LinesLeft < len(out) {
-		numbersToCheck = append(numbersToCheck, positionBelow2LinesLeft)
-	}
-
-	for _, number := range numbersToCheck {
-		if out[number] != emptyField && out[number] != attackPlace {
-			return true
-		}
+	if line2Below == positionBelow2LinesRight/dimension+1 && positionBelow2LinesRight < len(out) && isPiece(positionBelow2LinesRight) {
+		return true
 	}
 	return false
 }
 
 func isAnotherFigurePresentAbove(out []byte, position int, dimension int) bool {
-
+	isPiece := func(i int) bool { return out[i] != emptyField && out[i] != attackPlace }
 	currentLine := position/dimension + 1
-	var numbersToCheck []int
-
-	positionAboveLineLeft := position - dimension - 2
-	positionAboveLineRight := position - dimension + 2
 
 	lineAbove := currentLine - 1
-	aboveLineLeft := positionAboveLineLeft/dimension + 1
-	aboveLineRight := positionAboveLineRight/dimension + 1
-
-	if aboveLineLeft == lineAbove && positionAboveLineLeft >= 0 {
-		numbersToCheck = append(numbersToCheck, positionAboveLineLeft)
+	positionAboveLineLeft := position - dimension - 2
+	if positionAboveLineLeft/dimension+1 == lineAbove && positionAboveLineLeft >= 0 && isPiece(positionAboveLineLeft) {
+		return true
 	}
-	if aboveLineRight == lineAbove && positionAboveLineRight >= 0 {
-		numbersToCheck = append(numbersToCheck, positionAboveLineRight)
+	positionAboveLineRight := position - dimension + 2
+	if positionAboveLineRight/dimension+1 == lineAbove && positionAboveLineRight >= 0 && isPiece(positionAboveLineRight) {
+		return true
 	}
 
+	line2Above := currentLine - 2
 	positionAbove2LinesLeft := position - 2*dimension - 1
+	if positionAbove2LinesLeft/dimension+1 == line2Above && positionAbove2LinesLeft >= 0 && isPiece(positionAbove2LinesLeft) {
+		return true
+	}
 	positionAbove2LinesRight := position - 2*dimension + 1
-
-	above2LineLeft := positionAbove2LinesLeft/dimension + 1
-	above2LineRight := positionAbove2LinesRight/dimension + 1
-	line2Above := currentLine - 1 - 1
-	if above2LineLeft == line2Above && positionAbove2LinesLeft >= 0 {
-		numbersToCheck = append(numbersToCheck, positionAbove2LinesLeft)
-	}
-	if above2LineRight == line2Above && positionAbove2LinesRight >= 0 {
-		numbersToCheck = append(numbersToCheck, positionAbove2LinesRight)
-	}
-
-	for _, number := range numbersToCheck {
-		if out[number] != emptyField && out[number] != attackPlace {
-			return true
-		}
+	if positionAbove2LinesRight/dimension+1 == line2Above && positionAbove2LinesRight >= 0 && isPiece(positionAbove2LinesRight) {
+		return true
 	}
 	return false
 }

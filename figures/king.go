@@ -39,58 +39,27 @@ func (king *King) Handle(board []byte) map[uint64][]byte {
 }
 
 func isAnotherFigurePresent(out []byte, position int, dimension int) bool {
+	isPiece := func(i int) bool { return out[i] != emptyField && out[i] != attackPlace }
 
-	positionOneLineAbove := position - dimension
-	var positionsAround []int
+	prevLine := position >= dimension
+	nextLine := position < len(out)-dimension
+	leftCol  := position%dimension != 0
+	rightCol := position%dimension != dimension-1
 
-	diagAboveRight := positionOneLineAbove + 1
-	previousLineExists := position >= dimension
-
-	rightColumnExists := position%dimension != dimension-1
-	if previousLineExists && rightColumnExists {
-		positionsAround = append(positionsAround, diagAboveRight)
+	if prevLine {
+		above := position - dimension
+		if isPiece(above) { return true }
+		if leftCol  && isPiece(above-1) { return true }
+		if rightCol && isPiece(above+1) { return true }
 	}
-	diagAboveLeft := positionOneLineAbove - 1
-	leftColumnExists := position%dimension != 0
-	if previousLineExists && leftColumnExists && diagAboveLeft >= 0 {
-		positionsAround = append(positionsAround, diagAboveLeft)
+	if nextLine {
+		below := position + dimension
+		if isPiece(below) { return true }
+		if leftCol  && isPiece(below-1) { return true }
+		if rightCol && isPiece(below+1) { return true }
 	}
-
-	diagBelowRight := position + dimension + 1
-	diagBelowLeft := position + dimension - 1
-	isNotLastLine := position < len(out)-dimension
-	rightColumnExistsBelow := position%dimension != dimension-1
-
-	if isNotLastLine && rightColumnExistsBelow && diagBelowRight < len(out) {
-		positionsAround = append(positionsAround, diagBelowRight)
-	}
-	if isNotLastLine && position%dimension != 0 && diagBelowLeft < len(out) {
-		positionsAround = append(positionsAround, diagBelowLeft)
-	}
-
-	previousPosition := position - 1
-	if previousPosition >= 0 && leftColumnExists {
-		positionsAround = append(positionsAround, previousPosition)
-	}
-	nextPosition := position + 1
-	if nextPosition < len(out) && rightColumnExists {
-		positionsAround = append(positionsAround, nextPosition)
-	}
-
-	positionAbove := position - dimension
-	if previousLineExists {
-		positionsAround = append(positionsAround, positionAbove)
-	}
-	positionBelow := position + dimension
-	if position < len(out)-dimension {
-		positionsAround = append(positionsAround, positionBelow)
-	}
-
-	for _, number := range positionsAround {
-		if out[number] != emptyField && out[number] != attackPlace {
-			return true
-		}
-	}
+	if leftCol  && isPiece(position-1) { return true }
+	if rightCol && isPiece(position+1) { return true }
 	return false
 }
 
