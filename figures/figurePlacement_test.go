@@ -286,7 +286,7 @@ func Test_getParallelThreshold(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got := getParallelThreshold()
+			got := parallelThreshold
 			if got != tt.want {
 				t.Errorf("getParallelThreshold() = %v, want %v", got, tt.want)
 			}

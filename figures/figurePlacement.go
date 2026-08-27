@@ -32,16 +32,17 @@ var numWorkers = runtime.GOMAXPROCS(0)
 
 // getParallelThreshold calculates optimal threshold for parallel vs sequential processing
 // Returns minimum number of boards needed to justify parallel processing overhead
-func getParallelThreshold() int {
-	// Dynamic threshold: at least 10 boards per worker to justify overhead
-	// But never less than 10 total to avoid goroutine overhead for tiny workloads
-	minPerWorker := 10
-	threshold := numWorkers * minPerWorker
-	if threshold < 10 {
-		threshold = 10
+// Dynamic threshold: at least 10 boards per worker to justify overhead
+// But never less than 10 total to avoid goroutine overhead for tiny workloads
+const minPerWorker = 10
+
+var parallelThreshold = func() int {
+	t := numWorkers * minPerWorker
+	if t < minPerWorker {
+		return minPerWorker
 	}
-	return threshold
-}
+	return t
+}()
 
 const emptyField = '_'
 const attackPlace = 'x'
@@ -78,8 +79,7 @@ func (p *Placement) PlaceFigures(numberOfFigures int, behaviour FigureBehaviour,
 
 func (p *Placement) placeFigure(boards map[uint64][]byte, behaviour FigureBehaviour) map[uint64][]byte {
 	// Use parallel processing if we have enough boards to justify the overhead
-	threshold := getParallelThreshold()
-	if len(boards) >= threshold {
+	if len(boards) >= parallelThreshold {
 		return p.placeFigureParallel(boards, behaviour)
 	}
 
