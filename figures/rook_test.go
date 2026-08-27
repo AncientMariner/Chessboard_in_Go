@@ -201,7 +201,7 @@ func TestRook_placeAttackPlacesHorizontally(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			placeAttackPlacesHorizontally(tt.args.out, tt.args.position, 8)
+			placeAttackPlacesHorizontally(tt.args.out, tt.args.position, 8, 0)
 
 			if !reflect.DeepEqual(tt.args.out, tt.wantBoard) {
 				t.Errorf("placeAttackPlacesDiagonallyBelow() = %v, wantBoard %v", tt.args.out, tt.wantBoard)
@@ -553,7 +553,7 @@ func TestRook_placeAttackPlacesVertically(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			placeAttackPlacesVertically(tt.args.out, tt.args.position, 8)
+			placeAttackPlacesVertically(tt.args.out, tt.args.position, 8, 0)
 			if !reflect.DeepEqual(tt.args.out, tt.wantBoard) {
 				t.Errorf("placeAttackPlacesVertically() = %v, wantBoard %v", tt.args.out, tt.wantBoard)
 			}

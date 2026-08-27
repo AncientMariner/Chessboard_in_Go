@@ -4,8 +4,10 @@ import (
 	"Chessboard_in_Go/figures"
 )
 
-func (board *Chessboard) calculateBoards() map[uint64][]byte {
+// needed to run go build
+func main() {}
 
+func (board *Chessboard) calculateBoards() map[uint64][]byte {
 	return board.calculateBoard(board.currentFigureBehaviour, make(map[uint64][]byte))
 }
 

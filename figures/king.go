@@ -9,6 +9,7 @@ type King struct {
 func (king *King) Handle(board []byte) map[uint64][]byte {
 	boards := getMapFromPool()
 	dimension := getDimensionFromBoard(board)
+	boardHash := ZobristHash(board)
 
 	for i := 0; i < len(board) && len(board) == (dimension*dimension); i++ {
 		if board[i] == emptyField {
@@ -19,16 +20,18 @@ func (king *King) Handle(board []byte) map[uint64][]byte {
 				out := *outPtr
 				copy(out, board)
 
-				king.placeAttackPlacesHorizontally(out, i, dimension)
-				king.placeAttackPlacesVertically(out, i, dimension)
-				king.placeDiagonallyAbove(out, i, dimension)
-				king.placeDiagonallyBelow(out, i, dimension)
+				h := boardHash
+				h = king.placeAttackPlacesHorizontally(out, i, dimension, h)
+				h = king.placeAttackPlacesVertically(out, i, dimension, h)
+				h = king.placeDiagonallyAbove(out, i, dimension, h)
+				h = king.placeDiagonallyBelow(out, i, dimension, h)
+				h = ZobristUpdate(h, i, emptyField, king.GetName())
 				out[i] = king.GetName()
 
 				// Make permanent copy for storage
 				permanent := make([]byte, len(out))
 				copy(permanent, out)
-				boards[GenerateHash(permanent)] = permanent
+				boards[h] = permanent
 
 				// Return working buffer to pool
 				boardPool.Put(outPtr)
@@ -63,7 +66,7 @@ func isAnotherFigurePresent(out []byte, position int, dimension int) bool {
 	return false
 }
 
-func (king *King) placeDiagonallyAbove(out []byte, position int, dimension int) {
+func (king *King) placeDiagonallyAbove(out []byte, position int, dimension int, h uint64) uint64 {
 	positionOneLineAbove := position - dimension
 
 	diagAboveRight := positionOneLineAbove + 1
@@ -71,15 +74,18 @@ func (king *King) placeDiagonallyAbove(out []byte, position int, dimension int) 
 	rightColumnExists := position%dimension != dimension-1
 	if previousLineExists && rightColumnExists && out[diagAboveRight] == emptyField {
 		out[diagAboveRight] = attackPlace
+		h = ZobristUpdate(h, diagAboveRight, emptyField, attackPlace)
 	}
 	diagAboveLeft := positionOneLineAbove - 1
 	leftColumnExists := position%dimension != 0
 	if previousLineExists && leftColumnExists && diagAboveLeft >= 0 && out[diagAboveLeft] == emptyField {
 		out[diagAboveLeft] = attackPlace
+		h = ZobristUpdate(h, diagAboveLeft, emptyField, attackPlace)
 	}
+	return h
 }
 
-func (king *King) placeDiagonallyBelow(out []byte, position int, dimension int) {
+func (king *King) placeDiagonallyBelow(out []byte, position int, dimension int, h uint64) uint64 {
 	diagBelowRight := position + dimension + 1
 	diagBelowLeft := position + dimension - 1
 	isNotLastLine := position < len(out)-dimension
@@ -87,34 +93,43 @@ func (king *King) placeDiagonallyBelow(out []byte, position int, dimension int) 
 
 	if isNotLastLine && rightColumnExists && diagBelowRight < len(out) && out[diagBelowRight] == emptyField {
 		out[diagBelowRight] = attackPlace
+		h = ZobristUpdate(h, diagBelowRight, emptyField, attackPlace)
 	}
 	if isNotLastLine && position%dimension != 0 && diagBelowLeft < len(out) && out[diagBelowLeft] == emptyField {
 		out[diagBelowLeft] = attackPlace
+		h = ZobristUpdate(h, diagBelowLeft, emptyField, attackPlace)
 	}
+	return h
 }
 
-func (king *King) placeAttackPlacesVertically(out []byte, position int, dimension int) {
+func (king *King) placeAttackPlacesVertically(out []byte, position int, dimension int, h uint64) uint64 {
 	positionAbove := position - dimension
 	if position >= dimension && out[positionAbove] == emptyField {
 		out[positionAbove] = attackPlace
+		h = ZobristUpdate(h, positionAbove, emptyField, attackPlace)
 	}
 	positionBelow := position + dimension
 	if position < len(out)-dimension && out[positionBelow] == emptyField {
 		out[positionBelow] = attackPlace
+		h = ZobristUpdate(h, positionBelow, emptyField, attackPlace)
 	}
+	return h
 }
 
-func (king *King) placeAttackPlacesHorizontally(out []byte, position int, dimension int) {
+func (king *King) placeAttackPlacesHorizontally(out []byte, position int, dimension int, h uint64) uint64 {
 	previousPosition := position - 1
 	leftColumnExists := position%dimension != 0
 	if previousPosition >= 0 && leftColumnExists && out[previousPosition] == emptyField {
 		out[previousPosition] = attackPlace
+		h = ZobristUpdate(h, previousPosition, emptyField, attackPlace)
 	}
 	nextPosition := position + 1
 	rightColumnExists := position%dimension != dimension-1
 	if nextPosition < len(out) && rightColumnExists && out[nextPosition] == emptyField {
 		out[nextPosition] = attackPlace
+		h = ZobristUpdate(h, nextPosition, emptyField, attackPlace)
 	}
+	return h
 }
 
 func (*King) GetName() byte {

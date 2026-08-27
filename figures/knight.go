@@ -9,6 +9,7 @@ type Knight struct {
 func (knight *Knight) Handle(board []byte) map[uint64][]byte {
 	boards := getMapFromPool()
 	dimension := getDimensionFromBoard(board)
+	boardHash := ZobristHash(board)
 
 	for i := 0; i < len(board) && len(board) == (dimension*dimension); i++ {
 		if board[i] == emptyField {
@@ -19,14 +20,16 @@ func (knight *Knight) Handle(board []byte) map[uint64][]byte {
 				out := *outPtr
 				copy(out, board)
 
-				placeAttackPlacesBelow(out, i, dimension)
-				placeAttackPlacesAbove(out, i, dimension)
+				h := boardHash
+				h = placeAttackPlacesBelow(out, i, dimension, h)
+				h = placeAttackPlacesAbove(out, i, dimension, h)
+				h = ZobristUpdate(h, i, emptyField, knight.GetName())
 				out[i] = knight.GetName()
 
 				// Make permanent copy for storage
 				permanent := make([]byte, len(out))
 				copy(permanent, out)
-				boards[GenerateHash(permanent)] = permanent
+				boards[h] = permanent
 
 				// Return working buffer to pool
 				boardPool.Put(outPtr)
@@ -36,9 +39,9 @@ func (knight *Knight) Handle(board []byte) map[uint64][]byte {
 	return boards
 }
 
-func placeAttackPlacesBelow(out []byte, position int, dimension int) {
+func placeAttackPlacesBelow(out []byte, position int, dimension int, h uint64) uint64 {
 	if position >= len(out) {
-		return
+		return h
 	}
 	currentLine := position/dimension + 1
 	lineBelow := currentLine + 1
@@ -47,11 +50,13 @@ func placeAttackPlacesBelow(out []byte, position int, dimension int) {
 	belowLineLeft := positionBelowLineLeft/dimension + 1
 	if lineBelow == belowLineLeft && positionBelowLineLeft < len(out) && out[positionBelowLineLeft] == emptyField {
 		out[positionBelowLineLeft] = attackPlace
+		h = ZobristUpdate(h, positionBelowLineLeft, emptyField, attackPlace)
 	}
 	positionBelowLineRight := position + dimension + 2
 	belowLineRight := positionBelowLineRight/dimension + 1
 	if lineBelow == belowLineRight && positionBelowLineRight < len(out) && out[positionBelowLineRight] == emptyField {
 		out[positionBelowLineRight] = attackPlace
+		h = ZobristUpdate(h, positionBelowLineRight, emptyField, attackPlace)
 	}
 
 	line2Below := currentLine + 1 + 1
@@ -60,18 +65,21 @@ func placeAttackPlacesBelow(out []byte, position int, dimension int) {
 	below2LineLeft := positionBelow2LinesLeft/dimension + 1
 	if line2Below == below2LineLeft && positionBelow2LinesLeft < len(out) && out[positionBelow2LinesLeft] == emptyField {
 		out[positionBelow2LinesLeft] = attackPlace
+		h = ZobristUpdate(h, positionBelow2LinesLeft, emptyField, attackPlace)
 	}
 
 	positionBelow2LinesRight := position + 2*dimension + 1
 	below2LineRight := positionBelow2LinesRight/dimension + 1
 	if line2Below == below2LineRight && positionBelow2LinesRight < len(out) && out[positionBelow2LinesRight] == emptyField {
 		out[positionBelow2LinesRight] = attackPlace
+		h = ZobristUpdate(h, positionBelow2LinesRight, emptyField, attackPlace)
 	}
+	return h
 }
 
-func placeAttackPlacesAbove(out []byte, position int, dimension int) {
+func placeAttackPlacesAbove(out []byte, position int, dimension int, h uint64) uint64 {
 	if position >= len(out) {
-		return
+		return h
 	}
 	currentLine := position/dimension + 1
 
@@ -84,9 +92,11 @@ func placeAttackPlacesAbove(out []byte, position int, dimension int) {
 
 	if aboveLineLeft == lineAbove && positionAboveLineLeft >= 0 && out[positionAboveLineLeft] == emptyField {
 		out[positionAboveLineLeft] = attackPlace
+		h = ZobristUpdate(h, positionAboveLineLeft, emptyField, attackPlace)
 	}
 	if aboveLineRight == lineAbove && positionAboveLineRight >= 0 && out[positionAboveLineRight] == emptyField {
 		out[positionAboveLineRight] = attackPlace
+		h = ZobristUpdate(h, positionAboveLineRight, emptyField, attackPlace)
 	}
 
 	positionAbove2LinesLeft := position - 2*dimension - 1
@@ -97,10 +107,13 @@ func placeAttackPlacesAbove(out []byte, position int, dimension int) {
 	line2Above := currentLine - 1 - 1
 	if above2LineLeft == line2Above && positionAbove2LinesLeft >= 0 && out[positionAbove2LinesLeft] == emptyField {
 		out[positionAbove2LinesLeft] = attackPlace
+		h = ZobristUpdate(h, positionAbove2LinesLeft, emptyField, attackPlace)
 	}
 	if above2LineRight == line2Above && positionAbove2LinesRight >= 0 && out[positionAbove2LinesRight] == emptyField {
 		out[positionAbove2LinesRight] = attackPlace
+		h = ZobristUpdate(h, positionAbove2LinesRight, emptyField, attackPlace)
 	}
+	return h
 }
 
 func isAnotherFigurePresentBelow(out []byte, position int, dimension int) bool {

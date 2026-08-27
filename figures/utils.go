@@ -3,6 +3,39 @@ package figures
 import (
 	"sync"
 )
+
+// zobristTable[cell][byteValue] gives the random uint64 for that (cell, value) pair.
+// Sized for up to 12×12 = 144 cells. Initialised with a deterministic LCG so there
+// is no runtime dependency on math/rand or time.
+var zobristTable [144][256]uint64
+
+func init() {
+	// Deterministic LCG: multiplier and increment from Knuth TAOCP vol.2
+	state := uint64(0x123456789ABCDEF0)
+	next := func() uint64 {
+		state = state*6364136223846793005 + 1442695040888963407
+		return state
+	}
+	for i := range zobristTable {
+		for j := range zobristTable[i] {
+			zobristTable[i][j] = next()
+		}
+	}
+}
+
+// ZobristHash computes the full Zobrist hash of a board from scratch.
+func ZobristHash(board []byte) uint64 {
+	var h uint64
+	for i, b := range board {
+		h ^= zobristTable[i][b]
+	}
+	return h
+}
+
+// ZobristUpdate returns a new hash after changing cell i from oldVal to newVal.
+func ZobristUpdate(h uint64, i int, oldVal, newVal byte) uint64 {
+	return h ^ zobristTable[i][oldVal] ^ zobristTable[i][newVal]
+}
 // getDimensionFromBoard calculates the dimension of the chessboard based on the length of the board slice
 // using Newton method to find the integer square root. If the length is not a perfect square, it defaults to 8.
 func getDimensionFromBoard(board []byte) int {

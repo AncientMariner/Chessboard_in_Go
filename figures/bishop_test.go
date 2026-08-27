@@ -276,7 +276,7 @@ func TestBishop_placeAttackPlacesDiagonallyBelow(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			placeAttackPlacesDiagonallyBelow(tt.args.out, tt.args.position, 8)
+			placeAttackPlacesDiagonallyBelow(tt.args.out, tt.args.position, 8, 0)
 			if !reflect.DeepEqual(tt.args.out, tt.want) {
 				t.Errorf("placeAttackPlacesDiagonallyBelow() = %v, want %v", tt.args.out, tt.want)
 			}
@@ -465,7 +465,7 @@ func TestBishop_placeAttackPlacesDiagonallyAbove(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			placeAttackPlacesDiagonallyAbove(tt.args.out, tt.args.position, 8)
+			placeAttackPlacesDiagonallyAbove(tt.args.out, tt.args.position, 8, 0)
 			if !reflect.DeepEqual(tt.args.out, tt.want) {
 				t.Errorf("placeAttackPlacesDiagonallyAbove() = %v, want %v", tt.args.out, tt.want)
 			}

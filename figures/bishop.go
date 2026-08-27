@@ -9,6 +9,7 @@ type Bishop struct {
 func (bishop *Bishop) Handle(board []byte) map[uint64][]byte {
 	boards := getMapFromPool()
 	dimension := getDimensionFromBoard(board)
+	boardHash := ZobristHash(board)
 
 	for i := 0; i < len(board) && len(board) == (dimension*dimension); i++ {
 		if board[i] == emptyField {
@@ -19,14 +20,16 @@ func (bishop *Bishop) Handle(board []byte) map[uint64][]byte {
 				out := *outPtr
 				copy(out, board)
 
-				placeAttackPlacesDiagonallyAbove(out, i, dimension)
-				placeAttackPlacesDiagonallyBelow(out, i, dimension)
+				h := boardHash
+				h = placeAttackPlacesDiagonallyAbove(out, i, dimension, h)
+				h = placeAttackPlacesDiagonallyBelow(out, i, dimension, h)
+				h = ZobristUpdate(h, i, emptyField, bishop.GetName())
 				out[i] = bishop.GetName()
 
 				// Make permanent copy for storage
 				permanent := make([]byte, len(out))
 				copy(permanent, out)
-				boards[GenerateHash(permanent)] = permanent
+				boards[h] = permanent
 
 				// Return working buffer to pool
 				boardPool.Put(outPtr)
@@ -36,9 +39,9 @@ func (bishop *Bishop) Handle(board []byte) map[uint64][]byte {
 	return boards
 }
 
-func placeAttackPlacesDiagonallyBelow(out []byte, position int, dimension int) {
+func placeAttackPlacesDiagonallyBelow(out []byte, position int, dimension int, h uint64) uint64 {
 	if position >= len(out) {
-		return
+		return h
 	}
 	diagBelowRight := position + dimension + 1
 	diagBelowLeft := position + dimension - 1
@@ -50,19 +53,22 @@ func placeAttackPlacesDiagonallyBelow(out []byte, position int, dimension int) {
 
 		if lineBelow == lineOfTheDiagBelowRight && diagBelowRight < len(out) && position < len(out)-dimension && out[diagBelowRight] == emptyField {
 			out[diagBelowRight] = attackPlace
+			h = ZobristUpdate(h, diagBelowRight, emptyField, attackPlace)
 		}
 		diagBelowRight = diagBelowRight + dimension + 1
 
 		if lineBelow == lineOfTheDiagBelowLeft && diagBelowLeft < len(out) && position < len(out)-dimension && out[diagBelowLeft] == emptyField {
 			out[diagBelowLeft] = attackPlace
+			h = ZobristUpdate(h, diagBelowLeft, emptyField, attackPlace)
 		}
 		diagBelowLeft = diagBelowLeft + dimension - 1
 	}
+	return h
 }
 
-func placeAttackPlacesDiagonallyAbove(out []byte, position int, dimension int) {
+func placeAttackPlacesDiagonallyAbove(out []byte, position int, dimension int, h uint64) uint64 {
 	if position >= len(out) {
-		return
+		return h
 	}
 	diagAboveLeft := position - dimension - 1
 	diagAboveRight := position - dimension + 1
@@ -74,14 +80,17 @@ func placeAttackPlacesDiagonallyAbove(out []byte, position int, dimension int) {
 
 		if lineOfTheDiagAboveLeft == lineAbove && position >= dimension && diagAboveLeft >= 0 && out[diagAboveLeft] == emptyField {
 			out[diagAboveLeft] = attackPlace
+			h = ZobristUpdate(h, diagAboveLeft, emptyField, attackPlace)
 		}
 		diagAboveLeft = diagAboveLeft - dimension - 1
 
 		if lineOfTheDiagAboveRight == lineAbove && position >= dimension && diagAboveRight >= 0 && out[diagAboveRight] == emptyField {
 			out[diagAboveRight] = attackPlace
+			h = ZobristUpdate(h, diagAboveRight, emptyField, attackPlace)
 		}
 		diagAboveRight = diagAboveRight - dimension + 1
 	}
+	return h
 }
 
 func isAnotherFigurePresentDiag(out []byte, position int, dimension int) bool {

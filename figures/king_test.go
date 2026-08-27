@@ -170,7 +170,7 @@ func Test_placeAttackPlacesHorizontally(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			(&King{}).placeAttackPlacesHorizontally(tt.args.out, tt.args.position, 8)
+			(&King{}).placeAttackPlacesHorizontally(tt.args.out, tt.args.position, 8, 0)
 			if !reflect.DeepEqual(tt.args.out, tt.want) {
 				t.Errorf("placeAttackPlacesDiagonallyBelow() = %v, want %v", tt.args.out, tt.want)
 			}
@@ -265,7 +265,7 @@ func Test_placeAttackPlacesVertically(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			(&King{}).placeAttackPlacesVertically(tt.args.out, tt.args.position, 8)
+			(&King{}).placeAttackPlacesVertically(tt.args.out, tt.args.position, 8, 0)
 			if !reflect.DeepEqual(tt.args.out, tt.want) {
 				t.Errorf("placeAttackPlacesVertically() = %v, want %v", tt.args.out, tt.want)
 			}
@@ -402,7 +402,7 @@ func Test_placeDiagonallyAbove(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			(&King{}).placeDiagonallyAbove(tt.args.out, tt.args.position, 8)
+			(&King{}).placeDiagonallyAbove(tt.args.out, tt.args.position, 8, 0)
 			if !reflect.DeepEqual(tt.args.out, tt.want) {
 				t.Errorf("placeDiagonallyAbove() = %v, want %v", tt.args.out, tt.want)
 			}
@@ -513,7 +513,7 @@ func Test_placeDiagonallyBelow(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			(&King{}).placeDiagonallyBelow(tt.args.out, tt.args.position, 8)
+			(&King{}).placeDiagonallyBelow(tt.args.out, tt.args.position, 8, 0)
 			if !reflect.DeepEqual(tt.args.out, tt.want) {
 				t.Errorf("placeDiagonallyBelow() = %v, want %v", tt.args.out, tt.want)
 			}

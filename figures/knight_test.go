@@ -317,7 +317,7 @@ func Test_placeAttackPlacesBelow(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			placeAttackPlacesBelow(tt.args.out, tt.args.position, 8)
+			placeAttackPlacesBelow(tt.args.out, tt.args.position, 8, 0)
 			if !reflect.DeepEqual(tt.args.out, tt.want) {
 				t.Errorf("placeAttackPlacesBelow() = %v, want %v", tt.args.out, tt.want)
 			}
@@ -397,7 +397,7 @@ func Test_placeAttackPlacesAbove(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			placeAttackPlacesAbove(tt.args.out, tt.args.position, 8)
+			placeAttackPlacesAbove(tt.args.out, tt.args.position, 8, 0)
 			if !reflect.DeepEqual(tt.args.out, tt.want) {
 				t.Errorf("placeAttackPlacesAbove() = %v, want %v", tt.args.out, tt.want)
 			}

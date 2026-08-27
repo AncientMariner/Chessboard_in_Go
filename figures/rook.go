@@ -9,6 +9,7 @@ type Rook struct {
 func (rook *Rook) Handle(board []byte) map[uint64][]byte {
 	boards := getMapFromPool()
 	dimension := getDimensionFromBoard(board)
+	boardHash := ZobristHash(board)
 
 	for i := 0; i < len(board) && len(board) == (dimension*dimension); i++ {
 		if board[i] == emptyField {
@@ -19,14 +20,16 @@ func (rook *Rook) Handle(board []byte) map[uint64][]byte {
 				out := *outPtr
 				copy(out, board)
 
-				placeAttackPlacesHorizontally(out, i, dimension)
-				placeAttackPlacesVertically(out, i, dimension)
+				h := boardHash
+				h = placeAttackPlacesHorizontally(out, i, dimension, h)
+				h = placeAttackPlacesVertically(out, i, dimension, h)
+				h = ZobristUpdate(h, i, emptyField, rook.GetName())
 				out[i] = rook.GetName()
 
 				// Make permanent copy for storage
 				permanent := make([]byte, len(out))
 				copy(permanent, out)
-				boards[GenerateHash(permanent)] = permanent
+				boards[h] = permanent
 
 				// Return working buffer to pool
 				boardPool.Put(outPtr)
@@ -36,9 +39,9 @@ func (rook *Rook) Handle(board []byte) map[uint64][]byte {
 	return boards
 }
 
-func placeAttackPlacesHorizontally(out []byte, position int, dimension int) {
+func placeAttackPlacesHorizontally(out []byte, position int, dimension int, h uint64) uint64 {
 	if position >= len(out) {
-		return
+		return h
 	}
 
 	var counterOfLeftPositions = (position) % dimension
@@ -47,6 +50,7 @@ func placeAttackPlacesHorizontally(out []byte, position int, dimension int) {
 	for previousPosition := position - 1; counterOfLeftPositions > 0 && previousPosition >= 0; counterOfLeftPositions-- {
 		if out[previousPosition] == emptyField {
 			out[previousPosition] = attackPlace
+			h = ZobristUpdate(h, previousPosition, emptyField, attackPlace)
 		}
 		previousPosition--
 	}
@@ -54,9 +58,11 @@ func placeAttackPlacesHorizontally(out []byte, position int, dimension int) {
 	for nextPosition := position + 1; counterOfRightPositions > 0 && nextPosition < len(out); counterOfRightPositions-- {
 		if out[nextPosition] == emptyField {
 			out[nextPosition] = attackPlace
+			h = ZobristUpdate(h, nextPosition, emptyField, attackPlace)
 		}
 		nextPosition++
 	}
+	return h
 }
 
 func isAnotherFigurePresentOnTheLine(out []byte, position int, dimension int) bool {
@@ -78,9 +84,9 @@ func isAnotherFigurePresentOnTheLine(out []byte, position int, dimension int) bo
 	return false
 }
 
-func placeAttackPlacesVertically(out []byte, position int, dimension int) {
+func placeAttackPlacesVertically(out []byte, position int, dimension int, h uint64) uint64 {
 	if position >= len(out) {
-		return
+		return h
 	}
 
 	abovePosition := position - dimension
@@ -89,6 +95,7 @@ func placeAttackPlacesVertically(out []byte, position int, dimension int) {
 		lineOfTheAbovePosition := abovePosition/dimension + 1
 		if lineOfTheAbovePosition == lineAbove && out[abovePosition] == emptyField {
 			out[abovePosition] = attackPlace
+			h = ZobristUpdate(h, abovePosition, emptyField, attackPlace)
 		}
 		abovePosition = abovePosition - dimension
 	}
@@ -99,9 +106,11 @@ func placeAttackPlacesVertically(out []byte, position int, dimension int) {
 
 		if lineOfTheBelowPosition == lineBelow && out[belowPosition] == emptyField {
 			out[belowPosition] = attackPlace
+			h = ZobristUpdate(h, belowPosition, emptyField, attackPlace)
 		}
 		belowPosition = belowPosition + dimension
 	}
+	return h
 }
 
 func isAnotherFigurePresentOnTheColumn(out []byte, position int, dimension int) bool {

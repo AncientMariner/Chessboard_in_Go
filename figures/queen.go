@@ -9,6 +9,7 @@ type Queen struct {
 func (queen *Queen) Handle(board []byte) map[uint64][]byte {
 	boards := getMapFromPool()
 	dimension := getDimensionFromBoard(board)
+	boardHash := ZobristHash(board)
 
 	for i := 0; i < len(board) && len(board) == (dimension*dimension); i++ {
 		if board[i] == emptyField {
@@ -21,16 +22,18 @@ func (queen *Queen) Handle(board []byte) map[uint64][]byte {
 				out := *outPtr
 				copy(out, board)
 
-				placeAttackPlacesHorizontally(out, i, dimension)
-				placeAttackPlacesVertically(out, i, dimension)
-				placeAttackPlacesDiagonallyAbove(out, i, dimension)
-				placeAttackPlacesDiagonallyBelow(out, i, dimension)
+				h := boardHash
+				h = placeAttackPlacesHorizontally(out, i, dimension, h)
+				h = placeAttackPlacesVertically(out, i, dimension, h)
+				h = placeAttackPlacesDiagonallyAbove(out, i, dimension, h)
+				h = placeAttackPlacesDiagonallyBelow(out, i, dimension, h)
+				h = ZobristUpdate(h, i, emptyField, queen.GetName())
 				out[i] = queen.GetName()
 
 				// Make permanent copy for storage
 				permanent := make([]byte, len(out))
 				copy(permanent, out)
-				boards[GenerateHash(permanent)] = permanent
+				boards[h] = permanent
 
 				// Return working buffer to pool
 				boardPool.Put(outPtr)

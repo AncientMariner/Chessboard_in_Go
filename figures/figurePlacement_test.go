@@ -201,7 +201,7 @@ func TestPlacement_placeFigureSequential(t *testing.T) {
 					"____xxx_" +
 					"________" +
 					"________")
-			expectedHash := GenerateHash(expectedBoard)
+			expectedHash := ZobristHash(expectedBoard)
 			if _, exists := got[expectedHash]; !exists {
 				t.Errorf("placeFigureSequential() did not contain expected board with hash %v", expectedHash)
 			}
@@ -252,7 +252,7 @@ func TestPlacement_placeFigureParallel(t *testing.T) {
 					"____xxx_" +
 					"________" +
 					"________")
-			expectedHash := GenerateHash(expectedBoard)
+			expectedHash := ZobristHash(expectedBoard)
 			if _, exists := got[expectedHash]; !exists {
 				t.Errorf("placeFigureParallel() did not contain expected board with hash %v", expectedHash)
 			}
