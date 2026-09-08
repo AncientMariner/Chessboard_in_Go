@@ -267,3 +267,61 @@ func TestPutMapToPool(t *testing.T) {
 		t.Error("Expected to get a different map instance from the pool, got the same one")
 	}
 }
+
+func TestZobristHash(t *testing.T) {
+	tests := []struct {
+		name  string
+		board []byte
+		want  uint64
+	}{
+		{name: "empty board",
+			board: []byte(
+				"________" +
+					"________" +
+					"________" +
+					"________" +
+					"________" +
+					"________" +
+					"________" +
+					"________"),
+			want: 11764016652667355136,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got := ZobristHash(tt.board)
+			if got != tt.want {
+				t.Errorf("ZobristHash() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func TestZobristUpdate(t *testing.T) {
+	tests := []struct {
+		name string
+		h      uint64
+		i      int
+		oldVal byte
+		newVal byte
+		want   uint64
+	}{
+		{
+			name: "update empty cell",
+			h:    11764016652667355136,
+			i: 0,
+			oldVal: '_',
+			newVal: 'r',
+			want: 3117345295823972969,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got := ZobristUpdate(tt.h, tt.i, tt.oldVal, tt.newVal)
+			if got != tt.want {
+				t.Errorf("ZobristUpdate() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
