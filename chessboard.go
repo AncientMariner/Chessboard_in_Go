@@ -75,9 +75,7 @@ func (b *boardBuilder) addFigure(figure figures.FigureBehaviour, quantity int) C
 
 // NewChessboard with default size 8
 func NewChessboard() ChessboardBuilder {
-	chessboard := &Chessboard{}
-	chessboard.figurePlacement.SetDimension(8)
-	return &boardBuilder{chessboard: chessboard, figureQuantityMap: make(map[byte]int)}
+	return NewChessboardWithSize(8)
 }
 
 // NewChessboardWithSize custom default size
