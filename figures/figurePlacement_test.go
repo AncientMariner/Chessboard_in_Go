@@ -270,7 +270,7 @@ func TestPlacement_placeFigureSequential(t *testing.T) {
 
 func TestPlacement_placeFigureParallel(t *testing.T) {
 	tests := []struct {
-		name string
+		name      string
 		boards    map[uint64][]byte
 		behaviour FigureBehaviour
 		want      map[uint64][]byte
@@ -352,4 +352,3 @@ func Test_getParallelThreshold(t *testing.T) {
 		})
 	}
 }
-
