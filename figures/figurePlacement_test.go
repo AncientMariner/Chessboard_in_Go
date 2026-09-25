@@ -154,6 +154,65 @@ func TestPlacement_placeFigure(t *testing.T) {
 		})
 	}
 }
+func TestPlacement_placeFigure101Boards(t *testing.T) {
+	type fields struct {
+	}
+	type args struct {
+		boards    map[uint64][]byte
+		behaviour FigureBehaviour
+	}
+
+	var boards [][]byte
+	for i := range 64 {
+		b := []byte(
+			"________" +
+				"________" +
+				"________" +
+				"________" +
+				"________" +
+				"________" +
+				"________" +
+				"________")
+		b[i] = 'k'
+		boards = append(boards, b)
+	}
+	for i := range 37 {
+		b := []byte(
+			"________" +
+				"________" +
+				"________" +
+				"________" +
+				"________" +
+				"________" +
+				"________" +
+				"________")
+		b[i] = 'k'
+		b[63-i] = 'r'
+		boards = append(boards, b)
+	}
+
+	newMap := make(map[uint64][]byte)
+	for _, board := range boards {
+		newMap[GenerateHash(board)] = board
+	}
+
+	tests := []struct {
+		name   string
+		fields fields
+		args   args
+		want   int
+	}{
+		{"Test placement on 101 boards", fields{}, args{newMap, &King{}}, 5428},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			p := &Placement{}
+			if got := p.placeFigure(tt.args.boards, tt.args.behaviour); len(got) != tt.want {
+				t.Errorf("placeFigure() = %v, want > 0", tt.want)
+			}
+		})
+	}
+}
 
 func TestPlacement_placeFigureSequential(t *testing.T) {
 	tests := []struct {
@@ -279,10 +338,10 @@ func TestPlacement_SetDimension(t *testing.T) {
 
 func Test_getParallelThreshold(t *testing.T) {
 	tests := []struct {
-		name string 
+		name string
 		want int
 	}{
-		{ "Test get parallel threshold", 100},
+		{"Test get parallel threshold", 100},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
