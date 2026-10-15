@@ -1600,3 +1600,43 @@ func Test_boardBuilder_withRook(t *testing.T) {
 		})
 	}
 }
+
+func Test_5_queens_5x5_puzzle(t *testing.T) {
+	type args struct {
+		board *Chessboard
+	}
+	tests := []struct {
+		name string
+		args args
+		want int
+	}{
+		{"Test 5 queens on 5x5 board", args{board: NewChessboardWithSize(5).withQueen(5).Build()}, 10},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := tt.args.board.calculateBoards(); len(got) != tt.want {
+				t.Errorf("calculateBoards() = %v, want %v", len(got), tt.want)
+			}
+		})
+	}
+}
+
+func Test_6_queens_6x6_puzzle(t *testing.T) {
+	type args struct {
+		board *Chessboard
+	}
+	tests := []struct {
+		name string
+		args args
+		want int
+	}{
+		{"Test 6 queens on 6x6 board", args{board: NewChessboardWithSize(6).withQueen(6).Build()}, 4},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := tt.args.board.calculateBoards(); len(got) != tt.want {
+				t.Errorf("calculateBoards() = %v, want %v", len(got), tt.want)
+			}
+		})
+	}
+}
