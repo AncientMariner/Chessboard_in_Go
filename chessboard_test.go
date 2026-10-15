@@ -206,9 +206,9 @@ func Test_different_combinations(t *testing.T) {
 		{"Test empty board with 2 rook", args{board: NewChessboard().withRook(2).Build()}, 1568},
 		{"Test empty board with 1 rook 1 rook", args{board: NewChessboard().withRook(1).withRook(1).Build()}, 1568}, 
 		{"Test empty board with 1 king 1 rook", args{board: NewChessboard().withKing(1).withRook(1).Build()}, 2940},
+		{"Test empty board with 8 rook", args{board: NewChessboard().withRook(8).Build()}, 40320},
 		{"Test empty board with 1 rook 1 king", args{board: NewChessboard().withRook(1).withKing(1).Build()}, 2940},
 		{"Test empty board with 2 rook 2 king", args{board: NewChessboard().withRook(2).withKing(2).Build()}, 657390},
-		// {"Test empty board with 8 rook", args{board: NewChessboard().withRook(8).Build()}, 40320},
 		{"Test empty board with 1 king 1 bishop", args{board: NewChessboard().withKing(1).withBishop(1).Build()}, 3248},
 		{"Test empty board with 1 bishop 1 king", args{board: NewChessboard().withBishop(1).withKing(1).Build()}, 3248},
 		{"Test empty board with 2 king 2 bishop", args{board: NewChessboard().withKing(2).withBishop(2).Build()}, 1177824},
@@ -760,6 +760,15 @@ func Test_placement_order_independence_for_three_figures(t *testing.T) {
 				func() *Chessboard { return NewChessboard().withQueen(1).withRook(2).Build() },
 			},
 			expectedCount: 38264,
+		},
+		{
+			name:        "B(1)-K(1) both orders",
+			description: "1 Bishop + 1 King in both orders",
+			builders: []func() *Chessboard{
+				func() *Chessboard { return NewChessboard().withBishop(1).withKing(1).Build() },
+				func() *Chessboard { return NewChessboard().withKing(1).withBishop(1).Build() },
+			},
+			expectedCount: 2576,
 		},
 		{
 			name:        "B(2)-K(1) both orders",
