@@ -119,6 +119,78 @@ func BenchmarkKingHandle_WithPooling(b *testing.B) {
 	}
 }
 
+func BenchmarkQueenHandle(b *testing.B) {
+	queen := Queen{}
+	board := []byte("________" +
+		"________" +
+		"________" +
+		"________" +
+		"________" +
+		"________" +
+		"________" +
+		"________")
+
+	b.ResetTimer()
+	for i := 0; i < b.N; i++ {
+		result := queen.Handle(board)
+		PutMapToPool(result)
+	}
+}
+
+func BenchmarkRookHandle(b *testing.B) {
+	rook := Rook{}
+	board := []byte("________" +
+		"________" +
+		"________" +
+		"________" +
+		"________" +
+		"________" +
+		"________" +
+		"________")
+
+	b.ResetTimer()
+	for i := 0; i < b.N; i++ {
+		result := rook.Handle(board)
+		PutMapToPool(result)
+	}
+}
+
+func BenchmarkBishopHandle(b *testing.B) {
+	bishop := Bishop{}
+	board := []byte("________" +
+		"________" +
+		"________" +
+		"________" +
+		"________" +
+		"________" +
+		"________" +
+		"________")
+
+	b.ResetTimer()
+	for i := 0; i < b.N; i++ {
+		result := bishop.Handle(board)
+		PutMapToPool(result)
+	}
+}
+
+func BenchmarkKnightHandle(b *testing.B) {
+	knight := Knight{}
+	board := []byte("________" +
+		"________" +
+		"________" +
+		"________" +
+		"________" +
+		"________" +
+		"________" +
+		"________")
+
+	b.ResetTimer()
+	for i := 0; i < b.N; i++ {
+		result := knight.Handle(board)
+		PutMapToPool(result)
+	}
+}
+
 // BenchmarkPlacement_WithPooling benchmarks Placement.placeFigure with map pooling
 func BenchmarkPlacement_WithPooling(b *testing.B) {
 	boards := make(map[uint64][]byte)

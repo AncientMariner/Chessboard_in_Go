@@ -112,6 +112,30 @@ func BenchmarkPlaceFigureParallel_Direct(b *testing.B) {
 	}
 }
 
+func BenchmarkPlaceFigureSequential_1000(b *testing.B) {
+	boards := createMultipleBoards(1000)
+	placement := &Placement{}
+	rook := &Rook{}
+
+	b.ResetTimer()
+	for i := 0; i < b.N; i++ {
+		result := placement.placeFigureSequential(boards, rook)
+		PutMapToPool(result)
+	}
+}
+
+func BenchmarkPlaceFigureParallel_1000(b *testing.B) {
+	boards := createMultipleBoards(1000)
+	placement := &Placement{}
+	rook := &Rook{}
+
+	b.ResetTimer()
+	for i := 0; i < b.N; i++ {
+		result := placement.placeFigureParallel(boards, rook)
+		PutMapToPool(result)
+	}
+}
+
 // BenchmarkPlaceFigures_MultipleIterations benchmarks the full PlaceFigures workflow
 func BenchmarkPlaceFigures_MultipleIterations_Sequential(b *testing.B) {
 	placement := &Placement{}
@@ -151,6 +175,59 @@ func BenchmarkComplexScenario_KingAndRook(b *testing.B) {
 		boards := make(map[uint64][]byte)
 		boards = placement.PlaceFigures(1, king, boards)
 		boards = placement.PlaceFigures(1, rook, boards)
+		PutMapToPool(boards)
+	}
+}
+
+func BenchmarkPuzzle_8Queens(b *testing.B) {
+	placement := &Placement{}
+	placement.SetDimension(8)
+	queen := &Queen{}
+
+	b.ResetTimer()
+	for i := 0; i < b.N; i++ {
+		result := placement.PlaceFigures(8, queen, make(map[uint64][]byte))
+		PutMapToPool(result)
+	}
+}
+
+func BenchmarkPuzzle_2Rooks2Kings(b *testing.B) {
+	placement := &Placement{}
+	placement.SetDimension(8)
+	king := &King{}
+	rook := &Rook{}
+	king.SetNext(rook)
+
+	b.ResetTimer()
+	for i := 0; i < b.N; i++ {
+		boards := make(map[uint64][]byte)
+		boards = placement.PlaceFigures(2, king, boards)
+		boards = placement.PlaceFigures(2, rook, boards)
+		PutMapToPool(boards)
+	}
+}
+
+func BenchmarkPuzzle_AllPieces(b *testing.B) {
+	placement := &Placement{}
+	placement.SetDimension(8)
+	king := &King{}
+	queen := &Queen{}
+	rook := &Rook{}
+	bishop := &Bishop{}
+	knight := &Knight{}
+	king.SetNext(queen)
+	queen.SetNext(rook)
+	rook.SetNext(bishop)
+	bishop.SetNext(knight)
+
+	b.ResetTimer()
+	for i := 0; i < b.N; i++ {
+		boards := make(map[uint64][]byte)
+		boards = placement.PlaceFigures(1, king, boards)
+		boards = placement.PlaceFigures(1, queen, boards)
+		boards = placement.PlaceFigures(1, rook, boards)
+		boards = placement.PlaceFigures(1, bishop, boards)
+		boards = placement.PlaceFigures(1, knight, boards)
 		PutMapToPool(boards)
 	}
 }
