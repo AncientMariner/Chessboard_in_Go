@@ -4,8 +4,8 @@ import (
 	"testing"
 )
 
-// BenchmarkMapPooling_WithPool benchmarks map operations using the pool
-func BenchmarkMapPooling_WithPool(b *testing.B) {
+// BenchmarkMapPoolingWithPool benchmarks map operations using the pool
+func BenchmarkMapPoolingWithPool(b *testing.B) {
 	board := []byte("________" +
 		"________" +
 		"________" +
@@ -15,20 +15,22 @@ func BenchmarkMapPooling_WithPool(b *testing.B) {
 		"________" +
 		"________")
 
-	b.ResetTimer()
-	for i := 0; i < b.N; i++ {
+	i := 0
+	for b.Loop() {
 		m := getMapFromPool(0)
-		// Simulate typical usage: add some entries
+		// Simulate typical usage: add some entries.
+		// i varies keys across iterations so the map must insert, not just overwrite.
 		for j := 0; j < 10; j++ {
 			hash := uint64(i*10 + j)
 			m[hash] = board
 		}
 		putMapToPool(m)
+		i++
 	}
 }
 
-// BenchmarkMapPooling_WithoutPool benchmarks map operations without pooling
-func BenchmarkMapPooling_WithoutPool(b *testing.B) {
+// BenchmarkMapPoolingWithoutPool benchmarks map operations without pooling
+func BenchmarkMapPoolingWithoutPool(b *testing.B) {
 	board := []byte("________" +
 		"________" +
 		"________" +
@@ -38,8 +40,8 @@ func BenchmarkMapPooling_WithoutPool(b *testing.B) {
 		"________" +
 		"________")
 
-	b.ResetTimer()
-	for i := 0; i < b.N; i++ {
+	i := 0
+	for b.Loop() {
 		m := make(map[uint64][]byte, 64)
 		// Simulate typical usage: add some entries
 		for j := 0; j < 10; j++ {
@@ -47,11 +49,12 @@ func BenchmarkMapPooling_WithoutPool(b *testing.B) {
 			m[hash] = board
 		}
 		// Let GC handle it
+		i++
 	}
 }
 
-// BenchmarkMapPooling_WithPool_Parallel benchmarks pooled map operations under parallel load
-func BenchmarkMapPooling_WithPool_Parallel(b *testing.B) {
+// BenchmarkMapPoolingWithPoolParallel benchmarks pooled map operations under parallel load
+func BenchmarkMapPoolingWithPoolParallel(b *testing.B) {
 	board := []byte("________" +
 		"________" +
 		"________" +
@@ -75,8 +78,8 @@ func BenchmarkMapPooling_WithPool_Parallel(b *testing.B) {
 	})
 }
 
-// BenchmarkMapPooling_WithoutPool_Parallel benchmarks non-pooled map operations under parallel load
-func BenchmarkMapPooling_WithoutPool_Parallel(b *testing.B) {
+// BenchmarkMapPoolingWithoutPoolParallel benchmarks non-pooled map operations under parallel load
+func BenchmarkMapPoolingWithoutPoolParallel(b *testing.B) {
 	board := []byte("________" +
 		"________" +
 		"________" +
@@ -99,8 +102,8 @@ func BenchmarkMapPooling_WithoutPool_Parallel(b *testing.B) {
 	})
 }
 
-// BenchmarkKingHandle_WithPooling benchmarks the King figure Handle method with pooling
-func BenchmarkKingHandle_WithPooling(b *testing.B) {
+// BenchmarkKingHandleWithPooling benchmarks the King figure Handle method with pooling
+func BenchmarkKingHandleWithPooling(b *testing.B) {
 	king := King{}
 	board := []byte("________" +
 		"________" +
@@ -111,8 +114,7 @@ func BenchmarkKingHandle_WithPooling(b *testing.B) {
 		"________" +
 		"________")
 
-	b.ResetTimer()
-	for i := 0; i < b.N; i++ {
+	for b.Loop() {
 		result := king.Handle(board)
 		// Return the result map to pool
 		PutMapToPool(result)
@@ -130,8 +132,7 @@ func BenchmarkQueenHandle(b *testing.B) {
 		"________" +
 		"________")
 
-	b.ResetTimer()
-	for i := 0; i < b.N; i++ {
+	for b.Loop() {
 		result := queen.Handle(board)
 		PutMapToPool(result)
 	}
@@ -148,8 +149,7 @@ func BenchmarkRookHandle(b *testing.B) {
 		"________" +
 		"________")
 
-	b.ResetTimer()
-	for i := 0; i < b.N; i++ {
+	for b.Loop() {
 		result := rook.Handle(board)
 		PutMapToPool(result)
 	}
@@ -166,8 +166,7 @@ func BenchmarkBishopHandle(b *testing.B) {
 		"________" +
 		"________")
 
-	b.ResetTimer()
-	for i := 0; i < b.N; i++ {
+	for b.Loop() {
 		result := bishop.Handle(board)
 		PutMapToPool(result)
 	}
@@ -184,8 +183,7 @@ func BenchmarkKnightHandle(b *testing.B) {
 		"________" +
 		"________")
 
-	b.ResetTimer()
-	for i := 0; i < b.N; i++ {
+	for b.Loop() {
 		result := knight.Handle(board)
 		PutMapToPool(result)
 	}
@@ -207,16 +205,17 @@ func BenchmarkPlacement_WithPooling(b *testing.B) {
 	placement := &Placement{}
 	king := &King{}
 
-	b.ResetTimer()
-	for i := 0; i < b.N; i++ {
+	for b.Loop() {
 		result := placement.placeFigure(boards, king)
 		// Clean up result map
 		PutMapToPool(result)
 	}
 }
 
-// BenchmarkMapPooling_LargeCapacity benchmarks pooled maps with larger capacity hints
-func BenchmarkMapPooling_LargeCapacity(b *testing.B) {
+// BenchmarkMapPoolingLargeCapacity benchmarks the large-capacity bypass path in getMapFromPool.
+// When capacityHint > 64, the pooled map is discarded and a fresh allocation is made.
+// Compare with BenchmarkMapPoolingWithPool for the pool-hit cost (0 B/op).
+func BenchmarkMapPoolingLargeCapacity(b *testing.B) {
 	board := []byte("________" +
 		"________" +
 		"________" +
@@ -226,37 +225,40 @@ func BenchmarkMapPooling_LargeCapacity(b *testing.B) {
 		"________" +
 		"________")
 
-	b.ResetTimer()
-	for i := 0; i < b.N; i++ {
-		m := getMapFromPool(0) // Larger capacity
-		// Simulate typical usage with more entries
+	i := 0
+	for b.Loop() {
+		m := getMapFromPool(500) // Larger capacity: exceeds pool default (64), triggers new alloc
+		// i varies keys across iterations so the map must insert, not just overwrite.
 		for j := 0; j < 50; j++ {
 			hash := uint64(i*50 + j)
 			m[hash] = board
 		}
 		putMapToPool(m)
+		i++
 	}
 }
 
-// BenchmarkMapPooling_SmallCapacity benchmarks pooled maps with small capacity hints
-func BenchmarkMapPooling_SmallCapacity(b *testing.B) {
-	board := []byte("________" +
-		"________" +
-		"________" +
-		"________" +
-		"________" +
-		"________" +
-		"________" +
-		"________")
+// BenchmarkGetBoardFromPool compares pool-hit (dimension=8, matches default pool size)
+// against pool-miss (dimension=4 and dimension=12, require a resize on first call).
+// In practice all three converge to ~8 ns/0 B after warmup: the pool retains the
+// resized slice, so subsequent calls are hits regardless of dimension.
+func BenchmarkGetBoardFromPool(b *testing.B) {
+	sizes := []struct {
+		name      string
+		dimension int
+	}{
+		{"4x4Miss", 4},
+		{"8x8Hit", 8},
+		{"12x12Miss", 12},
+	}
 
-	b.ResetTimer()
-	for i := 0; i < b.N; i++ {
-		m := getMapFromPool(0) // Small capacity
-		// Simulate typical usage with few entries
-		for j := 0; j < 3; j++ {
-			hash := uint64(i*3 + j)
-			m[hash] = board
-		}
-		putMapToPool(m)
+	for _, s := range sizes {
+		b.Run(s.name, func(b *testing.B) {
+			for b.Loop() {
+				ptr := getBoardFromPool(s.dimension)
+				boardPool.Put(ptr)
+			}
+		})
 	}
 }
+

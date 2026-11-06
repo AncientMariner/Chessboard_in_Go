@@ -1,6 +1,8 @@
 package figures
 
 import (
+	"fmt"
+	"runtime"
 	"testing"
 )
 
@@ -34,144 +36,132 @@ func createMultipleBoards(count int) map[uint64][]byte {
 	return boards
 }
 
-// BenchmarkPlaceFigure_Sequential_Small benchmarks sequential processing with few boards
-func BenchmarkPlaceFigure_Sequential_Small(b *testing.B) {
+// BenchmarkPlaceFigureSequentialSmall benchmarks sequential processing with few boards
+func BenchmarkPlaceFigureSequentialSmall(b *testing.B) {
 	boards := createMultipleBoards(5) // Below parallelThreshold
 	placement := &Placement{}
 	rook := &Rook{}
 
-	b.ResetTimer()
-	for i := 0; i < b.N; i++ {
+	for b.Loop() {
 		result := placement.placeFigure(boards, rook)
 		PutMapToPool(result)
 	}
 }
 
-// BenchmarkPlaceFigure_Sequential_Medium benchmarks with medium board count (at threshold)
-func BenchmarkPlaceFigure_Sequential_Medium(b *testing.B) {
+// BenchmarkPlaceFigureSequentialMedium benchmarks with medium board count (at threshold)
+func BenchmarkPlaceFigureSequentialMedium(b *testing.B) {
 	boards := createMultipleBoards(10) // At parallelThreshold
 	placement := &Placement{}
 	rook := &Rook{}
 
-	b.ResetTimer()
-	for i := 0; i < b.N; i++ {
+	for b.Loop() {
 		result := placement.placeFigure(boards, rook)
 		PutMapToPool(result)
 	}
 }
 
-// BenchmarkPlaceFigure_Parallel_Large benchmarks parallel processing with many boards
-func BenchmarkPlaceFigure_Parallel_Large(b *testing.B) {
+// BenchmarkPlaceFigureParallelLarge benchmarks parallel processing with many boards
+func BenchmarkPlaceFigureParallelLarge(b *testing.B) {
 	boards := createMultipleBoards(50) // Well above parallelThreshold
 	placement := &Placement{}
 	rook := &Rook{}
 
-	b.ResetTimer()
-	for i := 0; i < b.N; i++ {
+	for b.Loop() {
 		result := placement.placeFigure(boards, rook)
 		PutMapToPool(result)
 	}
 }
 
-// BenchmarkPlaceFigure_Parallel_VeryLarge benchmarks parallel processing with very many boards
-func BenchmarkPlaceFigure_Parallel_VeryLarge(b *testing.B) {
+// BenchmarkPlaceFigureParallelVeryLarge benchmarks parallel processing with very many boards
+func BenchmarkPlaceFigureParallelVeryLarge(b *testing.B) {
 	boards := createMultipleBoards(64) // Maximum for 8x8 board with 1 figure
 	placement := &Placement{}
 	rook := &Rook{}
 
-	b.ResetTimer()
-	for i := 0; i < b.N; i++ {
+	for b.Loop() {
 		result := placement.placeFigure(boards, rook)
 		PutMapToPool(result)
 	}
 }
 
-// BenchmarkPlaceFigureSequential_Direct benchmarks the sequential implementation directly
-func BenchmarkPlaceFigureSequential_Direct(b *testing.B) {
+// BenchmarkPlaceFigureSequentialDirect benchmarks the sequential implementation directly
+func BenchmarkPlaceFigureSequentialDirect(b *testing.B) {
 	boards := createMultipleBoards(50)
 	placement := &Placement{}
 	rook := &Rook{}
 
-	b.ResetTimer()
-	for i := 0; i < b.N; i++ {
+	for b.Loop() {
 		result := placement.placeFigureSequential(boards, rook)
 		PutMapToPool(result)
 	}
 }
 
-// BenchmarkPlaceFigureParallel_Direct benchmarks the parallel implementation directly
-func BenchmarkPlaceFigureParallel_Direct(b *testing.B) {
+// BenchmarkPlaceFigureParallelDirect benchmarks the parallel implementation directly
+func BenchmarkPlaceFigureParallelDirect(b *testing.B) {
 	boards := createMultipleBoards(50)
 	placement := &Placement{}
 	rook := &Rook{}
 
-	b.ResetTimer()
-	for i := 0; i < b.N; i++ {
+	for b.Loop() {
 		result := placement.placeFigureParallel(boards, rook)
 		PutMapToPool(result)
 	}
 }
 
-func BenchmarkPlaceFigureSequential_1000(b *testing.B) {
+func BenchmarkPlaceFigureSequential1000(b *testing.B) {
 	boards := createMultipleBoards(1000)
 	placement := &Placement{}
 	rook := &Rook{}
 
-	b.ResetTimer()
-	for i := 0; i < b.N; i++ {
+	for b.Loop() {
 		result := placement.placeFigureSequential(boards, rook)
 		PutMapToPool(result)
 	}
 }
 
-func BenchmarkPlaceFigureParallel_1000(b *testing.B) {
+func BenchmarkPlaceFigureParallel1000(b *testing.B) {
 	boards := createMultipleBoards(1000)
 	placement := &Placement{}
 	rook := &Rook{}
 
-	b.ResetTimer()
-	for i := 0; i < b.N; i++ {
+	for b.Loop() {
 		result := placement.placeFigureParallel(boards, rook)
 		PutMapToPool(result)
 	}
 }
 
-// BenchmarkPlaceFigures_MultipleIterations benchmarks the full PlaceFigures workflow
-func BenchmarkPlaceFigures_MultipleIterations_Sequential(b *testing.B) {
+// BenchmarkPlaceFiguresMultipleIterationsSequential benchmarks the full PlaceFigures workflow
+func BenchmarkPlaceFiguresMultipleIterationsSequential(b *testing.B) {
 	placement := &Placement{}
 	placement.SetDimension(8)
 	king := &King{}
 
-	b.ResetTimer()
-	for i := 0; i < b.N; i++ {
+	for b.Loop() {
 		result := placement.PlaceFigures(2, king, make(map[uint64][]byte))
 		PutMapToPool(result)
 	}
 }
 
-// BenchmarkPlaceFigures_3Kings benchmarks placing 3 kings (realistic scenario)
-func BenchmarkPlaceFigures_3Kings(b *testing.B) {
+// BenchmarkPlaceFigures3Kings benchmarks placing 3 kings (realistic scenario)
+func BenchmarkPlaceFigures3Kings(b *testing.B) {
 	placement := &Placement{}
 	placement.SetDimension(8)
 	king := &King{}
 
-	b.ResetTimer()
-	for i := 0; i < b.N; i++ {
+	for b.Loop() {
 		result := placement.PlaceFigures(3, king, make(map[uint64][]byte))
 		PutMapToPool(result)
 	}
 }
 
-// BenchmarkComplexScenario benchmarks a complex multi-figure scenario
-func BenchmarkComplexScenario_KingAndRook(b *testing.B) {
+// BenchmarkComplexScenarioKingAndRook benchmarks a complex multi-figure scenario
+func BenchmarkComplexScenarioKingAndRook(b *testing.B) {
 	placement := &Placement{}
 	placement.SetDimension(8)
 	king := &King{}
 	rook := &Rook{}
-	king.SetNext(rook)
 
-	b.ResetTimer()
-	for i := 0; i < b.N; i++ {
+	for b.Loop() {
 		boards := make(map[uint64][]byte)
 		boards = placement.PlaceFigures(1, king, boards)
 		boards = placement.PlaceFigures(1, rook, boards)
@@ -179,27 +169,24 @@ func BenchmarkComplexScenario_KingAndRook(b *testing.B) {
 	}
 }
 
-func BenchmarkPuzzle_8Queens(b *testing.B) {
+func BenchmarkPuzzle8Queens(b *testing.B) {
 	placement := &Placement{}
 	placement.SetDimension(8)
 	queen := &Queen{}
 
-	b.ResetTimer()
-	for i := 0; i < b.N; i++ {
+	for b.Loop() {
 		result := placement.PlaceFigures(8, queen, make(map[uint64][]byte))
 		PutMapToPool(result)
 	}
 }
 
-func BenchmarkPuzzle_2Rooks2Kings(b *testing.B) {
+func BenchmarkPuzzle2Rooks2Kings(b *testing.B) {
 	placement := &Placement{}
 	placement.SetDimension(8)
 	king := &King{}
 	rook := &Rook{}
-	king.SetNext(rook)
 
-	b.ResetTimer()
-	for i := 0; i < b.N; i++ {
+	for b.Loop() {
 		boards := make(map[uint64][]byte)
 		boards = placement.PlaceFigures(2, king, boards)
 		boards = placement.PlaceFigures(2, rook, boards)
@@ -207,7 +194,7 @@ func BenchmarkPuzzle_2Rooks2Kings(b *testing.B) {
 	}
 }
 
-func BenchmarkPuzzle_AllPieces(b *testing.B) {
+func BenchmarkPuzzleAllPieces(b *testing.B) {
 	placement := &Placement{}
 	placement.SetDimension(8)
 	king := &King{}
@@ -215,13 +202,12 @@ func BenchmarkPuzzle_AllPieces(b *testing.B) {
 	rook := &Rook{}
 	bishop := &Bishop{}
 	knight := &Knight{}
-	king.SetNext(queen)
-	queen.SetNext(rook)
-	rook.SetNext(bishop)
-	bishop.SetNext(knight)
 
-	b.ResetTimer()
-	for i := 0; i < b.N; i++ {
+	for b.Loop() {
+		// runtime.GC() stabilises heap state before each iteration, preventing GC debt
+		// from one pass bleeding into the next. Without it, B/op varies 2-3x across runs
+		// due to the large working set (~4-9 GB) this benchmark allocates.
+		runtime.GC()
 		boards := make(map[uint64][]byte)
 		boards = placement.PlaceFigures(1, king, boards)
 		boards = placement.PlaceFigures(1, queen, boards)
@@ -229,5 +215,24 @@ func BenchmarkPuzzle_AllPieces(b *testing.B) {
 		boards = placement.PlaceFigures(1, bishop, boards)
 		boards = placement.PlaceFigures(1, knight, boards)
 		PutMapToPool(boards)
+	}
+}
+
+// BenchmarkBoardSizeScaling measures how placement cost grows with board dimension.
+// Uses a single king to isolate board-size effect from piece interaction complexity.
+func BenchmarkBoardSizeScaling(b *testing.B) {
+	sizes := []int{4, 6, 8, 10, 12}
+
+	for _, dim := range sizes {
+		b.Run(fmt.Sprintf("%dx%d", dim, dim), func(b *testing.B) {
+			placement := &Placement{}
+			placement.SetDimension(dim)
+			king := &King{}
+
+			for b.Loop() {
+				result := placement.PlaceFigures(1, king, make(map[uint64][]byte))
+				PutMapToPool(result)
+			}
+		})
 	}
 }

@@ -17,8 +17,7 @@ func BenchmarkGenerateHash(b *testing.B) {
 			"________",
 	)
 
-	b.ResetTimer()
-	for i := 0; i < b.N; i++ {
+	for b.Loop() {
 		_ = GenerateHash(board)
 	}
 }
@@ -84,8 +83,45 @@ func BenchmarkGenerateHashVariedBoards(b *testing.B) {
 				"xxxxxxxx"),
 	}
 
-	b.ResetTimer()
-	for i := 0; i < b.N; i++ {
+	i := 0
+	for b.Loop() {
 		_ = GenerateHash(boards[i%len(boards)])
+		i++
 	}
+}
+
+// BenchmarkHashStrategy compares full rehash (GenerateHash/ZobristHash) against
+// incremental update (ZobristUpdate) for a single-cell change on an 8x8 board.
+// ZobristUpdate should be O(1) vs O(n) for the full-scan variants.
+func BenchmarkHashStrategy(b *testing.B) {
+	board := []byte(
+		"________" +
+			"________" +
+			"________" +
+			"____k___" +
+			"________" +
+			"________" +
+			"________" +
+			"________",
+	)
+	const changedCell = 36 // centre cell where the king sits
+	baseHash := ZobristHash(board)
+
+	b.Run("GenerateHashFull", func(b *testing.B) {
+		for b.Loop() {
+			_ = GenerateHash(board)
+		}
+	})
+
+	b.Run("ZobristHashFull", func(b *testing.B) {
+		for b.Loop() {
+			_ = ZobristHash(board)
+		}
+	})
+
+	b.Run("ZobristUpdateIncremental", func(b *testing.B) {
+		for b.Loop() {
+			_ = ZobristUpdate(baseHash, changedCell, 'k', '_')
+		}
+	})
 }
