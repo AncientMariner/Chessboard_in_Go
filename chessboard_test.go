@@ -4,7 +4,7 @@ import (
 	"reflect"
 	"testing"
 
-	"Chessboard_in_Go/figures"
+	"github.com/AncientMariner/Chessboard_in_Go/figures"
 )
 
 func TestNewChessBoard(t *testing.T) {

@@ -1,7 +1,7 @@
 package main
 
 import (
-	"Chessboard_in_Go/figures"
+	"github.com/AncientMariner/Chessboard_in_Go/figures"
 )
 
 // needed to run go build
